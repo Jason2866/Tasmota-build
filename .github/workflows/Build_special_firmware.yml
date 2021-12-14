@@ -1,0 +1,192 @@
+name: Build_special_firmware
+
+on:
+  workflow_dispatch:
+  push:
+    branches: start_build
+    paths-ignore:
+    - '.github/**' # Ignore changes towards the .github directory
+
+
+jobs:
+  tasmota_pull:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        ref: special_builder
+    - name: Use latest Tasmota development
+      run: |
+        git config --local user.name "Platformio BUILD"
+        git config --local user.email github-actions@github.com
+        git remote add -f Tasmota "https://github.com/arendst/Tasmota.git" --track development
+        git switch -c work
+        git merge Tasmota/development --allow-unrelated-histories &> status.txt
+        echo "$(<status.txt)"
+        #git add status.txt
+        #git commit -m "status flag"
+        #git status
+    - name: Push updates of latest Tasmota development to repo
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.MASTER_ACCESS_TOKEN }}
+        branch: 'special_builder'
+
+  special:
+    needs: [tasmota_pull]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        variant:
+          - tasmota-tls
+          - tasmota-gps
+          - tasmota-battery
+          - tasmota-scripting
+          - tasmota-mega
+          - tasmota-allsensors
+          - tasmota-teleinfo
+          - tasmota-thermostat
+          - tasmota-rangeextender
+          - tasmota-fullrules
+          - tasmota-platinum
+          - tasmota-minicustom
+          - tasmota32-teleinfo
+          - tasmota32-thermostat
+          - tasmota32solo1-thermostat
+          - tasmota32-tls
+          - tasmota32-zigbee
+          - tasmota32-zigbeebridge
+          - tasmota32-gps
+          - tasmota32-battery
+          - tasmota32-scripting
+          - tasmota32-mega
+          - tasmota32-allsensors
+          - tasmota32-ethernet
+          - tasmota32-fullrules
+          - tasmota32-platinum
+          - tasmota32-minicustom
+          - tasmota32-udisplay
+          - tasmota32-rangeextender
+          - tasmota32c3
+          - tasmota32c3-bluetooth
+          - tasmota32s2
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: special_builder
+      - name: Set up Python
+        uses: actions/setup-python@v1
+      - name: Install dependencies
+        run: |
+          pip install -U https://github.com/platformio/platformio-core/archive/develop.zip
+      - name: Run PlatformIO
+        run: platformio run -e ${{ matrix.variant }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: firmware
+          path: ./build_output
+
+
+  Upload:
+    needs: [special]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: firmware
+    - name: Display files from branch firmware
+      run: ls -R
+    - uses: actions/download-artifact@v2
+      with:
+        name: firmware
+        path: ./mv_firmware
+    - name: Display structure of downloaded files
+      run: |
+        cp -rf ./firmware/tasmota32c3.bin ./firmware/tasmota32c3_2M.bin 2>/dev/null || :
+        rm -rf ./firmware/tasmota32c3.bin
+        cp -rf ./firmware/tasmota32c3-bluetooth.bin ./firmware/tasmota32c3-bluetooth_2M.bin 2>/dev/null || :
+        ls -R
+      working-directory: ./mv_firmware
+    - name: Move firmware files in sub-folders
+      run: |
+        mkdir -p ./firmware/tasmota32/other
+        mkdir -p ./firmware/tasmota/other
+        mkdir -p ./firmware/map
+        cp -rf ./mv_firmware/map/* ./firmware/map/
+        cp -rf ./mv_firmware/firmware/tasmota-* ./firmware/tasmota/other/
+        cp -rf ./mv_firmware/firmware/tasmota32* ./firmware/tasmota32/other/
+        rm -rf ./mv_firmware
+    - name: Build commit message
+      id: step_one
+      run: |
+        tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
+        tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
+        echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
+    - name: Transfer the new binaries into the repository
+      run: |
+        git config --local user.name "Platformio BUILD"
+        git config user.email github-actions@github.com
+        git add -f ./*
+        git commit -m "${{ env.tas_com }}"
+    - name: Push the firmware files to branch firmware
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: 'firmware'
+        force: true
+
+  copycat:
+    needs: Upload
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: firmware
+    - name: Build commit message
+      id: step_one
+      run: |
+        tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
+        tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
+        echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
+    - name: copycat tasmota
+      uses: andstor/copycat-action@v3
+      with:
+        personal_token: ${{ secrets.PERSONAL_TOKEN }}
+        src_path: firmware/tasmota/other/.
+        src_branch: firmware
+        dst_path: firmware/unofficial
+        dst_owner: tasmota
+        dst_branch: main
+        dst_repo_name: install
+        username: workflow
+        commit_message: ${{ env.tas_com }}
+
+  copycat32:
+    needs: copycat
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: firmware
+    - name: Build commit message
+      id: step_one
+      run: |
+        tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
+        tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
+        echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
+    - name: copycat tasmota32
+      uses: andstor/copycat-action@v3
+      with:
+        personal_token: ${{ secrets.PERSONAL_TOKEN }}
+        src_path: firmware/tasmota32/other/.
+        src_branch: firmware
+        dst_path: firmware/unofficial
+        dst_owner: tasmota
+        dst_branch: main
+        dst_repo_name: install
+        username: workflow
+        commit_message: ${{ env.tas_com }}
