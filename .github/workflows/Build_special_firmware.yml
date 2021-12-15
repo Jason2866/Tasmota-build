@@ -126,67 +126,16 @@ jobs:
         tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
         tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
         echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
-    - name: Transfer the new binaries into the repository
-      run: |
-        git config --local user.name "Platformio BUILD"
-        git config user.email github-actions@github.com
-        git add -f ./*
-        git commit -m "${{ env.tas_com }}"
-    - name: Push the firmware files to branch firmware
-      uses: ad-m/github-push-action@master
+    - name: Display files to transfer
+      run: ls -R ./*
+    - name: Push Firmware files to tmp_copy repo
+      uses: Jason2866/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: 'firmware'
-        force: true
-
-  copycat:
-    needs: Upload
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: firmware
-    - name: Build commit message
-      id: step_one
-      run: |
-        tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
-        tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
-        echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
-    - name: copycat tasmota
-      uses: andstor/copycat-action@v3
-      with:
-        personal_token: ${{ secrets.PERSONAL_TOKEN }}
-        src_path: firmware/tasmota/other/.
-        src_branch: firmware
-        dst_path: firmware/unofficial
-        dst_owner: tasmota
-        dst_branch: main
-        dst_repo_name: install
-        username: workflow
-        commit_message: ${{ env.tas_com }}
-
-  copycat32:
-    needs: copycat
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: firmware
-    - name: Build commit message
-      id: step_one
-      run: |
-        tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
-        tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
-        echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
-    - name: copycat tasmota32
-      uses: andstor/copycat-action@v3
-      with:
-        personal_token: ${{ secrets.PERSONAL_TOKEN }}
-        src_path: firmware/tasmota32/other/.
-        src_branch: firmware
-        dst_path: firmware/unofficial
-        dst_owner: tasmota
-        dst_branch: main
-        dst_repo_name: install
-        username: workflow
-        commit_message: ${{ env.tas_com }}
+        source_file: 'firmware'
+        destination_repo: 'Jason2866/tmp_copy'
+        destination_branch: 'firmware'
+        user_email: 'github-actions@github.com'
+        user_name: 'github-actions'
+        commit_message: '${{ env.tas_com }}'
