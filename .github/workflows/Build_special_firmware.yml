@@ -52,6 +52,7 @@ jobs:
           - tasmota-rangeextender
           - tasmota-fullrules
           - tasmota-platinum
+          - tasmota-titanium
           - tasmota-minicustom
           - tasmota32-teleinfo
           - tasmota32-thermostat
@@ -67,6 +68,7 @@ jobs:
           - tasmota32-ethernet
           - tasmota32-fullrules
           - tasmota32-platinum
+          - tasmota32-titanium
           - tasmota32-minicustom
           - tasmota32-udisplay
           - tasmota32-rangeextender
