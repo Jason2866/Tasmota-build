@@ -151,6 +151,6 @@ jobs:
       with:
         source_file: 'trigger.txt'
         destination_repo: 'Jason2866/tmp_copy'
-        destination_branch: 'action-development'
+        destination_branch: 'action-special'
         user_email: 'github-actions@github.com'
         user_name: 'github-actions'
