@@ -142,7 +142,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Creat trigger.txt
       run: |
-         echo ${{ env.tas_com }}  &> trigger.txt
+         tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
+         echo ${tas_com_tmp1}  &> trigger.txt
          echo "$(<trigger.txt)"
     - name: Push trigger.txt to start workflow copy in tmp repo
       uses: Jason2866/copy_file_to_another_repo_action@main
