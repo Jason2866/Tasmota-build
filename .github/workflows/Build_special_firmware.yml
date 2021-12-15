@@ -95,11 +95,6 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: firmware
-    - name: Display files from branch firmware
-      run: ls -R
     - uses: actions/download-artifact@v2
       with:
         name: firmware
@@ -139,3 +134,23 @@ jobs:
         user_email: 'github-actions@github.com'
         user_name: 'github-actions'
         commit_message: '${{ env.tas_com }}'
+
+  Start_final_copy:
+    needs: Upload
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Creat trigger.txt
+      run: |
+         echo ${{ env.tas_com }}  &> trigger.txt
+         echo "$(<trigger.txt)"
+    - name: Push trigger.txt to start workflow copy in tmp repo
+      uses: Jason2866/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: 'trigger.txt'
+        destination_repo: 'Jason2866/tmp_copy'
+        destination_branch: 'action-development'
+        user_email: 'github-actions@github.com'
+        user_name: 'github-actions'
