@@ -4044,19 +4044,13 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 
 #endif  // CUSTOM_CONFIG_PLATINUM *******************************************************************
 
-#ifdef CUSTOM_CONFIG_PLATINUM_SCRIPTING // **********************************************************************************************************************************************************************************
-/*
-ooooooooo.   ooooo              .o.       ooooooooooooo ooooo ooooo      ooo ooooo     ooo ooo        ooooo                .oooooo..o   .oooooo.   ooooooooo.   ooooooooo.   ooooooooooooo ooooo ooooo      ooo   .oooooo.    
-`888   `Y88. `888'             .888.      8'   888   `8 `888' `888b.     `8' `888'     `8' `88.       .888'               d8P'    `Y8  d8P'  `Y8b  `888   `Y88. `888   `Y88. 8'   888   `8 `888' `888b.     `8'  d8P'  `Y8b   
- 888   .d88'  888             .8"888.          888       888   8 `88b.    8   888       8   888b     d'888                Y88bo.      888           888   .d88'  888   .d88'      888       888   8 `88b.    8  888           
- 888ooo88P'   888            .8' `888.         888       888   8   `88b.  8   888       8   8 Y88. .P  888                 `"Y8888o.  888           888ooo88P'   888ooo88P'       888       888   8   `88b.  8  888           
- 888          888           .88ooo8888.        888       888   8     `88b.8   888       8   8  `888'   888                     `"Y88b 888           888`88b.     888              888       888   8     `88b.8  888     ooooo 
- 888          888       o  .8'     `888.       888       888   8       `888   `88.    .8'   8    Y     888                oo     .d8P `88b    ooo   888  `88b.   888              888       888   8       `888  `88.    .88'  
-o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     `YbodP'    o8o        o888o ooooooooooooo 8""88888P'   `Y8bood8P'  o888o  o888o o888o            o888o     o888o o8o        `8   `Y8bood8P'  
-############################################################################################################################################################################################################################*/
+/*********************************************************************************************\
+ * TITANIUM
+\*********************************************************************************************/
+#ifdef CUSTOM_CONFIG_TITANIUM // **********************************************************************************************************************************************************************************
 
 #undef CODE_IMAGE_STR
-#define CODE_IMAGE_STR "platinum_scripting"
+#define CODE_IMAGE_STR "titanium"
 
 #define USE_UFILESYS
 #define GUI_TRASH_FILE
@@ -4094,7 +4088,7 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 
 #ifdef ESP32
   #undef OTA_URL
-  #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-platinum-scripting.bin"
+  #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-titanium.bin"
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
