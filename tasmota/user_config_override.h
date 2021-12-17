@@ -4196,9 +4196,9 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 // -- SPI sensors ---------------------------------
 #define USE_SPI                                  // Hardware SPI using GPIO12(MISO), GPIO13(MOSI) and GPIO14(CLK) in addition to two user selectable GPIOs(CS and DC)
 #ifdef USE_SPI
-  #define USE_NRF24                              // Add SPI support for NRF24L01(+) (+2k6 code)
+  //#define USE_NRF24                              // Add SPI support for NRF24L01(+) (+2k6 code)
   #ifdef USE_NRF24
-     #define USE_MIBLE                            // BLE-bridge for some Mijia-BLE-sensors (+4k7 code)
+     //#define USE_MIBLE                            // BLE-bridge for some Mijia-BLE-sensors (+4k7 code)
   #endif  // USE_NRF24
   #define USE_RC522                              // Add support for MFRC522 13.56Mhz Rfid reader (+6k code)
     #define USE_RC522_DATA_FUNCTION              // Add support for reading data block content (+0k4 code)
