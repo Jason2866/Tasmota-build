@@ -7,7 +7,6 @@ on:
     paths-ignore:
     - '.github/**' # Ignore changes towards the .github directory
 
-
 jobs:
   tasmota_pull:
     runs-on: ubuntu-latest
@@ -25,9 +24,6 @@ jobs:
         git switch -c work
         git merge Tasmota/development --allow-unrelated-histories &> status.txt
         echo "$(<status.txt)"
-        #git add status.txt
-        #git commit -m "status flag"
-        #git status
     - name: Push updates of latest Tasmota development to repo
       uses: ad-m/github-push-action@master
       with:
@@ -90,7 +86,6 @@ jobs:
         with:
           name: firmware
           path: ./build_output
-
 
   Upload:
     needs: [special]
