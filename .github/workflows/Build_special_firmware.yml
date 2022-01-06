@@ -70,7 +70,7 @@ jobs:
           - tasmota32-nspanel
           - tasmota32-rangeextender
           - tasmota32c3_2M
-          - tasmota32c3_2M-bluetooth
+          - tasmota32c3-bluetooth
           - tasmota32s2
     steps:
       - uses: actions/checkout@v2
