@@ -325,6 +325,12 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef FIRMWARE_DISPLAYS                         // Disable tasmota-display with display drivers enabled
 #undef FIRMWARE_IR                               // Disable tasmota-ir with IR full protocols activated
 #undef FIRMWARE_IR_CUSTOM                        // Disable tasmota customizable with special marker to add all IR protocols
+#undef FIRMWARE_WEBCAM
+#undef FIRMWARE_ODROID_GO
+#undef FIRMWARE_M5STACK_CORE2
+#undef FIRMWARE_BLUETOOTH
+#undef FIRMWARE_LVGL
+#undef FIRMWARE_TASMOTA32
 
 #undef USE_ARDUINO_OTA                           // Disable support for Arduino OTA
 #undef USE_DOMOTICZ                              // Disable Domoticz
@@ -348,6 +354,12 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_RULES                                 // Disable support for rules
 #undef USE_SCRIPT                                // Disable support for script
 #undef USE_UFILESYS
+#undef GUI_TRASH_FILE
+#undef GUI_EDIT_FILE
+#undef USE_PING
+#undef USE_AUTOCONF
+#undef USE_BERRY
+#undef USE_WEBCLIENT_HTTPS
 
 // -- Optional modules ----------------------------
 #undef ROTARY_V1                                 // Disable support for MI Desk Lamp
