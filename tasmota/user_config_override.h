@@ -294,17 +294,19 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
  * Autoconf defines
 \*********************************************************************************************/
 
-#ifdef USE_AUTOCONF
-  #ifndef USE_BERRY
-    #define USE_BERRY
-  #endif
-  #ifndef USE_WEBCLIENT_HTTPS
-    #define USE_WEBCLIENT_HTTPS
-  #endif
-  #ifndef USE_TLS 
-    #define USE_TLS
-  #endif
-#endif // USE_AUTOCONF
+#ifndef FIRMWARE_MINICUSTOM
+  #ifdef USE_AUTOCONF
+    #ifndef USE_BERRY
+      #define USE_BERRY
+    #endif
+    #ifndef USE_WEBCLIENT_HTTPS
+      #define USE_WEBCLIENT_HTTPS
+    #endif
+    #ifndef USE_TLS 
+      #define USE_TLS
+    #endif
+  #endif // USE_AUTOCONF
+#endif // FIRMWARE_MINICUSTOM
 
 /*********************************************************************************************\
 
@@ -315,6 +317,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 \*********************************************************************************************/
 
 #ifdef FIRMWARE_MINICUSTOM  // *******************************************************************
+
+#define FIRMWARE_MINIMAL
 
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "mini-custom"
@@ -359,6 +363,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_PING
 #undef USE_AUTOCONF
 #undef USE_BERRY
+#undef USE_WEBCLIENT
 #undef USE_WEBCLIENT_HTTPS
 
 // -- Optional modules ----------------------------
