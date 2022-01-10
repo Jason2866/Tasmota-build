@@ -45,6 +45,16 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_DISCOVERY                            // Disable mDNS for the following services (+8k code, +0.3k mem)
 #undef USE_TIMERS                               // Disable support for up to 16 timers (+2k2 code)
 #undef USE_TIMERS_WEB                           // Disable timer webpage support (+4k5 code)
+
+#undef USE_UFILESYS
+#undef GUI_TRASH_FILE
+#undef GUI_EDIT_FILE
+#undef USE_PING
+#undef USE_AUTOCONF
+#undef USE_BERRY
+#undef USE_WEBCLIENT
+#undef USE_WEBCLIENT_HTTPS
+
 #undef USE_SUNRISE                              // Disable support for Sunrise and sunset tools (+16k)
 
 #undef USE_UNISHOX_COMPRESSION                  // Disable support for string compression in Rules or Scripts
@@ -294,6 +304,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
  * Autoconf defines
 \*********************************************************************************************/
 
+#ifndef FIRMWARE_MINIMAL
 #ifndef FIRMWARE_MINICUSTOM
   #ifdef USE_AUTOCONF
     #ifndef USE_BERRY
@@ -307,6 +318,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
     #endif
   #endif // USE_AUTOCONF
 #endif // FIRMWARE_MINICUSTOM
+#endif // FIRMWARE_MINIMAL
 
 /*********************************************************************************************\
 
