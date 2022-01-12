@@ -534,6 +534,7 @@ d'""""""d888' `888'  d8P'  `Y8b   `888'   `Y8b `888'     `8 `888'     `8
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-zigbee.bin"
+  #define USE_TLS 
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -810,6 +811,7 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-zigbeebridge.bin"
+  #define USE_TLS 
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -1275,6 +1277,7 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-gps.bin"
+  #define USE_TLS 
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -1352,6 +1355,8 @@ oo     .d8P `88b    ooo   888  `88b.   888   888              888       888   8 
 
 #define USE_UFILESYS
 #define GUI_TRASH_FILE
+
+#define USE_TLS 
 
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
@@ -1679,6 +1684,8 @@ Thermostat
 
 #undef OTA_URL
 #define OTA_URL                " "  // [OtaUrl]
+
+#define USE_TLS 
 
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
@@ -2089,6 +2096,7 @@ Teleinfo
 
 #define DISABLE_ESP32_BROWNOUT                   // Lot of Old MH & Live clone have poor regulators/caps that fire brownout reset on WiFi connection
 
+#define USE_TLS 
 #define USE_MQTT_TLS                             // Use TLS for MQTT connection (+34.5k code, +7.0k mem and +4.8k additional during connection handshake)
   #define USE_MQTT_TLS_CA_CERT  
 
@@ -2668,6 +2676,7 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-fullrules.bin"
+  #define USE_TLS  
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -2697,6 +2706,7 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
 #define GUI_TRASH_FILE
 
 #ifdef ESP32
+  #define USE_TLS 
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -2903,6 +2913,7 @@ o888ooooood8   "888" o888o o888o `Y8bod8P' d888b    o888o o888o `Y8bod8P'   "888
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-ethernet.bin"
+  #define USE_TLS 
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -3199,6 +3210,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-mega.bin"
+  #define USE_TLS  
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
