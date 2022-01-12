@@ -313,16 +313,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "mini-custom"
 
-#ifdef ESP32
-  #define USE_TLS
-  #define USE_MQTT_TLS
-  #define USE_BERRY
-  #define USE_BERRY_PSRAM
-  #define USE_WEBSERVER
-  //#define USE_WEBCLIENT
-  //#define USE_WEBCLIENT_HTTPS
-#endif  // ESP32
-
 #undef FIRMWARE_LITE                             // Disable tasmota-lite with no sensors
 #undef FIRMWARE_SENSORS                          // Disable tasmota-sensors with useful sensors enabled
 #undef FIRMWARE_KNX_NO_EMULATION                 // Disable tasmota-knx with KNX but without Emulation
@@ -469,6 +459,16 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef DEBUG_THEO                                // Disable debug code
 #undef USE_DEBUG_DRIVER                          // Disable debug code
 #undef USE_AC_ZERO_CROSS_DIMMER                  // Disable support for AC_ZERO_CROSS_DIMMER
+
+#ifdef ESP32
+  #define USE_TLS
+  #define USE_MQTT_TLS
+  #define USE_BERRY
+  #define USE_BERRY_PSRAM
+  #define USE_WEBSERVER
+  //#define USE_WEBCLIENT
+  //#define USE_WEBCLIENT_HTTPS
+#endif  // ESP32
 
 #endif  // FIRMWARE_MINICUSTOM *******************************************************************
 
