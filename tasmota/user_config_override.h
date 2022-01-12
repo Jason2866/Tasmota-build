@@ -300,28 +300,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #endif  // CUSTOM_CONFIG_REMOVALS *******************************************************************
 
-/*********************************************************************************************\
- * Autoconf defines
-\*********************************************************************************************/
-
-#ifndef FIRMWARE_MINIMAL
-#ifndef FIRMWARE_MINICUSTOM
-  #ifdef USE_AUTOCONF
-    #ifndef USE_BERRY
-      #define USE_BERRY
-    #endif
-    #ifndef USE_WEBCLIENT_HTTPS
-      #define USE_WEBCLIENT_HTTPS
-    #endif
-    #ifndef USE_TLS 
-      #define USE_TLS
-    #endif
-  #endif // USE_AUTOCONF
-#endif // FIRMWARE_MINICUSTOM
-#endif // FIRMWARE_MINIMAL
-
-/*********************************************************************************************\
-
 
 /*********************************************************************************************\
  * [tasmota-minicustom.bin]
@@ -334,6 +312,15 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "mini-custom"
+
+#ifdef ESP32
+  #define USE_TLS
+  #define USE_MQTT_TLS
+  //#define USE_BERRY
+  //#define USE_BERRY_PSRAM
+  //#define USE_WEBCLIENT
+  //#define USE_WEBCLIENT_HTTPS
+#endif  // ESP32
 
 #undef FIRMWARE_LITE                             // Disable tasmota-lite with no sensors
 #undef FIRMWARE_SENSORS                          // Disable tasmota-sensors with useful sensors enabled
@@ -1685,8 +1672,6 @@ Thermostat
 #undef OTA_URL
 #define OTA_URL                " "  // [OtaUrl]
 
-#define USE_TLS 
-
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
@@ -1698,13 +1683,6 @@ Thermostat
   #define USE_TIMERS_WEB                         // Add timer webpage support (+4k5 code)
   #define USE_SUNRISE                            // Add support for Sunrise and sunset tools (+16k)
     #define SUNRISE_DAWN_ANGLE DAWN_NORMAL       // Select desired Dawn Angle from (DAWN_NORMAL, DAWN_CIVIL, DAWN_NAUTIC, DAWN_ASTRONOMIC)
-
-#ifdef ESP32
-  #define USE_BERRY
-  #define USE_BERRY_PSRAM
-  #define USE_WEBCLIENT
-//  #define USE_WEBCLIENT_HTTPS
-#endif  // ESP32
 
 // -- Compression ---------------------------------
 #define USE_UNISHOX_COMPRESSION                  // Add support for string compression in Rules or Scripts
@@ -2069,6 +2047,8 @@ Thermostat
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-thermostat.bin"
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -2376,6 +2356,8 @@ Teleinfo
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-teleinfo.bin"
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -2676,7 +2658,8 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-fullrules.bin"
-  #define USE_TLS  
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -2706,7 +2689,8 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
 #define GUI_TRASH_FILE
 
 #ifdef ESP32
-  #define USE_TLS 
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -2913,7 +2897,8 @@ o888ooooood8   "888" o888o o888o `Y8bod8P' d888b    o888o o888o `Y8bod8P'   "888
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-ethernet.bin"
-  #define USE_TLS 
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -3210,7 +3195,8 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-mega.bin"
-  #define USE_TLS  
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -3516,6 +3502,8 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-allsensors.bin"
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -3608,10 +3596,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
  #define USE_MAX44009                           // Enable MAX44009 Ambient Light sensor (I2C addresses 0x4A and 0x4B) (+0k8 code)
  #define USE_SCD30                              // Enable Sensiron SCd30 CO2 sensor (I2C address 0x61) (+3k3 code)
  #define USE_SCD40
-
- #ifdef  ESP8266
  #define USE_SPS30                              // Enable Sensiron SPS30 particle sensor (I2C address 0x69) (+1.7 code)
- #endif
 
 #define USE_ADE7953                            // Enable ADE7953 Energy monitor as used on Shelly 2.5 (I2C address 0x38) (+1k5)
 #define USE_VL53L0X                            // Enable VL53L0x time of flight sensor (I2C address 0x29) (+4k code)
@@ -3844,6 +3829,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-platinum.bin"
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -4136,6 +4123,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-titanium.bin"
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
@@ -4414,6 +4403,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-udisplay.bin"
+  #define USE_TLS
+  #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
