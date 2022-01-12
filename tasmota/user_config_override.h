@@ -318,6 +318,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
   #define USE_MQTT_TLS
   #define USE_BERRY
   #define USE_BERRY_PSRAM
+  #define USE_WEBSERVER
   //#define USE_WEBCLIENT
   //#define USE_WEBCLIENT_HTTPS
 #endif  // ESP32
