@@ -4092,8 +4092,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 
 #define GUI_TRASH_FILE
 
-																						 
-																									  
+#define USE_TLS
+#define USE_MQTT_TLS
 
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
@@ -4146,6 +4146,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 
 #ifdef ESP8266
   #define USE_SENDMAIL
+
+  #define USE_CHIRP //compilation bug at ESP32
 #endif // ESP8266
 
 #ifdef ESP32
@@ -4168,20 +4170,20 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 // -- Optional modules ----------------------------
 #define ROTARY_V1                                // Add support for Rotary Encoder as used in MI Desk Lamp (+0k8 code)
   #define ROTARY_MAX_STEPS     10                // Rotary step boundary
-		
 
-																					  
-																						
-																																
-																						
-																		   
-																							
-																													
 
-			   
+
+
+
+
+
+
+
+
+
 #define USE_SONOFF_RF                            // Add support for Sonoff Rf Bridge (+3k2 code)
   #define USE_RF_FLASH                           // Add support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB (+2k7 code)
-																									   
+
 #define USE_SONOFF_SC                            // Add support for Sonoff Sc (+1k1 code)
 #define USE_TUYA_MCU                             // Add support for Tuya Serial MCU
   #define TUYA_DIMMER_ID       0                 // Default dimmer Id
@@ -4212,7 +4214,7 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #define USE_SM2135                               // Add support for SM2135 RGBCW led control as used in Action LSC (+0k6 code)
 #define USE_SONOFF_L1                            // Add support for Sonoff L1 led control
 #define USE_ELECTRIQ_MOODL                       // Add support for ElectriQ iQ-wifiMOODL RGBW LED controller (+0k3 code)
-																							 
+
 
 // -- Counter input -------------------------------
 #define USE_COUNTER                              // Enable inputs as counter (+0k8 code)
@@ -4264,13 +4266,13 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
   //#define USE_MGC3130                            // [I2cDriver27] Enable MGC3130 Electric Field Effect Sensor (I2C address 0x42) (+2k7 code, 0k3 mem)
   #define USE_MAX44009                           // [I2cDriver28] Enable MAX44009 Ambient Light sensor (I2C addresses 0x4A and 0x4B) (+0k8 code)
   #define USE_SCD30                              // [I2cDriver29] Enable Sensiron SCd30 CO2 sensor (I2C address 0x61) (+3k3 code)
-															
+
   #define USE_SPS30                              // [I2cDriver30] Enable Sensiron SPS30 particle sensor (I2C address 0x69) (+1.7 code)
-	   
+
   #define USE_ADE7953                            // [I2cDriver7] Enable ADE7953 Energy monitor as used on Shelly 2.5 (I2C address 0x38) (+1k5)
   #define USE_VL53L0X                            // [I2cDriver31] Enable VL53L0x time of flight sensor (I2C address 0x29) (+4k code)
   #define USE_MLX90614                           // [I2cDriver32] Enable MLX90614 ir temp sensor (I2C address 0x5a) (+0.6k code)
-  #define USE_CHIRP                              // [I2cDriver33] Enable CHIRP soil moisture sensor (variable I2C address, default 0x20)
+  //#define USE_CHIRP                              // [I2cDriver33] Enable CHIRP soil moisture sensor (variable I2C address, default 0x20)
   #define USE_PAJ7620                            // [I2cDriver34] Enable PAJ7620 gesture sensor (I2C address 0x73) (+2.5k code)
   #define USE_PCF8574                            // [I2cDriver2] Enable PCF8574 I/O Expander (I2C addresses 0x20 - 0x26 and 0x39 - 0x3F) (+1k9 code)
   #define USE_HIH6                               // [I2cDriver36] Enable Honeywell HIH Humidity and Temperature sensor (I2C address 0x27) (+0k6)
@@ -4281,8 +4283,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
     #define WEMOS_MOTOR_V1_ADDR  0x30            // Default I2C address 0x30
     #define WEMOS_MOTOR_V1_FREQ  1000            // Default frequency
   #define USE_HDC1080                            // [I2cDriver45] Enable HDC1080 temperature/humidity sensor (I2C address 0x40) (+1k5 code)
-																																  
-																																		  
+
+
 
   //#define USE_DISPLAY                            // Add I2C Display Support (+2k code)
     #define USE_DISPLAY_MODES1TO5                // Enable display mode 1 to 5 in addition to mode 0
@@ -4297,8 +4299,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
       #define MTX_ADDRESS6     0x76              // [DisplayAddress6] I2C address of sixth 8x8 matrix module
       #define MTX_ADDRESS7     0x00              // [DisplayAddress7] I2C address of seventh 8x8 matrix module
       #define MTX_ADDRESS8     0x00              // [DisplayAddress8] I2C address of eigth 8x8 matrix module
-																																		
-																												 
+
+
 //    #define USE_DISPLAY_SH1106                   // [DisplayModel 7] [I2cDriver6] Enable SH1106 Oled 128x64 display (I2C addresses 0x3C and 0x3D)
 
 #endif  // USE_I2C
@@ -4306,7 +4308,7 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 // -- SPI sensors ---------------------------------
 #define USE_SPI                                  // Hardware SPI using GPIO12(MISO), GPIO13(MOSI) and GPIO14(CLK) in addition to two user selectable GPIOs(CS and DC)
 #ifdef USE_SPI
-  #define USE_NRF24                              // Add SPI support for NRF24L01(+) (+2k6 code)
+  //#define USE_NRF24                              // Add SPI support for NRF24L01(+) (+2k6 code)
   #ifdef USE_NRF24
     #define USE_MIBLE                            // BLE-bridge for some Mijia-BLE-sensors (+4k7 code)
   #else
@@ -4352,32 +4354,32 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 //#define USE_GPS                                  // Add support for GPS and NTP Server for becoming Stratus 1 Time Source (+3k1 code, +132 bytes RAM)
   //#define USE_FLOG                               // Add support for GPS logging in OTA's Flash (Experimental) (+2k9 code, +8 bytes RAM)
 //#define USE_HM10                                 // Add support for HM-10 as a BLE-bridge for the LYWSD03 (+5k1 code)
-	  
-			 
-					  
-	  
+
+
+
+
 
 #define USE_HRXL                                 // Add support for MaxBotix HRXL-MaxSonar ultrasonic range finders (+0k7)
 
 // -- Power monitoring sensors --------------------
-																							   
+
 #define USE_ENERGY_MARGIN_DETECTION              // Add support for Energy Margin detection (+1k6 code)
   #define USE_ENERGY_POWER_LIMIT                 // Add additional support for Energy Power Limit detection (+1k2 code)
-																														 
-																																		 
-																													
+
+
+
 #define USE_PZEM004T                             // Add support for PZEM004T Energy monitor (+2k code)
 #define USE_PZEM_AC                              // Add support for PZEM014,016 Energy monitor (+1k1 code)
 #define USE_PZEM_DC                              // Add support for PZEM003,017 Energy monitor (+1k1 code)
 #define USE_MCP39F501                            // Add support for MCP39F501 Energy monitor as used in Shelly 2 (+3k1 code)
-																												   
-																										
-																																		
+
+
+
 #define USE_SDM120                               // Add support for Eastron SDM120-Modbus energy monitor (+1k1 code)
   #define SDM120_SPEED         2400              // SDM120-Modbus RS485 serial speed (default: 2400 baud)
 #define USE_SDM630                               // Add support for Eastron SDM630-Modbus energy monitor (+0k6 code)
   #define SDM630_SPEED         9600              // SDM630-Modbus RS485 serial speed (default: 9600 baud)
-																										   
+
 #define USE_DDS2382                              // Add support for Hiking DDS2382 Modbus energy monitor (+0k6 code)
   #define DDS2382_SPEED        9600              // Hiking DDS2382 Modbus RS485 serial speed (default: 9600 baud)
 #define USE_DDSU666                              // Add support for Chint DDSU666 Modbus energy monitor (+0k6 code)
@@ -4388,18 +4390,18 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #define USE_LE01MR                               // Add support for F&F LE-01MR Modbus energy monitor (+1k code)
   #define LE01MR_SPEED         9600              // LE-01MR modbus baudrate (default: 9600)
   #define LE01MR_ADDR          1                 // LE-01MR modbus address (default: 0x01)
-																																							  
-																																							   
-																																	   
-																										   
-																								 
-																														  
-																											   
+
+
+
+
+
+
+
 
 
 // -- Low level interface devices -----------------
 #define USE_DHT                                  // Add support for DHT11, AM2301 (DHT21, DHT22, AM2302, AM2321) and SI7021 Temperature and Humidity sensor (1k6 code)
-					
+
 
 #define USE_MAX31855                             // Add support for MAX31855 K-Type thermocouple sensor using softSPI
 #define USE_MAX31865                             // Add support for MAX31865 RTD sensors using softSPI
@@ -4448,7 +4450,7 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
   #define USE_HX711_GUI                          // Add optional web GUI to HX711 as scale (+1k8 code)
 
 // Select none or only one of the below defines
-#define USE_TX20_WIND_SENSOR                     // Add support for La Crosse TX20 anemometer (+2k6/0k8 code)
+//#define USE_TX20_WIND_SENSOR                     // Add support for La Crosse TX20 anemometer (+2k6/0k8 code)
 #define USE_TX23_WIND_SENSOR                     // Add support for La Crosse TX23 anemometer (+2k7/1k code)
 
 #define USE_RC_SWITCH                            // Add support for RF transceiver using library RcSwitch (+2k7 code, 460 iram)
@@ -4460,9 +4462,9 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #define USE_HRE                                  // Add support for Badger HR-E Water Meter (+1k4 code)
 #define USE_A4988_STEPPER                        // Add support for A4988/DRV8825 stepper-motor-driver-circuit (+10k5 code)
 
-																																					
 
-																														
+
+
 
 #define USE_TASMOTA_CLIENT                       // Add support for Arduino Uno/Pro Mini via serial interface including flashing (+2k6 code, 64 mem)
   #define USE_TASMOTA_CLIENT_FLASH_SPEED 57600     // Usually 57600 for 3.3V variants and 115200 for 5V variants
