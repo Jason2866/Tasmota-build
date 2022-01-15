@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Tasmota favicon to webbrowser tab (#14322)
 - Commands for ESP32 ethernet configuration ``EthIpAddress``, ``EthGateway``, ``EthSubnetmask``, ``EthDnsServer1`` and ``EthDnsServer2`` (#14385)
+- Support for Eastron SDM230 modBus energy meter (#13443)
 
 ### Changed
 - IRremoteESP8266 library from v2.8.0 to v2.8.1
