@@ -12,12 +12,13 @@ build_flags                 = ${core32solo1_dev.build_flags}
 
 [core32_dev]
 platform                    = https://github.com/tasmota/platform-espressif32/releases/download/v2.0.2/platform-tasmota-espressif32-2.0.2.zip
-platform_packages           =
+platform_packages           = framework-arduinoespressif32 @ https://github.com/Jason2866/esp32-arduino-lib-builder/releases/download/579/framework-arduinoespressif32-release_v4.4-3508fa225f.tar.gz
 build_unflags               = ${esp32_defaults.build_unflags}
 build_flags                 = ${esp32_defaults.build_flags}
 
+
 [core32solo1_dev]
 platform                    = https://github.com/tasmota/platform-espressif32/releases/download/v2.0.2solo1/platform-tasmota-espressif32-2.0.2-solo1.zip
-platform_packages           =
+platform_packages           = framework-arduinoespressif32 @ https://github.com/Jason2866/esp32-arduino-lib-builder/releases/download/578/framework-arduinoespressif32-solo1-release_v4.4-b4bbc09e5a.tar.gz
 build_unflags               = ${esp32_defaults.build_unflags}
 build_flags                 = ${esp32_defaults.build_flags}
