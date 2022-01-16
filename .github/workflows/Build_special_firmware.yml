@@ -67,6 +67,8 @@ jobs:
           - tasmota32-platinum
           - tasmota32-titanium
           - tasmota32-minicustom
+          - tasmota32c3-minicustom
+          - tasmota32s2-minicustom
           - tasmota32-udisplay
           - tasmota32-nspanel
           - tasmota32-rangeextender
