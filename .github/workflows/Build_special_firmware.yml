@@ -54,7 +54,6 @@ jobs:
           - tasmota32-thermostat
           - tasmota32solo1-thermostat
           - tasmota32solo1-bluetooth
-          - tasmota32-tls
           - tasmota32-zigbee
           - tasmota32-zigbeebridge
           - tasmota32-gps
