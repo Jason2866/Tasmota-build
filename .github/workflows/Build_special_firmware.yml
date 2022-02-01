@@ -74,6 +74,7 @@ jobs:
           - tasmota32c3_2M
           - tasmota32c3-bluetooth
           - tasmota32s2
+          - tasmota32s3
           - tasmota32c3-mi32-homebridge
           - tasmota32-mi32-homebridge
     steps:
