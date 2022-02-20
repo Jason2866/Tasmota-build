@@ -61,7 +61,6 @@ jobs:
           - tasmota32-scripting
           - tasmota32-mega
           - tasmota32-allsensors
-          - tasmota32-ethernet
           - tasmota32-fullrules
           - tasmota32-platinum
           - tasmota32-titanium
