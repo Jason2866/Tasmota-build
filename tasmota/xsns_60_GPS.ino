@@ -369,7 +369,7 @@ void UBXDetect(void)
 
   UBX.state.log_interval = 10;  // 1 second
   UBX.mode.send_UI_only = true; // send UI data ...
-  MqttPublishTeleperiodSensor();  // ... once at after start
+//  MqttPublishTeleperiodSensor();  // ... once at after start (No MQTT ready yet so do NOT try to send)
 }
 
 uint32_t UBXprocessGPS()
@@ -680,8 +680,7 @@ void UBXHandleTIME()
       if (UBX.mode.forceUTCupdate || Rtc.user_time_entry == false) {
 //        AddLog(LOG_LEVEL_INFO, PSTR("UBX: UTC-Time is valid, set system time"));
         Rtc.utc_time = UBX.rec_buffer.values.time;
-        RtcSync();
-        AddLog(LOG_LEVEL_DEBUG, PSTR("UBX: Synched"));
+        RtcSync("UBX");
       }
       Rtc.user_time_entry = true;
     }
