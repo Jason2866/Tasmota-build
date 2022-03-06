@@ -3230,9 +3230,9 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #define USE_BUZZER                               // Add support for a buzzer (+0k6 code)
 #define USE_SHUTTER                              // Add Shutter support for up to 4 shutter with different motortypes (+6k code)
 #define USE_DEEPSLEEP                            // Add support for deepsleep (+1k code)
-#define USE_HOTPLUG                              // Add support for HotPlug
+//#define USE_HOTPLUG                              // Add support for HotPlug
 #define USE_DEVICE_GROUPS                        // Add support for device groups (+4k code)
-#define USE_KEELOQ                               // Add support for Jarolift rollers by Keeloq algorithm (+4k5 code)
+//#define USE_KEELOQ                               // Add support for Jarolift rollers by Keeloq algorithm (+4k5 code)
 
 
 // -- Optional light modules ----------------------
