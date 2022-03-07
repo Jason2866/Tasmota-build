@@ -75,6 +75,7 @@ jobs:
           - tasmota32s2
           - tasmota32s3
           - tasmota32c3-mi32-homebridge
+          - tasmota32s3-mi32-homebridge
           - tasmota32-mi32-homebridge
     steps:
       - uses: actions/checkout@v2
