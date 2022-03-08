@@ -3213,8 +3213,8 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define ROTARY_MAX_STEPS     10                // Rotary step boundary
 
 #ifdef  ESP8266
-    #define USE_SONOFF_RF                        // Add support for Sonoff Rf Bridge
-    #define USE_RF_FLASH                         // Add support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB (+3k code)
+    //#define USE_SONOFF_RF                        // Add support for Sonoff Rf Bridge
+    //#define USE_RF_FLASH                         // Add support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB (+3k code)
     #define USE_SONOFF_IFAN                      // Add support for Sonoff iFan02 and iFan03 (+2k code)
     #define USE_SONOFF_SC                        // Add support for Sonoff Sc (+1k1 code)
     #define USE_ARMTRONIX_DIMMERS                // Add support for Armtronix Dimmers (+1k4 code)
@@ -3363,7 +3363,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 //#define USE_IBEACON                              // Add support for bluetooth LE passive scan of ibeacon devices (uses HM17 module)
 
 #ifdef  ESP8266
-#define USE_HM10                                 // Add support for HM-10 as a BLE-bridge for the LYWSD03 (+5k1 code)
+//#define USE_HM10                                 // Add support for HM-10 as a BLE-bridge for the LYWSD03 (+5k1 code)
 #endif
 #ifdef  ESP32
 #define USE_MI_ESP32
