@@ -3213,8 +3213,8 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define ROTARY_MAX_STEPS     10                // Rotary step boundary
 
 #ifdef  ESP8266
-    //#define USE_SONOFF_RF                        // Add support for Sonoff Rf Bridge
-    //#define USE_RF_FLASH                         // Add support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB (+3k code)
+    #define USE_SONOFF_RF                        // Add support for Sonoff Rf Bridge
+    #define USE_RF_FLASH                         // Add support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB (+3k code)
     #define USE_SONOFF_IFAN                      // Add support for Sonoff iFan02 and iFan03 (+2k code)
     #define USE_SONOFF_SC                        // Add support for Sonoff Sc (+1k1 code)
     #define USE_ARMTRONIX_DIMMERS                // Add support for Armtronix Dimmers (+1k4 code)
@@ -3230,9 +3230,9 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #define USE_BUZZER                               // Add support for a buzzer (+0k6 code)
 #define USE_SHUTTER                              // Add Shutter support for up to 4 shutter with different motortypes (+6k code)
 #define USE_DEEPSLEEP                            // Add support for deepsleep (+1k code)
-//#define USE_HOTPLUG                              // Add support for HotPlug
+#define USE_HOTPLUG                              // Add support for HotPlug
 #define USE_DEVICE_GROUPS                        // Add support for device groups (+4k code)
-//#define USE_KEELOQ                               // Add support for Jarolift rollers by Keeloq algorithm (+4k5 code)
+#define USE_KEELOQ                               // Add support for Jarolift rollers by Keeloq algorithm (+4k5 code)
 
 
 // -- Optional light modules ----------------------
@@ -3267,12 +3267,12 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
  #define USE_SHT3X                              // Enable SHT3x (I2C address 0x44 or 0x45) or SHTC3 (I2C address 0x70) sensor (+0k7 code)
  #define USE_TSL2561                            // Enable TSL2561 sensor (I2C address 0x29, 0x39 or 0x49) using library Joba_Tsl2561 (+2k3 code)
  #define USE_TSL2591                            // Enable TSL2591 sensor (I2C address 0x29, 0x39 or 0x49) using library Adafruit_TSL2591 (+2k3 code)
- //#define USE_MGS                                // Enable Xadow and Grove Mutichannel Gas sensor using library Multichannel_Gas_Sensor (+10k code)
-    // #define MGS_SENSOR_ADDR    0x04              // Default Mutichannel Gas sensor i2c address
+ #define USE_MGS                                // Enable Xadow and Grove Mutichannel Gas sensor using library Multichannel_Gas_Sensor (+10k code)
+   #define MGS_SENSOR_ADDR    0x04              // Default Mutichannel Gas sensor i2c address
  #define USE_SGP30                              // Enable SGP30 sensor (I2C address 0x58) (+1k1 code)
  #define USE_SI1145                             // Enable SI1145/46/47 sensor (I2C address 0x60) (+1k code)
  #define USE_LM75AD                             // Enable LM75AD sensor (I2C addresses 0x48 - 0x4F) (+0k5 code)
- //#define USE_APDS9960                           // Enable APDS9960 Proximity Sensor (I2C address 0x39). Disables SHT and VEML6070 (+4k7 code)
+ #define USE_APDS9960                           // Enable APDS9960 Proximity Sensor (I2C address 0x39). Disables SHT and VEML6070 (+4k7 code)
  #define USE_MCP230xx                           // Enable MCP23008/MCP23017 for GP INPUT ONLY (I2C addresses 0x20 - 0x27) providing command Sensor29 for configuration (+2k2 code)
    #define USE_MCP230xx_ADDR 0x20               // Enable MCP23008/MCP23017 I2C Address to use (Must be within range 0x20 through 0x27 - set according to your wired setup)
    #define USE_MCP230xx_OUTPUT                  // Enable MCP23008/MCP23017 OUTPUT support through sensor29 commands (+1k code)
@@ -3363,7 +3363,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 //#define USE_IBEACON                              // Add support for bluetooth LE passive scan of ibeacon devices (uses HM17 module)
 
 #ifdef  ESP8266
-//#define USE_HM10                                 // Add support for HM-10 as a BLE-bridge for the LYWSD03 (+5k1 code)
+#define USE_HM10                                 // Add support for HM-10 as a BLE-bridge for the LYWSD03 (+5k1 code)
 #endif
 #ifdef  ESP32
 #define USE_MI_ESP32
