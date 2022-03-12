@@ -103,7 +103,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl http://ota.tasmo
 
 [Complete list](BUILDS.md) of available feature and sensors.
 
-## Changelog v11.0.0.3
+## Changelog v11.0.0.4
 ### Added
 - Command ``SspmMap 0`` to reset Sonoff SPM default mapping
 - Command ``TcpConnect <port><ip_address>`` to add client connection mode [#14874](https://github.com/arendst/Tasmota/issues/14874)
@@ -112,7 +112,8 @@ The latter links can be used for OTA upgrades too like ``OtaUrl http://ota.tasmo
 - NeoPool commands ``NPpHMin``, ``NPpHMax``, ``NPpH``, ``NPRedox``, ``NPHydrolysis``, ``NPIonization``, ``NPChlorine`` and ``NPControl`` [#15015](https://github.com/arendst/Tasmota/issues/15015)
 - NeoPool system voltages display
 - TasmotaSerial implement ``end()``
-- Support for Shelly 3EM [#13515](https://github.com/arendst/Tasmota/issues/13515)
+- Support for ADE7880 3 phase energy monitor as used in Shelly 3EM [#13515](https://github.com/arendst/Tasmota/issues/13515)
+- Support for PCF85363 RTC as used in Shelly 3EM (#13515)
 - Full DS3231 integration and synchronisation when using UBX (=GPS), NTP or manual time
 - ESP32 Berry always enable rules
 - ESP32 Berry bootloop protection
