@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         ref: special_builder
@@ -73,15 +73,16 @@ jobs:
           - tasmota32c3-bluetooth
           - tasmota32s2
           - tasmota32s3
+          - tasmota32s3-bluetooth
           - tasmota32c3-mi32-homebridge
           - tasmota32s3-mi32-homebridge
           - tasmota32-mi32-homebridge
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: special_builder
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
       - name: Install dependencies
         run: |
           pip install -U platformio
@@ -142,7 +143,7 @@ jobs:
     needs: Upload
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Creat trigger.txt
       run: |
          echo ${{ github.run_number }}  &> trigger.txt
