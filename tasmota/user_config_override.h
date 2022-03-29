@@ -1370,6 +1370,14 @@ oo     .d8P `88b    ooo   888  `88b.   888   888              888       888   8 
 #define USE_SCRIPT                               // Add support for script
 #define USE_SCRIPT_COMPRESSION
 #define USE_SML_M
+#define SML_OBIS_LINE
+#define USE_SCRIPT_SUB_COMMAND
+#define LARGE_ARRAYS
+#define SCRIPT_LARGE_VNBUFF
+#define USE_WEBSEND_RESPONSE
+#define SML_MAX_VARS 60
+#define SML_BSIZ 1060
+#define TMSBSIZ 2048
 #define USE_SCRIPT_JSON_EXPORT
 #define USE_SCRIPT_WEB_DISPLAY
 #define SCRIPT_FULL_WEBPAGE
