@@ -73,6 +73,9 @@ jobs:
           - tasmota32c3-bluetooth
           - tasmota32s2
           - tasmota32s3
+          - tasmota32s2-lvgl
+          - tasmota32s3-lvgl
+          - tasmota32c3-lvgl
           - tasmota32s3-bluetooth
           - tasmota32c3-mi32-homebridge
           - tasmota32s3-mi32-homebridge
