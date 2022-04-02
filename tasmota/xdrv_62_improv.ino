@@ -114,6 +114,21 @@ void ImprovSendResponse(uint8_t* response, uint32_t size) {
   data[7] = IMPROV_TYPE_RPC_RESPONSE;                          // 0x04
   data[8] = size -1;
   memcpy(data +9, response, size);
+  data[10] = size -3;                                          // Total length of strings following
+
+  if (data[10]) {
+    // Replace '\n' (= lf) with string length
+    // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 ...
+    // I  M  P  R  O  V  ve ty le co pl lf T  a  s  m  o  t  a  lf 1  1  .  0  .  0  .  5  lf ...
+    // I  M  P  R  O  V  ve ty le co pl l1 T  a  s  m  o  t  a  l2 1  1  .  0  .  0  .  5  lf ...
+    uint32_t str_pos = 11;
+    for (uint32_t i = 12; i < sizeof(data); i++) {
+      if ('\n' == data[i]) {
+        data[str_pos] = i - str_pos -1;                      // Replace lf with string length
+        str_pos = i;
+      }
+    }
+  }
   ImprovWriteData(data, sizeof(data));
 }
 
@@ -121,24 +136,17 @@ void ImprovSendSetting(uint32_t command) {
   char data[100];
   uint32_t len = 0;
 #ifdef USE_WEBSERVER
-  len = ext_snprintf_P(data, sizeof(data), PSTR("01|http://%_I:%d|"), (uint32_t)WiFi.localIP(), WEB_PORT);
-  uint32_t str_pos = 2;
-  for (uint32_t i = 3; i < len; i++) {
-    if ('|' == data[i]) {
-      data[str_pos] = i - str_pos -1;
-    }
-  }
+  len = ext_snprintf_P(data, sizeof(data), PSTR("01\nhttp://%_I:%d\n"), (uint32_t)WiFi.localIP(), WEB_PORT);
   len -= 3;
 #endif  // USE_WEBSERVER
   data[0] = command;
-  data[1] = len;
   ImprovSendResponse((uint8_t*)data, len +3);
 }
 
 bool ImprovParseSerialByte(void) {
-  // 0  1  2  3  4  5  6  7  8  9        8 + le +1
-  // I  M  P  R  O  V  ve ty le data ... \n
-  // 49 4D 50 52 4F 56 01 xx yy ........ 0A
+  // 0  1  2  3  4  5  6  7  8  9  10 11       8 + le +1
+  // I  M  P  R  O  V  ve ty le co pl data ... \n
+  // 49 4D 50 52 4F 56 01 03 xx yy zz ........ 0A
   if (6 == TasmotaGlobal.serial_in_byte_counter) {
     return (IMPROV_SERIAL_VERSION == TasmotaGlobal.serial_in_byte);
   }
@@ -207,18 +215,9 @@ bool ImprovParseSerialByte(void) {
       }
       case IMPROV_GET_DEVICE_INFO: {                           // 0x03
         char data[200];
-        uint32_t len = snprintf_P(data, sizeof(data), PSTR("01|Tasmota|%s|%s|%s|"),
+        uint32_t len = snprintf_P(data, sizeof(data), PSTR("01\nTasmota\n%s\n%s\n%s\n"),
                                   TasmotaGlobal.version, GetDeviceHardware().c_str(), SettingsText(SET_DEVICENAME));
         data[0] = IMPROV_GET_DEVICE_INFO;
-        data[1] = len -3;
-
-        uint32_t str_pos = 2;
-        for (uint32_t i = 3; i < len; i++) {
-          if ('|' == data[i]) {
-            data[str_pos] = i - str_pos -1;
-            str_pos = i;
-          }
-        }
         ImprovSendResponse((uint8_t*)data, len);
         break;
       }
@@ -226,12 +225,9 @@ bool ImprovParseSerialByte(void) {
         char data[200];
         int n = WiFi.scanNetworks();
         if (n) {
-          // Sort networks
           int indices[n];
-          for (uint32_t i = 0; i < n; i++) {
-            indices[i] = i;
-          }
-          // RSSI SORT
+          // Sort RSSI - strongest first
+          for (uint32_t i = 0; i < n; i++) { indices[i] = i; }
           for (uint32_t i = 0; i < n; i++) {
             for (uint32_t j = i + 1; j < n; j++) {
               if (WiFi.RSSI(indices[j]) > WiFi.RSSI(indices[i])) {
@@ -239,45 +235,37 @@ bool ImprovParseSerialByte(void) {
               }
             }
           }
-          // Remove duplicates ( must be RSSI sorted )
+          // Remove duplicate SSIDs - IMPROV does not distinguish between channels so no need to keep them
           for (uint32_t i = 0; i < n; i++) {
             if (-1 == indices[i]) { continue; }
             String cssid = WiFi.SSID(indices[i]);
-            uint32_t cschn = WiFi.channel(indices[i]);
+//            uint32_t cschn = WiFi.channel(indices[i]);
             for (uint32_t j = i + 1; j < n; j++) {
-              if ((cssid == WiFi.SSID(indices[j])) && (cschn == WiFi.channel(indices[j]))) {
-                indices[j] = -1;  // set dup aps to index -1
+//              if ((cssid == WiFi.SSID(indices[j])) && (cschn == WiFi.channel(indices[j]))) {
+              if (cssid == WiFi.SSID(indices[j])) {
+                indices[j] = -1;                               // Set dup aps to index -1
               }
             }
           }
-
           // Send networks
           for (uint32_t i = 0; i < n; i++) {
             if (-1 == indices[i]) { continue; }                // Skip dups
-            int32_t rssi = WiFi.RSSI(indices[i]);
             String ssid_copy = WiFi.SSID(indices[i]);
             if (!ssid_copy.length()) { ssid_copy = F("no_name"); }
+            int32_t rssi = WiFi.RSSI(indices[i]);
+            bool encryption = (ENC_TYPE_NONE == WiFi.encryptionType(indices[i]));
 
             // Send each ssid separately to avoid overflowing the buffer
-            uint32_t len = snprintf_P(data, sizeof(data), PSTR("01|%s|%d|%s|"), ssid_copy.c_str(), rssi, (ENC_TYPE_NONE == WiFi.encryptionType(indices[i]))?"NO":"YES");
+            uint32_t len = snprintf_P(data, sizeof(data), PSTR("01\n%s\n%d\n%s\n"),
+                                      ssid_copy.c_str(), rssi, (encryption)?"NO":"YES");
             data[0] = IMPROV_GET_WIFI_NETWORKS;
-            data[1] = len -3;
-
-            uint32_t str_pos = 2;
-            for (uint32_t i = 3; i < len; i++) {
-              if ('|' == data[i]) {
-                data[str_pos] = i - str_pos -1;
-                str_pos = i;
-              }
-            }
             ImprovSendResponse((uint8_t*)data, len);
           }
         }
 
         // Send empty response to signify the end of the list.
         data[0] = IMPROV_GET_WIFI_NETWORKS;
-        data[1] = 0;                                           // Empty string
-        ImprovSendResponse((uint8_t*)data, 3);
+        ImprovSendResponse((uint8_t*)data, 3);                 // Empty string
         break;
       }
 /*
