@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Commands ``Sensor34 10 <valueA>`` and ``Sensor34 11 <valueB>`` to use HX711 absolute weight conversion (#15292)
 
+### Changed
+- NeoPool: boost command with redox control state, relay and aux detail display
+
+### Fixed
+- NeoPool filtration state
+
 ## [11.0.0.5] 20220407
 ### Added
 - Support for improv as used by esp-web-tools
@@ -59,7 +65,6 @@ All notable changes to this project will be documented in this file.
 - Tasmota ESP32 Arduino core to v2.0.2.3 (#14979)
 - TasmotaSerial library from v3.4.0 to v3.5.0 (#14981)
 - NeoPool limit relay output to the number actually available
-
 
 ## [11.0.0.2] 20220225
 ### Changed
