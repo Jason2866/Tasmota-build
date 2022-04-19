@@ -33,13 +33,13 @@
 #define CODE_IMAGE_STR "webcam"
 
 #define USE_WEBCAM
-#define USE_TASMOTA_DISCOVERY
 #define ENABLE_RTSPSERVER
 #define USE_SPI
 #define USE_SDCARD
 
 #undef USE_I2C
 #undef USE_HOME_ASSISTANT
+#define USE_TASMOTA_DISCOVERY                    // Enable Tasmota Discovery support (+2k code)
 #undef USE_COUNTER
 #undef USE_IR_REMOTE
 #undef USE_AC_ZERO_CROSS_DIMMER
@@ -71,8 +71,8 @@
 #define FALLBACK_MODULE        WEMOS             // [Module2] Select default module on fast reboot where USER_MODULE is user template
 
 #define USE_INFLUXDB                             // Enable influxdb support (+5k code)
-#define USE_TASMOTA_DISCOVERY
 #undef USE_HOME_ASSISTANT
+#define USE_TASMOTA_DISCOVERY
 
 #define USE_SDCARD
 
@@ -108,6 +108,7 @@
 
 #undef USE_DOMOTICZ
 #undef USE_HOME_ASSISTANT
+#define USE_TASMOTA_DISCOVERY                    // Enable Tasmota Discovery support (+2k code)
 
 #define USE_WEBCLIENT_HTTPS
 
