@@ -8,46 +8,6 @@
 #include "be_constobj.h"
 
 /********************************************************************
-** Solidified function: tostring
-********************************************************************/
-be_local_closure(Partition_otadata_tostring,   /* name */
-  be_nested_proto(
-    9,                          /* nstack */
-    1,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 7]) {     /* constants */
-    /* K0   */  be_nested_str(string),
-    /* K1   */  be_nested_str(format),
-    /* K2   */  be_nested_str(_X3Cinstance_X3A_X20Partition_otadata_X28ota_active_X3A_X25d_X2C_X20ota_seq_X3D_X5B_X25d_X2C_X25d_X5D_X2C_X20ota_max_X3D_X25d_X29_X3E),
-    /* K3   */  be_nested_str(active_otadata),
-    /* K4   */  be_nested_str(seq0),
-    /* K5   */  be_nested_str(seq1),
-    /* K6   */  be_nested_str(maxota),
-    }),
-    &be_const_str_tostring,
-    &be_const_str_solidified,
-    ( &(const binstruction[ 9]) {  /* code */
-      0xA4060000,  //  0000  IMPORT	R1	K0
-      0x8C080301,  //  0001  GETMET	R2	R1	K1
-      0x58100002,  //  0002  LDCONST	R4	K2
-      0x88140103,  //  0003  GETMBR	R5	R0	K3
-      0x88180104,  //  0004  GETMBR	R6	R0	K4
-      0x881C0105,  //  0005  GETMBR	R7	R0	K5
-      0x88200106,  //  0006  GETMBR	R8	R0	K6
-      0x7C080C00,  //  0007  CALL	R2	6
-      0x80040400,  //  0008  RET	1	R2
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
 ** Solidified function: load
 ********************************************************************/
 be_local_closure(Partition_otadata_load,   /* name */
@@ -214,6 +174,106 @@ be_local_closure(Partition_otadata_save,   /* name */
 
 
 /********************************************************************
+** Solidified function: tostring
+********************************************************************/
+be_local_closure(Partition_otadata_tostring,   /* name */
+  be_nested_proto(
+    9,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 7]) {     /* constants */
+    /* K0   */  be_nested_str(string),
+    /* K1   */  be_nested_str(format),
+    /* K2   */  be_nested_str(_X3Cinstance_X3A_X20Partition_otadata_X28ota_active_X3A_X25d_X2C_X20ota_seq_X3D_X5B_X25d_X2C_X25d_X5D_X2C_X20ota_max_X3D_X25d_X29_X3E),
+    /* K3   */  be_nested_str(active_otadata),
+    /* K4   */  be_nested_str(seq0),
+    /* K5   */  be_nested_str(seq1),
+    /* K6   */  be_nested_str(maxota),
+    }),
+    &be_const_str_tostring,
+    &be_const_str_solidified,
+    ( &(const binstruction[ 9]) {  /* code */
+      0xA4060000,  //  0000  IMPORT	R1	K0
+      0x8C080301,  //  0001  GETMET	R2	R1	K1
+      0x58100002,  //  0002  LDCONST	R4	K2
+      0x88140103,  //  0003  GETMBR	R5	R0	K3
+      0x88180104,  //  0004  GETMBR	R6	R0	K4
+      0x881C0105,  //  0005  GETMBR	R7	R0	K5
+      0x88200106,  //  0006  GETMBR	R8	R0	K6
+      0x7C080C00,  //  0007  CALL	R2	6
+      0x80040400,  //  0008  RET	1	R2
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: _validate
+********************************************************************/
+be_local_closure(Partition_otadata__validate,   /* name */
+  be_nested_proto(
+    3,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 6]) {     /* constants */
+    /* K0   */  be_nested_str(active_otadata),
+    /* K1   */  be_const_int(0),
+    /* K2   */  be_nested_str(seq0),
+    /* K3   */  be_const_int(1),
+    /* K4   */  be_nested_str(maxota),
+    /* K5   */  be_nested_str(seq1),
+    }),
+    &be_const_str__validate,
+    &be_const_str_solidified,
+    ( &(const binstruction[30]) {  /* code */
+      0x90020101,  //  0000  SETMBR	R0	K0	K1
+      0x88040102,  //  0001  GETMBR	R1	R0	K2
+      0x4C080000,  //  0002  LDNIL	R2
+      0x20040202,  //  0003  NE	R1	R1	R2
+      0x78060005,  //  0004  JMPF	R1	#000B
+      0x88040102,  //  0005  GETMBR	R1	R0	K2
+      0x04040303,  //  0006  SUB	R1	R1	K3
+      0x88080104,  //  0007  GETMBR	R2	R0	K4
+      0x00080503,  //  0008  ADD	R2	R2	K3
+      0x10040202,  //  0009  MOD	R1	R1	R2
+      0x90020001,  //  000A  SETMBR	R0	K0	R1
+      0x88040105,  //  000B  GETMBR	R1	R0	K5
+      0x4C080000,  //  000C  LDNIL	R2
+      0x20040202,  //  000D  NE	R1	R1	R2
+      0x7806000D,  //  000E  JMPF	R1	#001D
+      0x88040102,  //  000F  GETMBR	R1	R0	K2
+      0x4C080000,  //  0010  LDNIL	R2
+      0x1C040202,  //  0011  EQ	R1	R1	R2
+      0x74060003,  //  0012  JMPT	R1	#0017
+      0x88040105,  //  0013  GETMBR	R1	R0	K5
+      0x88080102,  //  0014  GETMBR	R2	R0	K2
+      0x24040202,  //  0015  GT	R1	R1	R2
+      0x78060005,  //  0016  JMPF	R1	#001D
+      0x88040105,  //  0017  GETMBR	R1	R0	K5
+      0x04040303,  //  0018  SUB	R1	R1	K3
+      0x88080104,  //  0019  GETMBR	R2	R0	K4
+      0x00080503,  //  001A  ADD	R2	R2	K3
+      0x10040202,  //  001B  MOD	R1	R1	R2
+      0x90020001,  //  001C  SETMBR	R0	K0	R1
+      0x80000000,  //  001D  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
 ** Solidified function: init
 ********************************************************************/
 be_local_closure(Partition_otadata_init,   /* name */
@@ -332,33 +392,6 @@ be_local_closure(Partition_otadata_set_active,   /* name */
 
 
 /********************************************************************
-** Solidified function: set_ota_max
-********************************************************************/
-be_local_closure(Partition_otadata_set_ota_max,   /* name */
-  be_nested_proto(
-    2,                          /* nstack */
-    2,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 1]) {     /* constants */
-    /* K0   */  be_nested_str(maxota),
-    }),
-    &be_const_str_set_ota_max,
-    &be_const_str_solidified,
-    ( &(const binstruction[ 2]) {  /* code */
-      0x90020001,  //  0000  SETMBR	R0	K0	R1
-      0x80000000,  //  0001  RET	0
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
 ** Solidified function: crc32_ota_seq
 ********************************************************************/
 be_local_closure(Partition_otadata_crc32_ota_seq,   /* name */
@@ -397,11 +430,11 @@ be_local_closure(Partition_otadata_crc32_ota_seq,   /* name */
 
 
 /********************************************************************
-** Solidified function: _validate
+** Solidified function: clear
 ********************************************************************/
-be_local_closure(Partition_otadata__validate,   /* name */
+be_local_closure(Partition_otadata_clear,   /* name */
   be_nested_proto(
-    3,                          /* nstack */
+    6,                          /* nstack */
     1,                          /* argc */
     2,                          /* varg */
     0,                          /* has upvals */
@@ -409,47 +442,61 @@ be_local_closure(Partition_otadata__validate,   /* name */
     0,                          /* has sup protos */
     NULL,                       /* no sub protos */
     1,                          /* has constants */
-    ( &(const bvalue[ 6]) {     /* constants */
-    /* K0   */  be_nested_str(active_otadata),
-    /* K1   */  be_const_int(0),
-    /* K2   */  be_nested_str(seq0),
-    /* K3   */  be_const_int(1),
-    /* K4   */  be_nested_str(maxota),
-    /* K5   */  be_nested_str(seq1),
+    ( &(const bvalue[ 5]) {     /* constants */
+    /* K0   */  be_nested_str(flash),
+    /* K1   */  be_nested_str(b),
+    /* K2   */  be_nested_str(resize),
+    /* K3   */  be_nested_str(write),
+    /* K4   */  be_nested_str(offset),
     }),
-    &be_const_str__validate,
+    &be_const_str_clear,
     &be_const_str_solidified,
-    ( &(const binstruction[30]) {  /* code */
-      0x90020101,  //  0000  SETMBR	R0	K0	K1
-      0x88040102,  //  0001  GETMBR	R1	R0	K2
-      0x4C080000,  //  0002  LDNIL	R2
-      0x20040202,  //  0003  NE	R1	R1	R2
-      0x78060005,  //  0004  JMPF	R1	#000B
-      0x88040102,  //  0005  GETMBR	R1	R0	K2
-      0x04040303,  //  0006  SUB	R1	R1	K3
-      0x88080104,  //  0007  GETMBR	R2	R0	K4
-      0x00080503,  //  0008  ADD	R2	R2	K3
-      0x10040202,  //  0009  MOD	R1	R1	R2
-      0x90020001,  //  000A  SETMBR	R0	K0	R1
-      0x88040105,  //  000B  GETMBR	R1	R0	K5
-      0x4C080000,  //  000C  LDNIL	R2
-      0x20040202,  //  000D  NE	R1	R1	R2
-      0x7806000D,  //  000E  JMPF	R1	#001D
-      0x88040102,  //  000F  GETMBR	R1	R0	K2
-      0x4C080000,  //  0010  LDNIL	R2
-      0x1C040202,  //  0011  EQ	R1	R1	R2
-      0x74060003,  //  0012  JMPT	R1	#0017
-      0x88040105,  //  0013  GETMBR	R1	R0	K5
-      0x88080102,  //  0014  GETMBR	R2	R0	K2
-      0x24040202,  //  0015  GT	R1	R1	R2
-      0x78060005,  //  0016  JMPF	R1	#001D
-      0x88040105,  //  0017  GETMBR	R1	R0	K5
-      0x04040303,  //  0018  SUB	R1	R1	K3
-      0x88080104,  //  0019  GETMBR	R2	R0	K4
-      0x00080503,  //  001A  ADD	R2	R2	K3
-      0x10040202,  //  001B  MOD	R1	R1	R2
-      0x90020001,  //  001C  SETMBR	R0	K0	R1
-      0x80000000,  //  001D  RET	0
+    ( &(const binstruction[18]) {  /* code */
+      0xA4060000,  //  0000  IMPORT	R1	K0
+      0x60080015,  //  0001  GETGBL	R2	G21
+      0x7C080000,  //  0002  CALL	R2	0
+      0x8C080502,  //  0003  GETMET	R2	R2	K2
+      0x5412001F,  //  0004  LDINT	R4	32
+      0x7C080400,  //  0005  CALL	R2	2
+      0xBC0A0200,  //  0006  SETNGBL	R2	K1
+      0x8C080303,  //  0007  GETMET	R2	R1	K3
+      0x88100104,  //  0008  GETMBR	R4	R0	K4
+      0xB8160200,  //  0009  GETNGBL	R5	K1
+      0x7C080600,  //  000A  CALL	R2	3
+      0x8C080303,  //  000B  GETMET	R2	R1	K3
+      0x88100104,  //  000C  GETMBR	R4	R0	K4
+      0x54160FFF,  //  000D  LDINT	R5	4096
+      0x00100805,  //  000E  ADD	R4	R4	R5
+      0xB8160200,  //  000F  GETNGBL	R5	K1
+      0x7C080600,  //  0010  CALL	R2	3
+      0x80000000,  //  0011  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: set_ota_max
+********************************************************************/
+be_local_closure(Partition_otadata_set_ota_max,   /* name */
+  be_nested_proto(
+    2,                          /* nstack */
+    2,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 1]) {     /* constants */
+    /* K0   */  be_nested_str(maxota),
+    }),
+    &be_const_str_set_ota_max,
+    &be_const_str_solidified,
+    ( &(const binstruction[ 2]) {  /* code */
+      0x90020001,  //  0000  SETMBR	R0	K0	R1
+      0x80000000,  //  0001  RET	0
     })
   )
 );
@@ -462,21 +509,22 @@ be_local_closure(Partition_otadata__validate,   /* name */
 be_local_class(Partition_otadata,
     5,
     NULL,
-    be_nested_map(13,
+    be_nested_map(14,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_const_key(tostring, 1), be_const_closure(Partition_otadata_tostring_closure) },
-        { be_const_key(_validate, -1), be_const_closure(Partition_otadata__validate_closure) },
-        { be_const_key(crc32_ota_seq, 12), be_const_static_closure(Partition_otadata_crc32_ota_seq_closure) },
-        { be_const_key(active_otadata, -1), be_const_var(2) },
-        { be_const_key(save, 8), be_const_closure(Partition_otadata_save_closure) },
-        { be_const_key(seq1, -1), be_const_var(4) },
-        { be_const_key(init, 7), be_const_closure(Partition_otadata_init_closure) },
         { be_const_key(set_ota_max, -1), be_const_closure(Partition_otadata_set_ota_max_closure) },
-        { be_const_key(seq0, 10), be_const_var(3) },
-        { be_const_key(set_active, -1), be_const_closure(Partition_otadata_set_active_closure) },
-        { be_const_key(offset, -1), be_const_var(1) },
-        { be_const_key(load, 2), be_const_closure(Partition_otadata_load_closure) },
+        { be_const_key(seq1, 8), be_const_var(4) },
+        { be_const_key(save, -1), be_const_closure(Partition_otadata_save_closure) },
+        { be_const_key(tostring, -1), be_const_closure(Partition_otadata_tostring_closure) },
+        { be_const_key(_validate, -1), be_const_closure(Partition_otadata__validate_closure) },
+        { be_const_key(init, 0), be_const_closure(Partition_otadata_init_closure) },
+        { be_const_key(clear, -1), be_const_closure(Partition_otadata_clear_closure) },
+        { be_const_key(load, 13), be_const_closure(Partition_otadata_load_closure) },
         { be_const_key(maxota, -1), be_const_var(0) },
+        { be_const_key(active_otadata, 11), be_const_var(2) },
+        { be_const_key(offset, 9), be_const_var(1) },
+        { be_const_key(seq0, -1), be_const_var(3) },
+        { be_const_key(set_active, 6), be_const_closure(Partition_otadata_set_active_closure) },
+        { be_const_key(crc32_ota_seq, -1), be_const_static_closure(Partition_otadata_crc32_ota_seq_closure) },
     })),
     (bstring*) &be_const_str_Partition_otadata
 );
@@ -537,174 +585,6 @@ be_local_closure(Partition_load_otadata,   /* name */
       0x7C0C0600,  //  0018  CALL	R3	3
       0x90021003,  //  0019  SETMBR	R0	K8	R3
       0x80000000,  //  001A  RET	0
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
-** Solidified function: get_active
-********************************************************************/
-be_local_closure(Partition_get_active,   /* name */
-  be_nested_proto(
-    2,                          /* nstack */
-    1,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 2]) {     /* constants */
-    /* K0   */  be_nested_str(otadata),
-    /* K1   */  be_nested_str(active_otadata),
-    }),
-    &be_const_str_get_active,
-    &be_const_str_solidified,
-    ( &(const binstruction[ 3]) {  /* code */
-      0x88040100,  //  0000  GETMBR	R1	R0	K0
-      0x88040301,  //  0001  GETMBR	R1	R1	K1
-      0x80040200,  //  0002  RET	1	R1
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
-** Solidified function: init
-********************************************************************/
-be_local_closure(Partition_init,   /* name */
-  be_nested_proto(
-    3,                          /* nstack */
-    1,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 4]) {     /* constants */
-    /* K0   */  be_nested_str(slots),
-    /* K1   */  be_nested_str(load),
-    /* K2   */  be_nested_str(parse),
-    /* K3   */  be_nested_str(load_otadata),
-    }),
-    &be_const_str_init,
-    &be_const_str_solidified,
-    ( &(const binstruction[10]) {  /* code */
-      0x60040012,  //  0000  GETGBL	R1	G18
-      0x7C040000,  //  0001  CALL	R1	0
-      0x90020001,  //  0002  SETMBR	R0	K0	R1
-      0x8C040101,  //  0003  GETMET	R1	R0	K1
-      0x7C040200,  //  0004  CALL	R1	1
-      0x8C040102,  //  0005  GETMET	R1	R0	K2
-      0x7C040200,  //  0006  CALL	R1	1
-      0x8C040103,  //  0007  GETMET	R1	R0	K3
-      0x7C040200,  //  0008  CALL	R1	1
-      0x80000000,  //  0009  RET	0
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
-** Solidified function: get_ota_slot
-********************************************************************/
-be_local_closure(Partition_get_ota_slot,   /* name */
-  be_nested_proto(
-    6,                          /* nstack */
-    2,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 3]) {     /* constants */
-    /* K0   */  be_nested_str(slots),
-    /* K1   */  be_nested_str(is_ota),
-    /* K2   */  be_nested_str(stop_iteration),
-    }),
-    &be_const_str_get_ota_slot,
-    &be_const_str_solidified,
-    ( &(const binstruction[18]) {  /* code */
-      0x60080010,  //  0000  GETGBL	R2	G16
-      0x880C0100,  //  0001  GETMBR	R3	R0	K0
-      0x7C080200,  //  0002  CALL	R2	1
-      0xA8020008,  //  0003  EXBLK	0	#000D
-      0x5C0C0400,  //  0004  MOVE	R3	R2
-      0x7C0C0000,  //  0005  CALL	R3	0
-      0x8C100701,  //  0006  GETMET	R4	R3	K1
-      0x7C100200,  //  0007  CALL	R4	1
-      0x1C100801,  //  0008  EQ	R4	R4	R1
-      0x78120001,  //  0009  JMPF	R4	#000C
-      0xA8040001,  //  000A  EXBLK	1	1
-      0x80040600,  //  000B  RET	1	R3
-      0x7001FFF6,  //  000C  JMP		#0004
-      0x58080002,  //  000D  LDCONST	R2	K2
-      0xAC080200,  //  000E  CATCH	R2	1	0
-      0xB0080000,  //  000F  RAISE	2	R0	R0
-      0x4C080000,  //  0010  LDNIL	R2
-      0x80040400,  //  0011  RET	1	R2
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
-** Solidified function: tostring
-********************************************************************/
-be_local_closure(Partition_tostring,   /* name */
-  be_nested_proto(
-    6,                          /* nstack */
-    1,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 9]) {     /* constants */
-    /* K0   */  be_nested_str(_X3Cinstance_X3A_X20Partition_X28_X5B_X0A),
-    /* K1   */  be_nested_str(slots),
-    /* K2   */  be_nested_str(_X20_X20),
-    /* K3   */  be_nested_str(tostring),
-    /* K4   */  be_nested_str(_X0A),
-    /* K5   */  be_nested_str(stop_iteration),
-    /* K6   */  be_nested_str(_X5D_X2C_X0A_X20_X20),
-    /* K7   */  be_nested_str(otadata),
-    /* K8   */  be_nested_str(_X0A_X29_X3E),
-    }),
-    &be_const_str_tostring,
-    &be_const_str_solidified,
-    ( &(const binstruction[23]) {  /* code */
-      0x58040000,  //  0000  LDCONST	R1	K0
-      0x60080010,  //  0001  GETGBL	R2	G16
-      0x880C0101,  //  0002  GETMBR	R3	R0	K1
-      0x7C080200,  //  0003  CALL	R2	1
-      0xA8020007,  //  0004  EXBLK	0	#000D
-      0x5C0C0400,  //  0005  MOVE	R3	R2
-      0x7C0C0000,  //  0006  CALL	R3	0
-      0x00040302,  //  0007  ADD	R1	R1	K2
-      0x8C100703,  //  0008  GETMET	R4	R3	K3
-      0x7C100200,  //  0009  CALL	R4	1
-      0x00040204,  //  000A  ADD	R1	R1	R4
-      0x00040304,  //  000B  ADD	R1	R1	K4
-      0x7001FFF7,  //  000C  JMP		#0005
-      0x58080005,  //  000D  LDCONST	R2	K5
-      0xAC080200,  //  000E  CATCH	R2	1	0
-      0xB0080000,  //  000F  RAISE	2	R0	R0
-      0x00040306,  //  0010  ADD	R1	R1	K6
-      0x88080107,  //  0011  GETMBR	R2	R0	K7
-      0x8C080503,  //  0012  GETMET	R2	R2	K3
-      0x7C080200,  //  0013  CALL	R2	1
-      0x00040202,  //  0014  ADD	R1	R1	R2
-      0x00040308,  //  0015  ADD	R1	R1	K8
-      0x80040200,  //  0016  RET	1	R1
     })
   )
 );
@@ -780,54 +660,9 @@ be_local_closure(Partition_tobytes,   /* name */
 
 
 /********************************************************************
-** Solidified function: save
+** Solidified function: tostring
 ********************************************************************/
-be_local_closure(Partition_save,   /* name */
-  be_nested_proto(
-    7,                          /* nstack */
-    1,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 6]) {     /* constants */
-    /* K0   */  be_nested_str(flash),
-    /* K1   */  be_nested_str(tobytes),
-    /* K2   */  be_nested_str(erase),
-    /* K3   */  be_nested_str(write),
-    /* K4   */  be_nested_str(otadata),
-    /* K5   */  be_nested_str(save),
-    }),
-    &be_const_str_save,
-    &be_const_str_solidified,
-    ( &(const binstruction[15]) {  /* code */
-      0xA4060000,  //  0000  IMPORT	R1	K0
-      0x8C080101,  //  0001  GETMET	R2	R0	K1
-      0x7C080200,  //  0002  CALL	R2	1
-      0x8C0C0302,  //  0003  GETMET	R3	R1	K2
-      0x54167FFF,  //  0004  LDINT	R5	32768
-      0x541A0FFF,  //  0005  LDINT	R6	4096
-      0x7C0C0600,  //  0006  CALL	R3	3
-      0x8C0C0303,  //  0007  GETMET	R3	R1	K3
-      0x54167FFF,  //  0008  LDINT	R5	32768
-      0x5C180400,  //  0009  MOVE	R6	R2
-      0x7C0C0600,  //  000A  CALL	R3	3
-      0x880C0104,  //  000B  GETMBR	R3	R0	K4
-      0x8C0C0705,  //  000C  GETMET	R3	R3	K5
-      0x7C0C0200,  //  000D  CALL	R3	1
-      0x80000000,  //  000E  RET	0
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
-** Solidified function: load
-********************************************************************/
-be_local_closure(Partition_load,   /* name */
+be_local_closure(Partition_tostring,   /* name */
   be_nested_proto(
     6,                          /* nstack */
     1,                          /* argc */
@@ -837,75 +672,43 @@ be_local_closure(Partition_load,   /* name */
     0,                          /* has sup protos */
     NULL,                       /* no sub protos */
     1,                          /* has constants */
-    ( &(const bvalue[ 3]) {     /* constants */
-    /* K0   */  be_nested_str(flash),
-    /* K1   */  be_nested_str(raw),
-    /* K2   */  be_nested_str(read),
-    }),
-    &be_const_str_load,
-    &be_const_str_solidified,
-    ( &(const binstruction[ 7]) {  /* code */
-      0xA4060000,  //  0000  IMPORT	R1	K0
-      0x8C080302,  //  0001  GETMET	R2	R1	K2
-      0x54127FFF,  //  0002  LDINT	R4	32768
-      0x54160FFF,  //  0003  LDINT	R5	4096
-      0x7C080600,  //  0004  CALL	R2	3
-      0x90020202,  //  0005  SETMBR	R0	K1	R2
-      0x80000000,  //  0006  RET	0
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
-** Solidified function: invalidate_spiffs
-********************************************************************/
-be_local_closure(Partition_invalidate_spiffs,   /* name */
-  be_nested_proto(
-    8,                          /* nstack */
-    1,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 8]) {     /* constants */
-    /* K0   */  be_nested_str(flash),
+    ( &(const bvalue[ 9]) {     /* constants */
+    /* K0   */  be_nested_str(_X3Cinstance_X3A_X20Partition_X28_X5B_X0A),
     /* K1   */  be_nested_str(slots),
-    /* K2   */  be_nested_str(is_spiffs),
-    /* K3   */  be_nested_str(value_error),
-    /* K4   */  be_nested_str(No_X20SPIFFS_X20partition_X20found),
-    /* K5   */  be_nested_str(00),
-    /* K6   */  be_nested_str(write),
-    /* K7   */  be_nested_str(start),
+    /* K2   */  be_nested_str(_X20_X20),
+    /* K3   */  be_nested_str(tostring),
+    /* K4   */  be_nested_str(_X0A),
+    /* K5   */  be_nested_str(stop_iteration),
+    /* K6   */  be_nested_str(_X5D_X2C_X0A_X20_X20),
+    /* K7   */  be_nested_str(otadata),
+    /* K8   */  be_nested_str(_X0A_X29_X3E),
     }),
-    &be_const_str_invalidate_spiffs,
+    &be_const_str_tostring,
     &be_const_str_solidified,
-    ( &(const binstruction[22]) {  /* code */
-      0xA4060000,  //  0000  IMPORT	R1	K0
-      0x5409FFFE,  //  0001  LDINT	R2	-1
+    ( &(const binstruction[23]) {  /* code */
+      0x58040000,  //  0000  LDCONST	R1	K0
+      0x60080010,  //  0001  GETGBL	R2	G16
       0x880C0101,  //  0002  GETMBR	R3	R0	K1
-      0x94080602,  //  0003  GETIDX	R2	R3	R2
-      0x8C100502,  //  0004  GETMET	R4	R2	K2
-      0x7C100200,  //  0005  CALL	R4	1
-      0x74120000,  //  0006  JMPT	R4	#0008
-      0xB0060704,  //  0007  RAISE	1	K3	K4
-      0x600C0015,  //  0008  GETGBL	R3	G21
-      0x58100005,  //  0009  LDCONST	R4	K5
-      0x7C0C0200,  //  000A  CALL	R3	1
-      0x8C100306,  //  000B  GETMET	R4	R1	K6
-      0x88180507,  //  000C  GETMBR	R6	R2	K7
-      0x5C1C0600,  //  000D  MOVE	R7	R3
-      0x7C100600,  //  000E  CALL	R4	3
-      0x8C100306,  //  000F  GETMET	R4	R1	K6
-      0x88180507,  //  0010  GETMBR	R6	R2	K7
-      0x541E0FFF,  //  0011  LDINT	R7	4096
-      0x00180C07,  //  0012  ADD	R6	R6	R7
-      0x5C1C0600,  //  0013  MOVE	R7	R3
-      0x7C100600,  //  0014  CALL	R4	3
-      0x80000000,  //  0015  RET	0
+      0x7C080200,  //  0003  CALL	R2	1
+      0xA8020007,  //  0004  EXBLK	0	#000D
+      0x5C0C0400,  //  0005  MOVE	R3	R2
+      0x7C0C0000,  //  0006  CALL	R3	0
+      0x00040302,  //  0007  ADD	R1	R1	K2
+      0x8C100703,  //  0008  GETMET	R4	R3	K3
+      0x7C100200,  //  0009  CALL	R4	1
+      0x00040204,  //  000A  ADD	R1	R1	R4
+      0x00040304,  //  000B  ADD	R1	R1	K4
+      0x7001FFF7,  //  000C  JMP		#0005
+      0x58080005,  //  000D  LDCONST	R2	K5
+      0xAC080200,  //  000E  CATCH	R2	1	0
+      0xB0080000,  //  000F  RAISE	2	R0	R0
+      0x00040306,  //  0010  ADD	R1	R1	K6
+      0x88080107,  //  0011  GETMBR	R2	R0	K7
+      0x8C080503,  //  0012  GETMET	R2	R2	K3
+      0x7C080200,  //  0013  CALL	R2	1
+      0x00040202,  //  0014  ADD	R1	R1	R2
+      0x00040308,  //  0015  ADD	R1	R1	K8
+      0x80040200,  //  0016  RET	1	R1
     })
   )
 );
@@ -913,47 +716,124 @@ be_local_closure(Partition_invalidate_spiffs,   /* name */
 
 
 /********************************************************************
-** Solidified function: set_active
+** Solidified function: get_active
 ********************************************************************/
-be_local_closure(Partition_set_active,   /* name */
+be_local_closure(Partition_get_active,   /* name */
   be_nested_proto(
-    6,                          /* nstack */
-    2,                          /* argc */
+    2,                          /* nstack */
+    1,                          /* argc */
     2,                          /* varg */
     0,                          /* has upvals */
     NULL,                       /* no upvals */
     0,                          /* has sup protos */
     NULL,                       /* no sub protos */
     1,                          /* has constants */
-    ( &(const bvalue[ 7]) {     /* constants */
-    /* K0   */  be_const_int(0),
-    /* K1   */  be_nested_str(ota_max),
-    /* K2   */  be_nested_str(value_error),
-    /* K3   */  be_nested_str(Invalid_X20ota_X20partition_X20number),
-    /* K4   */  be_nested_str(otadata),
-    /* K5   */  be_nested_str(set_ota_max),
-    /* K6   */  be_nested_str(set_active),
+    ( &(const bvalue[ 2]) {     /* constants */
+    /* K0   */  be_nested_str(otadata),
+    /* K1   */  be_nested_str(active_otadata),
     }),
-    &be_const_str_set_active,
+    &be_const_str_get_active,
     &be_const_str_solidified,
-    ( &(const binstruction[17]) {  /* code */
-      0x14080300,  //  0000  LT	R2	R1	K0
-      0x740A0003,  //  0001  JMPT	R2	#0006
-      0x8C080101,  //  0002  GETMET	R2	R0	K1
+    ( &(const binstruction[ 3]) {  /* code */
+      0x88040100,  //  0000  GETMBR	R1	R0	K0
+      0x88040301,  //  0001  GETMBR	R1	R1	K1
+      0x80040200,  //  0002  RET	1	R1
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: init
+********************************************************************/
+be_local_closure(Partition_init,   /* name */
+  be_nested_proto(
+    3,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 4]) {     /* constants */
+    /* K0   */  be_nested_str(slots),
+    /* K1   */  be_nested_str(load),
+    /* K2   */  be_nested_str(parse),
+    /* K3   */  be_nested_str(load_otadata),
+    }),
+    &be_const_str_init,
+    &be_const_str_solidified,
+    ( &(const binstruction[10]) {  /* code */
+      0x60040012,  //  0000  GETGBL	R1	G18
+      0x7C040000,  //  0001  CALL	R1	0
+      0x90020001,  //  0002  SETMBR	R0	K0	R1
+      0x8C040101,  //  0003  GETMET	R1	R0	K1
+      0x7C040200,  //  0004  CALL	R1	1
+      0x8C040102,  //  0005  GETMET	R1	R0	K2
+      0x7C040200,  //  0006  CALL	R1	1
+      0x8C040103,  //  0007  GETMET	R1	R0	K3
+      0x7C040200,  //  0008  CALL	R1	1
+      0x80000000,  //  0009  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: ota_max
+********************************************************************/
+be_local_closure(Partition_ota_max,   /* name */
+  be_nested_proto(
+    6,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 5]) {     /* constants */
+    /* K0   */  be_const_int(0),
+    /* K1   */  be_nested_str(slots),
+    /* K2   */  be_nested_str(type),
+    /* K3   */  be_nested_str(subtype),
+    /* K4   */  be_nested_str(stop_iteration),
+    }),
+    &be_const_str_ota_max,
+    &be_const_str_solidified,
+    ( &(const binstruction[29]) {  /* code */
+      0x58040000,  //  0000  LDCONST	R1	K0
+      0x60080010,  //  0001  GETGBL	R2	G16
+      0x880C0101,  //  0002  GETMBR	R3	R0	K1
       0x7C080200,  //  0003  CALL	R2	1
-      0x24080202,  //  0004  GT	R2	R1	R2
-      0x780A0000,  //  0005  JMPF	R2	#0007
-      0xB0060503,  //  0006  RAISE	1	K2	K3
-      0x88080104,  //  0007  GETMBR	R2	R0	K4
-      0x8C080505,  //  0008  GETMET	R2	R2	K5
-      0x8C100101,  //  0009  GETMET	R4	R0	K1
-      0x7C100200,  //  000A  CALL	R4	1
-      0x7C080400,  //  000B  CALL	R2	2
-      0x88080104,  //  000C  GETMBR	R2	R0	K4
-      0x8C080506,  //  000D  GETMET	R2	R2	K6
-      0x5C100200,  //  000E  MOVE	R4	R1
-      0x7C080400,  //  000F  CALL	R2	2
-      0x80000000,  //  0010  RET	0
+      0xA8020013,  //  0004  EXBLK	0	#0019
+      0x5C0C0400,  //  0005  MOVE	R3	R2
+      0x7C0C0000,  //  0006  CALL	R3	0
+      0x88100702,  //  0007  GETMBR	R4	R3	K2
+      0x1C100900,  //  0008  EQ	R4	R4	K0
+      0x7812000D,  //  0009  JMPF	R4	#0018
+      0x88100703,  //  000A  GETMBR	R4	R3	K3
+      0x5416000F,  //  000B  LDINT	R5	16
+      0x28100805,  //  000C  GE	R4	R4	R5
+      0x78120009,  //  000D  JMPF	R4	#0018
+      0x88100703,  //  000E  GETMBR	R4	R3	K3
+      0x5416001F,  //  000F  LDINT	R5	32
+      0x14100805,  //  0010  LT	R4	R4	R5
+      0x78120005,  //  0011  JMPF	R4	#0018
+      0x88100703,  //  0012  GETMBR	R4	R3	K3
+      0x5416000F,  //  0013  LDINT	R5	16
+      0x04100805,  //  0014  SUB	R4	R4	R5
+      0x24140801,  //  0015  GT	R5	R4	R1
+      0x78160000,  //  0016  JMPF	R5	#0018
+      0x5C040800,  //  0017  MOVE	R1	R4
+      0x7001FFEB,  //  0018  JMP		#0005
+      0x58080004,  //  0019  LDCONST	R2	K4
+      0xAC080200,  //  001A  CATCH	R2	1	0
+      0xB0080000,  //  001B  RAISE	2	R0	R0
+      0x80040200,  //  001C  RET	1	R1
     })
   )
 );
@@ -1053,9 +933,183 @@ be_local_closure(Partition_parse,   /* name */
 
 
 /********************************************************************
-** Solidified function: ota_max
+** Solidified function: invalidate_spiffs
 ********************************************************************/
-be_local_closure(Partition_ota_max,   /* name */
+be_local_closure(Partition_invalidate_spiffs,   /* name */
+  be_nested_proto(
+    8,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 8]) {     /* constants */
+    /* K0   */  be_nested_str(flash),
+    /* K1   */  be_nested_str(slots),
+    /* K2   */  be_nested_str(is_spiffs),
+    /* K3   */  be_nested_str(value_error),
+    /* K4   */  be_nested_str(No_X20SPIFFS_X20partition_X20found),
+    /* K5   */  be_nested_str(00),
+    /* K6   */  be_nested_str(write),
+    /* K7   */  be_nested_str(start),
+    }),
+    &be_const_str_invalidate_spiffs,
+    &be_const_str_solidified,
+    ( &(const binstruction[22]) {  /* code */
+      0xA4060000,  //  0000  IMPORT	R1	K0
+      0x5409FFFE,  //  0001  LDINT	R2	-1
+      0x880C0101,  //  0002  GETMBR	R3	R0	K1
+      0x94080602,  //  0003  GETIDX	R2	R3	R2
+      0x8C100502,  //  0004  GETMET	R4	R2	K2
+      0x7C100200,  //  0005  CALL	R4	1
+      0x74120000,  //  0006  JMPT	R4	#0008
+      0xB0060704,  //  0007  RAISE	1	K3	K4
+      0x600C0015,  //  0008  GETGBL	R3	G21
+      0x58100005,  //  0009  LDCONST	R4	K5
+      0x7C0C0200,  //  000A  CALL	R3	1
+      0x8C100306,  //  000B  GETMET	R4	R1	K6
+      0x88180507,  //  000C  GETMBR	R6	R2	K7
+      0x5C1C0600,  //  000D  MOVE	R7	R3
+      0x7C100600,  //  000E  CALL	R4	3
+      0x8C100306,  //  000F  GETMET	R4	R1	K6
+      0x88180507,  //  0010  GETMBR	R6	R2	K7
+      0x541E0FFF,  //  0011  LDINT	R7	4096
+      0x00180C07,  //  0012  ADD	R6	R6	R7
+      0x5C1C0600,  //  0013  MOVE	R7	R3
+      0x7C100600,  //  0014  CALL	R4	3
+      0x80000000,  //  0015  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: save
+********************************************************************/
+be_local_closure(Partition_save,   /* name */
+  be_nested_proto(
+    7,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 6]) {     /* constants */
+    /* K0   */  be_nested_str(flash),
+    /* K1   */  be_nested_str(tobytes),
+    /* K2   */  be_nested_str(erase),
+    /* K3   */  be_nested_str(write),
+    /* K4   */  be_nested_str(otadata),
+    /* K5   */  be_nested_str(save),
+    }),
+    &be_const_str_save,
+    &be_const_str_solidified,
+    ( &(const binstruction[15]) {  /* code */
+      0xA4060000,  //  0000  IMPORT	R1	K0
+      0x8C080101,  //  0001  GETMET	R2	R0	K1
+      0x7C080200,  //  0002  CALL	R2	1
+      0x8C0C0302,  //  0003  GETMET	R3	R1	K2
+      0x54167FFF,  //  0004  LDINT	R5	32768
+      0x541A0FFF,  //  0005  LDINT	R6	4096
+      0x7C0C0600,  //  0006  CALL	R3	3
+      0x8C0C0303,  //  0007  GETMET	R3	R1	K3
+      0x54167FFF,  //  0008  LDINT	R5	32768
+      0x5C180400,  //  0009  MOVE	R6	R2
+      0x7C0C0600,  //  000A  CALL	R3	3
+      0x880C0104,  //  000B  GETMBR	R3	R0	K4
+      0x8C0C0705,  //  000C  GETMET	R3	R3	K5
+      0x7C0C0200,  //  000D  CALL	R3	1
+      0x80000000,  //  000E  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: get_ota_slot
+********************************************************************/
+be_local_closure(Partition_get_ota_slot,   /* name */
+  be_nested_proto(
+    6,                          /* nstack */
+    2,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 3]) {     /* constants */
+    /* K0   */  be_nested_str(slots),
+    /* K1   */  be_nested_str(is_ota),
+    /* K2   */  be_nested_str(stop_iteration),
+    }),
+    &be_const_str_get_ota_slot,
+    &be_const_str_solidified,
+    ( &(const binstruction[18]) {  /* code */
+      0x60080010,  //  0000  GETGBL	R2	G16
+      0x880C0100,  //  0001  GETMBR	R3	R0	K0
+      0x7C080200,  //  0002  CALL	R2	1
+      0xA8020008,  //  0003  EXBLK	0	#000D
+      0x5C0C0400,  //  0004  MOVE	R3	R2
+      0x7C0C0000,  //  0005  CALL	R3	0
+      0x8C100701,  //  0006  GETMET	R4	R3	K1
+      0x7C100200,  //  0007  CALL	R4	1
+      0x1C100801,  //  0008  EQ	R4	R4	R1
+      0x78120001,  //  0009  JMPF	R4	#000C
+      0xA8040001,  //  000A  EXBLK	1	1
+      0x80040600,  //  000B  RET	1	R3
+      0x7001FFF6,  //  000C  JMP		#0004
+      0x58080002,  //  000D  LDCONST	R2	K2
+      0xAC080200,  //  000E  CATCH	R2	1	0
+      0xB0080000,  //  000F  RAISE	2	R0	R0
+      0x4C080000,  //  0010  LDNIL	R2
+      0x80040400,  //  0011  RET	1	R2
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: switch_factory
+********************************************************************/
+be_local_closure(Partition_switch_factory,   /* name */
+  be_nested_proto(
+    3,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 2]) {     /* constants */
+    /* K0   */  be_nested_str(otadata),
+    /* K1   */  be_nested_str(clear),
+    }),
+    &be_const_str_switch_factory,
+    &be_const_str_solidified,
+    ( &(const binstruction[ 4]) {  /* code */
+      0x88040100,  //  0000  GETMBR	R1	R0	K0
+      0x8C040301,  //  0001  GETMET	R1	R1	K1
+      0x7C040200,  //  0002  CALL	R1	1
+      0x80000000,  //  0003  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: load
+********************************************************************/
+be_local_closure(Partition_load,   /* name */
   be_nested_proto(
     6,                          /* nstack */
     1,                          /* argc */
@@ -1065,45 +1119,69 @@ be_local_closure(Partition_ota_max,   /* name */
     0,                          /* has sup protos */
     NULL,                       /* no sub protos */
     1,                          /* has constants */
-    ( &(const bvalue[ 5]) {     /* constants */
-    /* K0   */  be_const_int(0),
-    /* K1   */  be_nested_str(slots),
-    /* K2   */  be_nested_str(type),
-    /* K3   */  be_nested_str(subtype),
-    /* K4   */  be_nested_str(stop_iteration),
+    ( &(const bvalue[ 3]) {     /* constants */
+    /* K0   */  be_nested_str(flash),
+    /* K1   */  be_nested_str(raw),
+    /* K2   */  be_nested_str(read),
     }),
-    &be_const_str_ota_max,
+    &be_const_str_load,
     &be_const_str_solidified,
-    ( &(const binstruction[29]) {  /* code */
-      0x58040000,  //  0000  LDCONST	R1	K0
-      0x60080010,  //  0001  GETGBL	R2	G16
-      0x880C0101,  //  0002  GETMBR	R3	R0	K1
+    ( &(const binstruction[ 7]) {  /* code */
+      0xA4060000,  //  0000  IMPORT	R1	K0
+      0x8C080302,  //  0001  GETMET	R2	R1	K2
+      0x54127FFF,  //  0002  LDINT	R4	32768
+      0x54160FFF,  //  0003  LDINT	R5	4096
+      0x7C080600,  //  0004  CALL	R2	3
+      0x90020202,  //  0005  SETMBR	R0	K1	R2
+      0x80000000,  //  0006  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: set_active
+********************************************************************/
+be_local_closure(Partition_set_active,   /* name */
+  be_nested_proto(
+    6,                          /* nstack */
+    2,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 7]) {     /* constants */
+    /* K0   */  be_const_int(0),
+    /* K1   */  be_nested_str(ota_max),
+    /* K2   */  be_nested_str(value_error),
+    /* K3   */  be_nested_str(Invalid_X20ota_X20partition_X20number),
+    /* K4   */  be_nested_str(otadata),
+    /* K5   */  be_nested_str(set_ota_max),
+    /* K6   */  be_nested_str(set_active),
+    }),
+    &be_const_str_set_active,
+    &be_const_str_solidified,
+    ( &(const binstruction[17]) {  /* code */
+      0x14080300,  //  0000  LT	R2	R1	K0
+      0x740A0003,  //  0001  JMPT	R2	#0006
+      0x8C080101,  //  0002  GETMET	R2	R0	K1
       0x7C080200,  //  0003  CALL	R2	1
-      0xA8020013,  //  0004  EXBLK	0	#0019
-      0x5C0C0400,  //  0005  MOVE	R3	R2
-      0x7C0C0000,  //  0006  CALL	R3	0
-      0x88100702,  //  0007  GETMBR	R4	R3	K2
-      0x1C100900,  //  0008  EQ	R4	R4	K0
-      0x7812000D,  //  0009  JMPF	R4	#0018
-      0x88100703,  //  000A  GETMBR	R4	R3	K3
-      0x5416000F,  //  000B  LDINT	R5	16
-      0x28100805,  //  000C  GE	R4	R4	R5
-      0x78120009,  //  000D  JMPF	R4	#0018
-      0x88100703,  //  000E  GETMBR	R4	R3	K3
-      0x5416001F,  //  000F  LDINT	R5	32
-      0x14100805,  //  0010  LT	R4	R4	R5
-      0x78120005,  //  0011  JMPF	R4	#0018
-      0x88100703,  //  0012  GETMBR	R4	R3	K3
-      0x5416000F,  //  0013  LDINT	R5	16
-      0x04100805,  //  0014  SUB	R4	R4	R5
-      0x24140801,  //  0015  GT	R5	R4	R1
-      0x78160000,  //  0016  JMPF	R5	#0018
-      0x5C040800,  //  0017  MOVE	R1	R4
-      0x7001FFEB,  //  0018  JMP		#0005
-      0x58080004,  //  0019  LDCONST	R2	K4
-      0xAC080200,  //  001A  CATCH	R2	1	0
-      0xB0080000,  //  001B  RAISE	2	R0	R0
-      0x80040200,  //  001C  RET	1	R1
+      0x24080202,  //  0004  GT	R2	R1	R2
+      0x780A0000,  //  0005  JMPF	R2	#0007
+      0xB0060503,  //  0006  RAISE	1	K2	K3
+      0x88080104,  //  0007  GETMBR	R2	R0	K4
+      0x8C080505,  //  0008  GETMET	R2	R2	K5
+      0x8C100101,  //  0009  GETMET	R4	R0	K1
+      0x7C100200,  //  000A  CALL	R4	1
+      0x7C080400,  //  000B  CALL	R2	2
+      0x88080104,  //  000C  GETMBR	R2	R0	K4
+      0x8C080506,  //  000D  GETMET	R2	R2	K6
+      0x5C100200,  //  000E  MOVE	R4	R1
+      0x7C080400,  //  000F  CALL	R2	2
+      0x80000000,  //  0010  RET	0
     })
   )
 );
@@ -1116,27 +1194,78 @@ be_local_closure(Partition_ota_max,   /* name */
 be_local_class(Partition,
     4,
     NULL,
-    be_nested_map(16,
+    be_nested_map(17,
     ( (struct bmapnode*) &(const bmapnode[]) {
         { be_const_key(load_otadata, -1), be_const_closure(Partition_load_otadata_closure) },
-        { be_const_key(raw, -1), be_const_var(0) },
-        { be_const_key(get_active, -1), be_const_closure(Partition_get_active_closure) },
-        { be_const_key(init, 11), be_const_closure(Partition_init_closure) },
-        { be_const_key(ota_max, -1), be_const_closure(Partition_ota_max_closure) },
-        { be_const_key(tostring, -1), be_const_closure(Partition_tostring_closure) },
-        { be_const_key(slots, 14), be_const_var(2) },
-        { be_const_key(get_ota_slot, 15), be_const_closure(Partition_get_ota_slot_closure) },
-        { be_const_key(save, 4), be_const_closure(Partition_save_closure) },
-        { be_const_key(load, -1), be_const_closure(Partition_load_closure) },
-        { be_const_key(invalidate_spiffs, -1), be_const_closure(Partition_invalidate_spiffs_closure) },
-        { be_const_key(md5, -1), be_const_var(1) },
-        { be_const_key(parse, -1), be_const_closure(Partition_parse_closure) },
-        { be_const_key(otadata, -1), be_const_var(3) },
         { be_const_key(set_active, -1), be_const_closure(Partition_set_active_closure) },
-        { be_const_key(tobytes, -1), be_const_closure(Partition_tobytes_closure) },
+        { be_const_key(tostring, 12), be_const_closure(Partition_tostring_closure) },
+        { be_const_key(raw, -1), be_const_var(0) },
+        { be_const_key(get_active, 16), be_const_closure(Partition_get_active_closure) },
+        { be_const_key(load, -1), be_const_closure(Partition_load_closure) },
+        { be_const_key(parse, -1), be_const_closure(Partition_parse_closure) },
+        { be_const_key(ota_max, 1), be_const_closure(Partition_ota_max_closure) },
+        { be_const_key(slots, -1), be_const_var(2) },
+        { be_const_key(save, -1), be_const_closure(Partition_save_closure) },
+        { be_const_key(invalidate_spiffs, -1), be_const_closure(Partition_invalidate_spiffs_closure) },
+        { be_const_key(tobytes, 9), be_const_closure(Partition_tobytes_closure) },
+        { be_const_key(get_ota_slot, 6), be_const_closure(Partition_get_ota_slot_closure) },
+        { be_const_key(switch_factory, -1), be_const_closure(Partition_switch_factory_closure) },
+        { be_const_key(md5, -1), be_const_var(1) },
+        { be_const_key(init, 5), be_const_closure(Partition_init_closure) },
+        { be_const_key(otadata, -1), be_const_var(3) },
     })),
     (bstring*) &be_const_str_Partition
 );
+
+/********************************************************************
+** Solidified function: remove_trailing_zeroes
+********************************************************************/
+be_local_closure(Partition_info_remove_trailing_zeroes,   /* name */
+  be_nested_proto(
+    7,                          /* nstack */
+    1,                          /* argc */
+    0,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 3]) {     /* constants */
+    /* K0   */  be_const_int(0),
+    /* K1   */  be_const_int(1),
+    /* K2   */  be_nested_str(resize),
+    }),
+    &be_const_str_remove_trailing_zeroes,
+    &be_const_str_solidified,
+    ( &(const binstruction[23]) {  /* code */
+      0x6004000C,  //  0000  GETGBL	R1	G12
+      0x5C080000,  //  0001  MOVE	R2	R0
+      0x7C040200,  //  0002  CALL	R1	1
+      0x58080000,  //  0003  LDCONST	R2	K0
+      0x140C0401,  //  0004  LT	R3	R2	R1
+      0x780E0007,  //  0005  JMPF	R3	#000E
+      0x540DFFFE,  //  0006  LDINT	R3	-1
+      0x040C0602,  //  0007  SUB	R3	R3	R2
+      0x940C0003,  //  0008  GETIDX	R3	R0	R3
+      0x200C0700,  //  0009  NE	R3	R3	K0
+      0x780E0000,  //  000A  JMPF	R3	#000C
+      0x70020001,  //  000B  JMP		#000E
+      0x00080501,  //  000C  ADD	R2	R2	K1
+      0x7001FFF5,  //  000D  JMP		#0004
+      0x240C0500,  //  000E  GT	R3	R2	K0
+      0x780E0005,  //  000F  JMPF	R3	#0016
+      0x8C0C0102,  //  0010  GETMET	R3	R0	K2
+      0x6014000C,  //  0011  GETGBL	R5	G12
+      0x5C180000,  //  0012  MOVE	R6	R0
+      0x7C140200,  //  0013  CALL	R5	1
+      0x04140A02,  //  0014  SUB	R5	R5	R2
+      0x7C0C0400,  //  0015  CALL	R3	2
+      0x80040000,  //  0016  RET	1	R0
+    })
+  )
+);
+/*******************************************************************/
+
 
 /********************************************************************
 ** Solidified function: tostring
@@ -1302,56 +1431,6 @@ be_local_closure(Partition_info_tostring,   /* name */
 
 
 /********************************************************************
-** Solidified function: remove_trailing_zeroes
-********************************************************************/
-be_local_closure(Partition_info_remove_trailing_zeroes,   /* name */
-  be_nested_proto(
-    7,                          /* nstack */
-    1,                          /* argc */
-    0,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[ 3]) {     /* constants */
-    /* K0   */  be_const_int(0),
-    /* K1   */  be_const_int(1),
-    /* K2   */  be_nested_str(resize),
-    }),
-    &be_const_str_remove_trailing_zeroes,
-    &be_const_str_solidified,
-    ( &(const binstruction[23]) {  /* code */
-      0x6004000C,  //  0000  GETGBL	R1	G12
-      0x5C080000,  //  0001  MOVE	R2	R0
-      0x7C040200,  //  0002  CALL	R1	1
-      0x58080000,  //  0003  LDCONST	R2	K0
-      0x140C0401,  //  0004  LT	R3	R2	R1
-      0x780E0007,  //  0005  JMPF	R3	#000E
-      0x540DFFFE,  //  0006  LDINT	R3	-1
-      0x040C0602,  //  0007  SUB	R3	R3	R2
-      0x940C0003,  //  0008  GETIDX	R3	R0	R3
-      0x200C0700,  //  0009  NE	R3	R3	K0
-      0x780E0000,  //  000A  JMPF	R3	#000C
-      0x70020001,  //  000B  JMP		#000E
-      0x00080501,  //  000C  ADD	R2	R2	K1
-      0x7001FFF5,  //  000D  JMP		#0004
-      0x240C0500,  //  000E  GT	R3	R2	K0
-      0x780E0005,  //  000F  JMPF	R3	#0016
-      0x8C0C0102,  //  0010  GETMET	R3	R0	K2
-      0x6014000C,  //  0011  GETGBL	R5	G12
-      0x5C180000,  //  0012  MOVE	R6	R0
-      0x7C140200,  //  0013  CALL	R5	1
-      0x04140A02,  //  0014  SUB	R5	R5	R2
-      0x7C0C0400,  //  0015  CALL	R3	2
-      0x80040000,  //  0016  RET	1	R0
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
 ** Solidified function: tobytes
 ********************************************************************/
 be_local_closure(Partition_info_tobytes,   /* name */
@@ -1427,11 +1506,11 @@ be_local_closure(Partition_info_tobytes,   /* name */
 
 
 /********************************************************************
-** Solidified function: is_ota
+** Solidified function: is_factory
 ********************************************************************/
-be_local_closure(Partition_info_is_ota,   /* name */
+be_local_closure(Partition_info_is_factory,   /* name */
   be_nested_proto(
-    3,                          /* nstack */
+    2,                          /* nstack */
     1,                          /* argc */
     2,                          /* varg */
     0,                          /* has upvals */
@@ -1440,27 +1519,22 @@ be_local_closure(Partition_info_is_ota,   /* name */
     NULL,                       /* no sub protos */
     1,                          /* has constants */
     ( &(const bvalue[ 3]) {     /* constants */
-    /* K0   */  be_nested_str(subtype),
-    /* K1   */  be_nested_str(type),
-    /* K2   */  be_const_int(0),
+    /* K0   */  be_nested_str(type),
+    /* K1   */  be_const_int(0),
+    /* K2   */  be_nested_str(subtype),
     }),
-    &be_const_str_is_ota,
+    &be_const_str_is_factory,
     &be_const_str_solidified,
-    ( &(const binstruction[14]) {  /* code */
+    ( &(const binstruction[ 9]) {  /* code */
       0x88040100,  //  0000  GETMBR	R1	R0	K0
-      0x88080101,  //  0001  GETMBR	R2	R0	K1
-      0x1C080502,  //  0002  EQ	R2	R2	K2
-      0x780A0008,  //  0003  JMPF	R2	#000D
-      0x540A000F,  //  0004  LDINT	R2	16
-      0x28080202,  //  0005  GE	R2	R1	R2
-      0x780A0005,  //  0006  JMPF	R2	#000D
-      0x540A001F,  //  0007  LDINT	R2	32
-      0x14080202,  //  0008  LT	R2	R1	R2
-      0x780A0002,  //  0009  JMPF	R2	#000D
-      0x540A000F,  //  000A  LDINT	R2	16
-      0x04080202,  //  000B  SUB	R2	R1	R2
-      0x80040400,  //  000C  RET	1	R2
-      0x80000000,  //  000D  RET	0
+      0x1C040301,  //  0001  EQ	R1	R1	K1
+      0x78060002,  //  0002  JMPF	R1	#0006
+      0x88040102,  //  0003  GETMBR	R1	R0	K2
+      0x1C040301,  //  0004  EQ	R1	R1	K1
+      0x74060000,  //  0005  JMPT	R1	#0007
+      0x50040001,  //  0006  LDBOOL	R1	0	1
+      0x50040200,  //  0007  LDBOOL	R1	1	0
+      0x80040200,  //  0008  RET	1	R1
     })
   )
 );
@@ -1571,117 +1645,6 @@ be_local_closure(Partition_info_init,   /* name */
 
 
 /********************************************************************
-** Solidified function: get_image_size
-********************************************************************/
-be_local_closure(Partition_info_get_image_size,   /* name */
-  be_nested_proto(
-    13,                          /* nstack */
-    1,                          /* argc */
-    2,                          /* varg */
-    0,                          /* has upvals */
-    NULL,                       /* no upvals */
-    0,                          /* has sup protos */
-    NULL,                       /* no sub protos */
-    1,                          /* has constants */
-    ( &(const bvalue[12]) {     /* constants */
-    /* K0   */  be_nested_str(flash),
-    /* K1   */  be_nested_str(is_ota),
-    /* K2   */  be_nested_str(start),
-    /* K3   */  be_nested_str(read),
-    /* K4   */  be_const_int(1),
-    /* K5   */  be_nested_str(get),
-    /* K6   */  be_const_int(0),
-    /* K7   */  be_nested_str(tasmota),
-    /* K8   */  be_nested_str(log),
-    /* K9   */  be_nested_str(BRY_X3A_X20Exception_X3E_X20_X27),
-    /* K10  */  be_nested_str(_X27_X20_X2D_X20),
-    /* K11  */  be_const_int(2),
-    }),
-    &be_const_str_get_image_size,
-    &be_const_str_solidified,
-    ( &(const binstruction[75]) {  /* code */
-      0xA4060000,  //  0000  IMPORT	R1	K0
-      0x8C080101,  //  0001  GETMET	R2	R0	K1
-      0x7C080200,  //  0002  CALL	R2	1
-      0x4C0C0000,  //  0003  LDNIL	R3
-      0x1C080403,  //  0004  EQ	R2	R2	R3
-      0x780A0001,  //  0005  JMPF	R2	#0008
-      0x5409FFFE,  //  0006  LDINT	R2	-1
-      0x80040400,  //  0007  RET	1	R2
-      0xA8020033,  //  0008  EXBLK	0	#003D
-      0x88080102,  //  0009  GETMBR	R2	R0	K2
-      0x8C0C0303,  //  000A  GETMET	R3	R1	K3
-      0x5C140400,  //  000B  MOVE	R5	R2
-      0x58180004,  //  000C  LDCONST	R6	K4
-      0x7C0C0600,  //  000D  CALL	R3	3
-      0x8C0C0705,  //  000E  GETMET	R3	R3	K5
-      0x58140006,  //  000F  LDCONST	R5	K6
-      0x58180004,  //  0010  LDCONST	R6	K4
-      0x7C0C0600,  //  0011  CALL	R3	3
-      0x541200E8,  //  0012  LDINT	R4	233
-      0x20100604,  //  0013  NE	R4	R3	R4
-      0x78120002,  //  0014  JMPF	R4	#0018
-      0x5411FFFE,  //  0015  LDINT	R4	-1
-      0xA8040001,  //  0016  EXBLK	1	1
-      0x80040800,  //  0017  RET	1	R4
-      0x8C100303,  //  0018  GETMET	R4	R1	K3
-      0x00180504,  //  0019  ADD	R6	R2	K4
-      0x581C0004,  //  001A  LDCONST	R7	K4
-      0x7C100600,  //  001B  CALL	R4	3
-      0x8C100905,  //  001C  GETMET	R4	R4	K5
-      0x58180006,  //  001D  LDCONST	R6	K6
-      0x581C0004,  //  001E  LDCONST	R7	K4
-      0x7C100600,  //  001F  CALL	R4	3
-      0x5416001F,  //  0020  LDINT	R5	32
-      0x00140405,  //  0021  ADD	R5	R2	R5
-      0x58180006,  //  0022  LDCONST	R6	K6
-      0x141C0C04,  //  0023  LT	R7	R6	R4
-      0x781E0011,  //  0024  JMPF	R7	#0037
-      0x8C1C0303,  //  0025  GETMET	R7	R1	K3
-      0x54260007,  //  0026  LDINT	R9	8
-      0x04240A09,  //  0027  SUB	R9	R5	R9
-      0x542A0007,  //  0028  LDINT	R10	8
-      0x7C1C0600,  //  0029  CALL	R7	3
-      0x8C200F05,  //  002A  GETMET	R8	R7	K5
-      0x58280006,  //  002B  LDCONST	R10	K6
-      0x542E0003,  //  002C  LDINT	R11	4
-      0x7C200600,  //  002D  CALL	R8	3
-      0x8C240F05,  //  002E  GETMET	R9	R7	K5
-      0x542E0003,  //  002F  LDINT	R11	4
-      0x54320003,  //  0030  LDINT	R12	4
-      0x7C240600,  //  0031  CALL	R9	3
-      0x542A0007,  //  0032  LDINT	R10	8
-      0x0028120A,  //  0033  ADD	R10	R9	R10
-      0x00140A0A,  //  0034  ADD	R5	R5	R10
-      0x00180D04,  //  0035  ADD	R6	R6	K4
-      0x7001FFEB,  //  0036  JMP		#0023
-      0x041C0A02,  //  0037  SUB	R7	R5	R2
-      0x001C0F04,  //  0038  ADD	R7	R7	K4
-      0xA8040001,  //  0039  EXBLK	1	1
-      0x80040E00,  //  003A  RET	1	R7
-      0xA8040001,  //  003B  EXBLK	1	1
-      0x7002000C,  //  003C  JMP		#004A
-      0xAC080002,  //  003D  CATCH	R2	0	2
-      0x70020009,  //  003E  JMP		#0049
-      0xB8120E00,  //  003F  GETNGBL	R4	K7
-      0x8C100908,  //  0040  GETMET	R4	R4	K8
-      0x001A1202,  //  0041  ADD	R6	K9	R2
-      0x00180D0A,  //  0042  ADD	R6	R6	K10
-      0x00180C03,  //  0043  ADD	R6	R6	R3
-      0x581C000B,  //  0044  LDCONST	R7	K11
-      0x7C100600,  //  0045  CALL	R4	3
-      0x5411FFFE,  //  0046  LDINT	R4	-1
-      0x80040800,  //  0047  RET	1	R4
-      0x70020000,  //  0048  JMP		#004A
-      0xB0080000,  //  0049  RAISE	2	R0	R0
-      0x80000000,  //  004A  RET	0
-    })
-  )
-);
-/*******************************************************************/
-
-
-/********************************************************************
 ** Solidified function: is_spiffs
 ********************************************************************/
 be_local_closure(Partition_info_is_spiffs,   /* name */
@@ -1719,26 +1682,183 @@ be_local_closure(Partition_info_is_spiffs,   /* name */
 
 
 /********************************************************************
+** Solidified function: get_image_size
+********************************************************************/
+be_local_closure(Partition_info_get_image_size,   /* name */
+  be_nested_proto(
+    13,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[13]) {     /* constants */
+    /* K0   */  be_nested_str(flash),
+    /* K1   */  be_nested_str(is_ota),
+    /* K2   */  be_nested_str(is_factory),
+    /* K3   */  be_nested_str(start),
+    /* K4   */  be_nested_str(read),
+    /* K5   */  be_const_int(1),
+    /* K6   */  be_nested_str(get),
+    /* K7   */  be_const_int(0),
+    /* K8   */  be_nested_str(tasmota),
+    /* K9   */  be_nested_str(log),
+    /* K10  */  be_nested_str(BRY_X3A_X20Exception_X3E_X20_X27),
+    /* K11  */  be_nested_str(_X27_X20_X2D_X20),
+    /* K12  */  be_const_int(2),
+    }),
+    &be_const_str_get_image_size,
+    &be_const_str_solidified,
+    ( &(const binstruction[78]) {  /* code */
+      0xA4060000,  //  0000  IMPORT	R1	K0
+      0x8C080101,  //  0001  GETMET	R2	R0	K1
+      0x7C080200,  //  0002  CALL	R2	1
+      0x4C0C0000,  //  0003  LDNIL	R3
+      0x1C080403,  //  0004  EQ	R2	R2	R3
+      0x780A0004,  //  0005  JMPF	R2	#000B
+      0x8C080102,  //  0006  GETMET	R2	R0	K2
+      0x7C080200,  //  0007  CALL	R2	1
+      0x740A0001,  //  0008  JMPT	R2	#000B
+      0x5409FFFE,  //  0009  LDINT	R2	-1
+      0x80040400,  //  000A  RET	1	R2
+      0xA8020033,  //  000B  EXBLK	0	#0040
+      0x88080103,  //  000C  GETMBR	R2	R0	K3
+      0x8C0C0304,  //  000D  GETMET	R3	R1	K4
+      0x5C140400,  //  000E  MOVE	R5	R2
+      0x58180005,  //  000F  LDCONST	R6	K5
+      0x7C0C0600,  //  0010  CALL	R3	3
+      0x8C0C0706,  //  0011  GETMET	R3	R3	K6
+      0x58140007,  //  0012  LDCONST	R5	K7
+      0x58180005,  //  0013  LDCONST	R6	K5
+      0x7C0C0600,  //  0014  CALL	R3	3
+      0x541200E8,  //  0015  LDINT	R4	233
+      0x20100604,  //  0016  NE	R4	R3	R4
+      0x78120002,  //  0017  JMPF	R4	#001B
+      0x5411FFFE,  //  0018  LDINT	R4	-1
+      0xA8040001,  //  0019  EXBLK	1	1
+      0x80040800,  //  001A  RET	1	R4
+      0x8C100304,  //  001B  GETMET	R4	R1	K4
+      0x00180505,  //  001C  ADD	R6	R2	K5
+      0x581C0005,  //  001D  LDCONST	R7	K5
+      0x7C100600,  //  001E  CALL	R4	3
+      0x8C100906,  //  001F  GETMET	R4	R4	K6
+      0x58180007,  //  0020  LDCONST	R6	K7
+      0x581C0005,  //  0021  LDCONST	R7	K5
+      0x7C100600,  //  0022  CALL	R4	3
+      0x5416001F,  //  0023  LDINT	R5	32
+      0x00140405,  //  0024  ADD	R5	R2	R5
+      0x58180007,  //  0025  LDCONST	R6	K7
+      0x141C0C04,  //  0026  LT	R7	R6	R4
+      0x781E0011,  //  0027  JMPF	R7	#003A
+      0x8C1C0304,  //  0028  GETMET	R7	R1	K4
+      0x54260007,  //  0029  LDINT	R9	8
+      0x04240A09,  //  002A  SUB	R9	R5	R9
+      0x542A0007,  //  002B  LDINT	R10	8
+      0x7C1C0600,  //  002C  CALL	R7	3
+      0x8C200F06,  //  002D  GETMET	R8	R7	K6
+      0x58280007,  //  002E  LDCONST	R10	K7
+      0x542E0003,  //  002F  LDINT	R11	4
+      0x7C200600,  //  0030  CALL	R8	3
+      0x8C240F06,  //  0031  GETMET	R9	R7	K6
+      0x542E0003,  //  0032  LDINT	R11	4
+      0x54320003,  //  0033  LDINT	R12	4
+      0x7C240600,  //  0034  CALL	R9	3
+      0x542A0007,  //  0035  LDINT	R10	8
+      0x0028120A,  //  0036  ADD	R10	R9	R10
+      0x00140A0A,  //  0037  ADD	R5	R5	R10
+      0x00180D05,  //  0038  ADD	R6	R6	K5
+      0x7001FFEB,  //  0039  JMP		#0026
+      0x041C0A02,  //  003A  SUB	R7	R5	R2
+      0x001C0F05,  //  003B  ADD	R7	R7	K5
+      0xA8040001,  //  003C  EXBLK	1	1
+      0x80040E00,  //  003D  RET	1	R7
+      0xA8040001,  //  003E  EXBLK	1	1
+      0x7002000C,  //  003F  JMP		#004D
+      0xAC080002,  //  0040  CATCH	R2	0	2
+      0x70020009,  //  0041  JMP		#004C
+      0xB8121000,  //  0042  GETNGBL	R4	K8
+      0x8C100909,  //  0043  GETMET	R4	R4	K9
+      0x001A1402,  //  0044  ADD	R6	K10	R2
+      0x00180D0B,  //  0045  ADD	R6	R6	K11
+      0x00180C03,  //  0046  ADD	R6	R6	R3
+      0x581C000C,  //  0047  LDCONST	R7	K12
+      0x7C100600,  //  0048  CALL	R4	3
+      0x5411FFFE,  //  0049  LDINT	R4	-1
+      0x80040800,  //  004A  RET	1	R4
+      0x70020000,  //  004B  JMP		#004D
+      0xB0080000,  //  004C  RAISE	2	R0	R0
+      0x80000000,  //  004D  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
+** Solidified function: is_ota
+********************************************************************/
+be_local_closure(Partition_info_is_ota,   /* name */
+  be_nested_proto(
+    3,                          /* nstack */
+    1,                          /* argc */
+    2,                          /* varg */
+    0,                          /* has upvals */
+    NULL,                       /* no upvals */
+    0,                          /* has sup protos */
+    NULL,                       /* no sub protos */
+    1,                          /* has constants */
+    ( &(const bvalue[ 3]) {     /* constants */
+    /* K0   */  be_nested_str(subtype),
+    /* K1   */  be_nested_str(type),
+    /* K2   */  be_const_int(0),
+    }),
+    &be_const_str_is_ota,
+    &be_const_str_solidified,
+    ( &(const binstruction[14]) {  /* code */
+      0x88040100,  //  0000  GETMBR	R1	R0	K0
+      0x88080101,  //  0001  GETMBR	R2	R0	K1
+      0x1C080502,  //  0002  EQ	R2	R2	K2
+      0x780A0008,  //  0003  JMPF	R2	#000D
+      0x540A000F,  //  0004  LDINT	R2	16
+      0x28080202,  //  0005  GE	R2	R1	R2
+      0x780A0005,  //  0006  JMPF	R2	#000D
+      0x540A001F,  //  0007  LDINT	R2	32
+      0x14080202,  //  0008  LT	R2	R1	R2
+      0x780A0002,  //  0009  JMPF	R2	#000D
+      0x540A000F,  //  000A  LDINT	R2	16
+      0x04080202,  //  000B  SUB	R2	R1	R2
+      0x80040400,  //  000C  RET	1	R2
+      0x80000000,  //  000D  RET	0
+    })
+  )
+);
+/*******************************************************************/
+
+
+/********************************************************************
 ** Solidified class: Partition_info
 ********************************************************************/
 be_local_class(Partition_info,
     6,
     NULL,
-    be_nested_map(13,
+    be_nested_map(14,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_const_key(tostring, 4), be_const_closure(Partition_info_tostring_closure) },
         { be_const_key(start, -1), be_const_var(2) },
-        { be_const_key(label, -1), be_const_var(4) },
-        { be_const_key(tobytes, 10), be_const_closure(Partition_info_tobytes_closure) },
         { be_const_key(type, -1), be_const_var(0) },
-        { be_const_key(is_ota, -1), be_const_closure(Partition_info_is_ota_closure) },
-        { be_const_key(init, -1), be_const_closure(Partition_info_init_closure) },
-        { be_const_key(get_image_size, -1), be_const_closure(Partition_info_get_image_size_closure) },
-        { be_const_key(flags, 1), be_const_var(5) },
-        { be_const_key(remove_trailing_zeroes, 11), be_const_static_closure(Partition_info_remove_trailing_zeroes_closure) },
-        { be_const_key(is_spiffs, -1), be_const_closure(Partition_info_is_spiffs_closure) },
-        { be_const_key(subtype, -1), be_const_var(1) },
+        { be_const_key(tobytes, 1), be_const_closure(Partition_info_tobytes_closure) },
+        { be_const_key(tostring, 2), be_const_closure(Partition_info_tostring_closure) },
+        { be_const_key(is_factory, -1), be_const_closure(Partition_info_is_factory_closure) },
+        { be_const_key(init, 9), be_const_closure(Partition_info_init_closure) },
         { be_const_key(size, -1), be_const_var(3) },
+        { be_const_key(is_spiffs, 8), be_const_closure(Partition_info_is_spiffs_closure) },
+        { be_const_key(subtype, -1), be_const_var(1) },
+        { be_const_key(get_image_size, -1), be_const_closure(Partition_info_get_image_size_closure) },
+        { be_const_key(is_ota, -1), be_const_closure(Partition_info_is_ota_closure) },
+        { be_const_key(label, -1), be_const_var(4) },
+        { be_const_key(flags, -1), be_const_var(5) },
+        { be_const_key(remove_trailing_zeroes, 0), be_const_static_closure(Partition_info_remove_trailing_zeroes_closure) },
     })),
     (bstring*) &be_const_str_Partition_info
 );
