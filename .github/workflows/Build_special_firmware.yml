@@ -66,10 +66,10 @@ jobs:
           - tasmota32-fullrules
           - tasmota32-platinum
           - tasmota32-titanium
-          - tasmota32-minicustom
-          - tasmota32c3-minicustom
-          - tasmota32s2-minicustom
-          - tasmota32s3-minicustom
+          - tasmota32-safemode
+          - tasmota32c3-safemode
+          - tasmota32s2-safemode
+          - tasmota32s3-safemode
           - tasmota32-nspanel
           - tasmota32-rangeextender
           - tasmota32c3_2M
