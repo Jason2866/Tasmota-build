@@ -463,6 +463,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #ifdef ESP32
   #undef CODE_IMAGE_STR
   #define CODE_IMAGE_STR "safemode"
+  #define FIRMWARE-SAFEMODE
   #define USE_TLS
   #define USE_MQTT_TLS
   //#define USE_BERRY
