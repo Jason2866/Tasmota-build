@@ -302,8 +302,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 
 /*********************************************************************************************\
- * [tasmota-minicustom.bin and tasmota32-safemode.bin]
- * Custom minimal version and esp32x factory firmware
+ * [tasmota-minicustom.bin]
+ * Custom minimal version for ESP8266
 \*********************************************************************************************/
 
 #ifdef FIRMWARE_MINICUSTOM  // *******************************************************************
@@ -459,19 +459,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef DEBUG_THEO                                // Disable debug code
 #undef USE_DEBUG_DRIVER                          // Disable debug code
 #undef USE_AC_ZERO_CROSS_DIMMER                  // Disable support for AC_ZERO_CROSS_DIMMER
-
-#ifdef ESP32
-  #undef CODE_IMAGE_STR
-  #define CODE_IMAGE_STR "safemode"
-  #define FIRMWARE-SAFEMODE
-  #define USE_TLS
-  #define USE_MQTT_TLS
-  //#define USE_BERRY
-  //#define USE_BERRY_PSRAM
-  #define USE_WEBSERVER
-  #define USE_WEBCLIENT
-  #define USE_WEBCLIENT_HTTPS
-#endif  // ESP32
 
 #endif  // FIRMWARE_MINICUSTOM *******************************************************************
 
