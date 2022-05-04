@@ -244,11 +244,11 @@ const char HTTP_HEAD_STYLE3[] PROGMEM =
   "<div style='text-align:left;display:inline-block;color:#%06x;min-width:340px;'>"  // COLOR_TEXT
 #ifdef FIRMWARE_MINIMAL
 #ifdef FIRMWARE_SAFEMODE
-  "<div style='text-align:center;color:#%06x;'><h3>SafeMode</h3></div>"  // COLOR_TEXT_SUCCESS
+  "<span style='text-align:center;color:#%06x;'><h3>" D_SAFEMODE "</h3></span>"  // COLOR_TEXT_WARNING
 #else
   "<div style='text-align:center;color:#%06x;'><h3>" D_MINIMAL_FIRMWARE_PLEASE_UPGRADE "</h3></div>"  // COLOR_TEXT_WARNING
-#endif
-#endif
+#endif  // FIRMWARE_SAFEMODE
+#endif  // FIRMWARE_MINIMAL
   "<div style='text-align:center;color:#%06x;'><noscript>" D_NOSCRIPT "<br></noscript>" // COLOR_TITLE
 /*
 #ifdef LANGUAGE_MODULE_NAME
@@ -883,11 +883,7 @@ void WSContentSendStyle_P(const char* formatP, ...) {
   }
   WSContentSend_P(HTTP_HEAD_STYLE3, WebColor(COL_TEXT),
 #ifdef FIRMWARE_MINIMAL
-#ifdef FIRMWARE_SAFEMODE
-  WebColor(COL_TEXT_SUCCESS),
-#else
   WebColor(COL_TEXT_WARNING),
-#endif
 #endif
   WebColor(COL_TITLE),
   (Web.initial_config) ? "" : ModuleName().c_str(), SettingsText(SET_DEVICENAME));
@@ -3424,7 +3420,7 @@ const char kWebCmndStatus[] PROGMEM = D_JSON_DONE "|" D_JSON_WRONG_PARAMETERS "|
 
 const char kWebCommands[] PROGMEM = "|"  // No prefix
   D_CMND_WEBLOG "|"
-#ifndef FIRMWARE_MINIMAL
+#ifndef FIRMWARE_MINIMAL_ONLY
   D_CMND_WEBTIME "|"
 #ifdef USE_EMULATION
   D_CMND_EMULATION "|"
@@ -3440,12 +3436,12 @@ const char kWebCommands[] PROGMEM = "|"  // No prefix
 #ifdef USE_CORS
   "|" D_CMND_CORS
 #endif
-#endif  // FIRMWARE_MINIMAL
+#endif  // FIRMWARE_MINIMAL_ONLY
 ;
 
 void (* const WebCommand[])(void) PROGMEM = {
   &CmndWeblog,
-#ifndef FIRMWARE_MINIMAL
+#ifndef FIRMWARE_MINIMAL_ONLY
   &CmndWebTime,
 #ifdef USE_EMULATION
   &CmndEmulation,
@@ -3461,7 +3457,7 @@ void (* const WebCommand[])(void) PROGMEM = {
 #ifdef USE_CORS
   , &CmndCors
 #endif
-#endif  // FIRMWARE_MINIMAL
+#endif  // FIRMWARE_MINIMAL_ONLY
   };
 
 /*********************************************************************************************\
