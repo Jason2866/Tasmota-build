@@ -117,10 +117,6 @@ jobs:
         mkdir -p ./firmware/tasmota/other
         mkdir -p ./firmware/map
         rm -rf ./mv_firmware/firmware/tasmota-minicustom.bin
-        rm -rf ./mv_firmware/firmware/tasmota32-safemode.factory.bin
-        rm -rf ./mv_firmware/firmware/tasmota32c3-safemode.factory.bin
-        rm -rf ./mv_firmware/firmware/tasmota32s2-safemode.factory.bin
-        rm -rf ./mv_firmware/firmware/tasmota32s3-safemode.factory.bin
         cp -rf ./mv_firmware/map/* ./firmware/map/
         cp -rf ./mv_firmware/firmware/tasmota-* ./firmware/tasmota/other/
         cp -rf ./mv_firmware/firmware/tasmota32* ./firmware/tasmota32/other/
