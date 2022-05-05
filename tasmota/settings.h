@@ -309,27 +309,42 @@ typedef union {                            // Restricted by MISRA-C Rule 18.4 bu
     uint32_t mirror : 1;
     uint32_t flip : 1;
     uint32_t rtsp : 1;
-    uint32_t spare4 : 1;
-    uint32_t spare5 : 1;
-    uint32_t spare6 : 1;
-    uint32_t spare7 : 1;
-    uint32_t spare8 : 1;
-    uint32_t spare9 : 1;
-    uint32_t spare10 : 1;
-    uint32_t spare11 : 1;
-    uint32_t spare12 : 1;
-    uint32_t spare13 : 1;
-    uint32_t spare14 : 1;
+    uint32_t awb : 1;
+    uint32_t awb_gain : 1;
+    uint32_t aec : 1;
+    uint32_t aec2 : 1;
+    uint32_t agc : 1;
+    uint32_t raw_gma : 1;
+    uint32_t lenc : 1;
+    uint32_t colorbar : 1;
+    uint32_t wpc : 1;
+    uint32_t dcw : 1;
+    uint32_t bpc : 1;
     uint32_t spare15 : 1;
     uint32_t spare16 : 1;
-    uint32_t spare17 : 1;
-    uint32_t spare18 : 1;
+    uint32_t feature : 2;
     uint32_t contrast : 3;
     uint32_t brightness : 3;
     uint32_t saturation : 3;
     uint32_t resolution : 4;
   };
 } WebCamCfg;
+
+typedef union {
+  uint32_t data;
+  struct {
+    uint32_t wb_mode : 3;
+    uint32_t ae_level : 3;
+    uint32_t aec_value : 11;
+    uint32_t gainceiling : 3;
+    uint32_t agc_gain: 5;
+    uint32_t special_effect : 3;
+    uint32_t spare28 : 1;
+    uint32_t spare29 : 1;
+    uint32_t spare30 : 1;
+    uint32_t upgraded : 1;
+  };
+} WebCamCfg2;
 
 typedef union {
   uint16_t data;
@@ -676,7 +691,11 @@ typedef struct {
   mytmplt8285   ex_user_template8;         // 72F  14 bytes (ESP8266) - Free since 9.0.0.1
 #endif  // ESP8266
 #ifdef ESP32
-  uint8_t       free_esp32_72f[14];        // 72F
+  uint8_t       free_esp32_72f[1];         // 72F
+
+  WebCamCfg2    webcam_config2;            // 730
+
+  uint8_t       free_esp32_734[9];         // 734
 #endif  // ESP32
 
   uint8_t       novasds_startingoffset;    // 73D
