@@ -114,11 +114,12 @@ The latter links can be used for OTA upgrades too like ``OtaUrl http://ota.tasmo
 - Support for daisy chaining MAX7219 displays [#15345](https://github.com/arendst/Tasmota/issues/15345)
 - Sonoff SPM delayed SetPowerOnState [#13447](https://github.com/arendst/Tasmota/issues/13447)
 - Support for flowrate meters like YF-DN50 and similary [#15474](https://github.com/arendst/Tasmota/issues/15474)
+- ESP32 Command ``Restart 3`` to switch between SafeBoot and Production
 
 ### Breaking Changed
 
 ### Changed
-- ESP32 Tasmota SafeMode with changed partition scheme allowing larger binaries
+- ESP32 Tasmota SafeBoot with changed partition scheme allowing larger binaries
 
 ### Fixed
 - Improv initial or erase device installation failing to provide Configure WiFi option
