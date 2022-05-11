@@ -3805,7 +3805,7 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #define GUI_TRASH_FILE
 
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
-#define USE_HOME_ASSISTANT                       // Enable Home Assistant Discovery Support (+7k code)
+#define USE_TASMOTA_DISCOVERY
 
 #define USE_KNX                                  // Enable KNX IP Protocol Support (+9.4k code, +3k7 mem)
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
@@ -4090,7 +4090,7 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #define GUI_TRASH_FILE
 
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
-#define USE_HOME_ASSISTANT                       // Enable Home Assistant Discovery Support (+7k code)
+#define USE_TASMOTA_DISCOVERY
 
 #define USE_KNX                                  // Enable KNX IP Protocol Support (+9.4k code, +3k7 mem)
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
