@@ -70,8 +70,6 @@ jobs:
           - tasmota32-rangeextender
           - tasmota32c3_2M
           - tasmota32c3-bluetooth
-          - tasmota32s2
-          - tasmota32s3
           - tasmota32s2-lvgl
           - tasmota32s3-lvgl
           - tasmota32c3-lvgl
