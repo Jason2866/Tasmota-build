@@ -2078,7 +2078,9 @@ Teleinfo
 #define USE_TLS 
 #define USE_MQTT_TLS                             // Use TLS for MQTT connection (+34.5k code, +7.0k mem and +4.8k additional during connection handshake)
   #define USE_MQTT_TLS_CA_CERT  
-#define USE_AUTOCONF                             // Enable Autoconfig
+#ifdef ESP32
+  #define USE_AUTOCONF                           // Enable Autoconfig
+#endif
 
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
