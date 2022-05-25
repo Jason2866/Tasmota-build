@@ -116,7 +116,9 @@ jobs:
         mkdir -p ./firmware/map
         cp -rf ./mv_firmware/firmware/tasmota32-itead.bin ./firmware/tasmota32/other/tasmota32-nspanel.bin
         cp -rf ./mv_firmware/firmware/tasmota32-itead.bin ./firmware/tasmota32/other/tasmota32-zbbrdgpro.bin
-        rm -rf ./mv_firmware/firmware/tasmota32-itead.bin
+        cp -rf ./mv_firmware/firmware/tasmota32-itead.factory.bin ./firmware/tasmota32/other/tasmota32-nspanel.factory.bin
+        cp -rf ./mv_firmware/firmware/tasmota32-itead.factory.bin ./firmware/tasmota32/other/tasmota32-zbbrdgpro.factory.bin
+        rm -rf ./mv_firmware/firmware/tasmota32-itead*
         cp -rf ./mv_firmware/map/* ./firmware/map/
         cp -rf ./mv_firmware/firmware/tasmota-* ./firmware/tasmota/other/
         cp -rf ./mv_firmware/firmware/tasmota32* ./firmware/tasmota32/other/
