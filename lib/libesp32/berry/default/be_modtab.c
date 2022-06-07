@@ -48,6 +48,7 @@ be_extern_native_module(uuid);
 be_extern_native_module(animate);
 be_extern_native_module(partition_core);
 be_extern_native_module(crc);
+be_extern_native_module(crypto);
 #ifdef USE_ZIGBEE
 be_extern_native_module(zigbee);
 #endif // USE_ZIGBEE
@@ -156,6 +157,9 @@ BERRY_LOCAL const bntvmodule* const be_module_table[] = {
     &be_native_module(flash),
     &be_native_module(partition_core),
     &be_native_module(crc),
+#ifdef USE_ALEXA_AVS
+    &be_native_module(crypto),
+#endif
 
     /* user-defined modules register end */
     NULL /* do not remove */
@@ -189,6 +193,7 @@ be_extern_native_class(md5);
 be_extern_native_class(udp);
 be_extern_native_class(webclient);
 be_extern_native_class(tcpclient);
+be_extern_native_class(energy_struct);
 // BLE
 be_extern_native_class(MI32);
 be_extern_native_class(BLE);
@@ -240,6 +245,9 @@ BERRY_LOCAL bclass_array be_class_table = {
     &be_native_class(Leds),
     &be_native_class(Leds_animator),
 #endif // USE_WS2812
+#ifdef USE_ENERGY_SENSOR
+    &be_native_class(energy_struct),
+#endif // USE_ENERGY_SENSOR
 
 #ifdef USE_LVGL
     &be_native_class(LVGL_glob),
@@ -276,7 +284,6 @@ BERRY_LOCAL bclass_array be_class_table = {
     NULL, /* do not remove */
 };
 
-extern void be_load_crypto_lib(bvm *vm);
 extern void be_load_ctypes_energy_definitions_lib(bvm *vm);
 
 /* this code loads the native class definitions */
@@ -288,10 +295,4 @@ BERRY_API void be_load_custom_libs(bvm *vm)
 #if !BE_USE_PRECOMPILED_OBJECT
     /* be_load_xxxlib(vm); */
 #endif
-#ifdef USE_ALEXA_AVS
-    be_load_crypto_lib(vm);     // sub-module
-#endif
-#ifdef USE_ENERGY_SENSOR
-    be_load_ctypes_energy_definitions_lib(vm);      // ctype class
-#endif // USE_ENERGY_SENSOR
 }
