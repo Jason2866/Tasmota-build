@@ -27,7 +27,7 @@
 
 #include <ESP_Mail_Client.h>
 
-//#define DEBUG_EMAIL_PORT    // Enable serial debugging
+// #define DEBUG_EMAIL_PORT    // Enable debugging
 
 #ifndef SEND_MAIL32_MINRAM
 #undef SEND_MAIL32_MINRAM
@@ -35,224 +35,177 @@
 #endif
 
 #define xPSTR(a) a
+
 #define MAX_ATTCHMENTS 8
+
+void script_send_email_body(void(*func)(char *));
+
+/*********************************************************************************************/
+
 char *attachments[MAX_ATTCHMENTS];
 uint8_t num_attachments;
-void script_send_email_body(void(*func)(char *));
 String html_content = "";
 SMTP_Message *email_mptr;
 SMTPSession *smtp;
+
 //SMTPSession smtp;
 void smtpCallback(SMTP_Status status);
 
 uint16_t SendMail(char *buffer) {
-  char *params,*oparams = 0;
-  const char *mserv;
-  uint16_t port;
-  const char *user;
-  const char *pstr;
-  const char *passwd;
-  const char *from;
-  const char *to;
-  const char *subject;
-  const char *cmd;
-  uint16_t status = 1;
-  uint16_t blen;
-  char *endcmd;
-  ESP_Mail_Session session;
-  SMTP_Message message;
-  email_mptr = &message;
-  smtp = new SMTPSession();
-  if (!smtp) {
-   return 4;
-  }
   // return if not enough memory
-  uint32_t mem = ESP.getFreeHeap();
-  //AddLog(LOG_LEVEL_INFO, PSTR("heap: %d"),mem);
-  if (mem < SEND_MAIL32_MINRAM) {
-    return 4;
-  }
-  #ifdef DEBUG_EMAIL_PORT
-      AddLog(LOG_LEVEL_INFO, PSTR("heap: %d"),mem);
-  #endif
+  uint32_t mem = ESP_getFreeHeap();
+  if (mem < SEND_MAIL32_MINRAM) { return 4; }
 
   while (*buffer==' ') buffer++;
-
-  if (*buffer != '[') {
-      goto exit;
-  }
+  if (*buffer != '[') { return 1; }
 
   buffer++;
-
-  endcmd = strchr(buffer, ']');
-  if (!endcmd) {
-    goto exit;
-  }
+  char *endcmd = strchr(buffer, ']');
+  if (!endcmd) { return 1; }
 
   // copy params
-  blen = (uint32_t)endcmd - (uint32_t)buffer;
-  oparams = (char*)calloc(blen+2, 1);
-  if (!oparams) return 4;
-  params = oparams;
+  uint16_t blen = (uint32_t)endcmd - (uint32_t)buffer;
+  char *oparams = (char*)calloc(blen+2, 1);
+  if (!oparams) { return 4; }
+
+  uint16_t status = 1;
+  char *params = oparams;
   strncpy(oparams, buffer, blen+2);
   oparams[blen] = 0;
+  const char *cmd = endcmd + 1;
 
-  cmd = endcmd + 1;
-
+#ifdef DEBUG_EMAIL_PORT
+  AddLog(LOG_LEVEL_INFO, PSTR("MAI: Size %d"), blen);
+#endif
 
   for (uint32_t cnt = 0; cnt < MAX_ATTCHMENTS; cnt++) {
     attachments[cnt] = 0;
   }
   num_attachments = 0;
 
-#ifdef DEBUG_EMAIL_PORT
-    AddLog(LOG_LEVEL_INFO, PSTR("mailsize: %d"),blen);
-#endif
-
-  mserv = strtok(params, ":");
-  if (!mserv) {
-      goto exit;
+  smtp = new SMTPSession();
+  if (!smtp) {
+    if (oparams) { free(oparams); }
+    return 4;
   }
 
-  // port
-  pstr = strtok(NULL, ":");
-  if (!pstr) {
-      goto exit;
-  }
-
-#ifdef EMAIL_PORT
-  if (*pstr == '*') {
-    port = EMAIL_PORT;
-  } else {
-    port = atoi(pstr);
-  }
-#else
-  port = atoi(pstr);
-#endif
-
-  user = strtok(NULL, ":");
-  if (!user) {
-      goto exit;
-  }
-
-  passwd = strtok(NULL, ":");
-  if (!passwd) {
-      goto exit;
-  }
-
-  from = strtok(NULL, ":");
-  if (!from) {
-      goto exit;
-  }
-
-  to = strtok(NULL, ":");
-  if (!to) {
-      goto exit;
-  }
-
-  subject = strtok(NULL, "]");
-  if (!subject) {
-      goto exit;
-  }
-
+  const char *mserv = strtok(params, ":");
+  if (mserv) {
+    // port
+    const char *pstr = strtok(NULL, ":");
+    if (pstr) {
+      uint16_t port;
+    #ifdef EMAIL_PORT
+      port = (*pstr == '*') ? EMAIL_PORT : port = atoi(pstr);
+    #else
+      port = atoi(pstr);
+    #endif
+      const char *user = strtok(NULL, ":");
+      if (user) {
+        const char *passwd = strtok(NULL, ":");
+        if (passwd) {
+          const char *from = strtok(NULL, ":");
+          if (from) {
+            const char *to = strtok(NULL, ":");
+            if (to) {
+              const char *subject = strtok(NULL, "]");
+              if (subject) {
 #ifdef EMAIL_USER
-  if (*user == '*') {
-    user = xPSTR(EMAIL_USER);
-  }
+                if (*user == '*') { user = xPSTR(EMAIL_USER); }
 #endif
-
 #ifdef EMAIL_PASSWORD
-  if (*passwd == '*') {
-    passwd = xPSTR(EMAIL_PASSWORD);
-  }
+                if (*passwd == '*') { passwd = xPSTR(EMAIL_PASSWORD); }
 #endif
-
 #ifdef EMAIL_SERVER
-  if (*mserv == '*') {
-    mserv = xPSTR(EMAIL_SERVER);
-  }
+                if (*mserv == '*') { mserv = xPSTR(EMAIL_SERVER); }
 #endif
 
 #ifdef DEBUG_EMAIL_PORT
-  AddLog(LOG_LEVEL_INFO, PSTR("%s - %d - %s - %s"), mserv, port, user, passwd);
+                AddLog(LOG_LEVEL_INFO, PSTR("MAI: %s, %d, %s, %s"), mserv, port, user, passwd);
 #endif
 
 #ifdef EMAIL_FROM
-  if (*from == '*') {
-    from = xPSTR(EMAIL_FROM);
-  }
+                if (*from == '*') { from = xPSTR(EMAIL_FROM); }
 #endif
 
 #ifdef DEBUG_EMAIL_PORT
-  AddLog(LOG_LEVEL_INFO, PSTR("%s - %s - %s - %s"), from, to, subject, cmd);
+                AddLog(LOG_LEVEL_INFO, PSTR("MAI: %s, %s, %s, %s"), from, to, subject, cmd);
 #endif
 
-
 #ifdef DEBUG_EMAIL_PORT
-  smtp->debug(true);
+                smtp->debug(true);
 #else
-  smtp->debug(false);
+                smtp->debug(false);
 #endif
 
-//  smtp->callback(smtpCallback);
+              //  smtp->callback(smtpCallback);
 
-  message.clearRecipients();
-  message.clearCc();
-  message.clearBcc();
+                SMTP_Message message;
+                email_mptr = &message;
+                message.clearRecipients();
+                message.clearCc();
+                message.clearBcc();
 
-  session.server.host_name = mserv;
-  session.server.port = port;
-  session.login.email = user;
-  session.login.password = passwd;
-  session.login.user_domain = "googlemail.com";
+                ESP_Mail_Session session;
+                session.server.host_name = mserv;
+                session.server.port = port;
+                session.login.email = user;
+                session.login.password = passwd;
+                session.login.user_domain = "googlemail.com";
 
+                message.enable.chunking = true;
+                char sname[32];
+                strlcpy(sname, SettingsText(SET_FRIENDLYNAME1), sizeof(sname));
+                message.sender.name = sname;
+                message.sender.email = from;
+                message.subject = subject;
+                message.addRecipient("user1", to);
+                message.html.charSet = "utf-8";
+                message.text.charSet = "utf-8";
+                message.text.transfer_encoding = Content_Transfer_Encoding::enc_base64;
+                message.priority = esp_mail_smtp_priority::esp_mail_smtp_priority_normal;
+                //message.response.notify = esp_mail_smtp_notify_success | esp_mail_smtp_notify_failure | esp_mail_smtp_notify_delay;
+                message.response.notify = esp_mail_smtp_notify_failure;
+                message.html.charSet = "us-ascii";
+                message.html.transfer_encoding = Content_Transfer_Encoding::enc_7bit;
+                message.addHeader("Message-ID: <user1@gmail.com>");
 
-  message.enable.chunking = true;
-  char sname[32];
-  strlcpy(sname, SettingsText(SET_FRIENDLYNAME1), sizeof(sname));
-  message.sender.name = sname;
-  message.sender.email = from;
-  message.subject = subject;
-  message.addRecipient("user1", to);
-  message.html.charSet = "utf-8";
-  message.text.charSet = "utf-8";
-  message.text.transfer_encoding = Content_Transfer_Encoding::enc_base64;
-  message.priority = esp_mail_smtp_priority::esp_mail_smtp_priority_normal;
-  //message.response.notify = esp_mail_smtp_notify_success | esp_mail_smtp_notify_failure | esp_mail_smtp_notify_delay;
-  message.response.notify = esp_mail_smtp_notify_failure;
-  message.html.charSet = "us-ascii";
-  message.html.transfer_encoding = Content_Transfer_Encoding::enc_7bit;
-  message.addHeader("Message-ID: <user1@gmail.com>");
+/*-------------------------------------------------------------------------------------------*/
 
-  #ifdef USE_SCRIPT
-    if (*cmd == '*' && *(cmd + 1) == 0) {
-      script_send_email_body(send_message_txt);
-    } else {
-      html_content += cmd;
-      message.html.content  = html_content.c_str();
+#ifdef USE_SCRIPT
+                if (*cmd == '*' && *(cmd + 1) == 0) {
+                  script_send_email_body(send_message_txt);
+                } else {
+                  html_content += cmd;
+                  message.html.content = html_content.c_str();
+                }
+#else
+                html_content += cmd;
+                message.html.content = html_content.c_str();
+#endif  // USE_SCRIPT
+
+/*-------------------------------------------------------------------------------------------*/
+
+                /* Connect to server with the session config */
+                delay(0);
+                if (smtp->connect(&session)) {
+                  /* Start sending the Email and close the session */
+                  delay(0);
+                  if (!MailClient.sendMail(smtp, &message, true)) {
+                    Serial.println("Error sending Email, " + smtp->errorReason());
+                  } else {
+                    status = 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
-  #else
-    html_content += cmd;
-    message.html.content  = html_content.c_str();
-  #endif
-
-  /* Connect to server with the session config */
-  delay(0);
-  if (!smtp->connect(&session)) {
-    goto exit;
   }
 
-  /* Start sending the Email and close the session */
-  delay(0);
-
-  if (!MailClient.sendMail(smtp, &message, true)) {
-    Serial.println("Error sending Email, " + smtp->errorReason());
-  } else {
-    status = 0;
-  }
-
-exit:
-  if (smtp) delete smtp;
+  if (smtp) { delete smtp; }
   for (uint32_t cnt = 0; cnt < MAX_ATTCHMENTS; cnt++) {
     if (attachments[cnt]) {
       free(attachments[cnt]);
@@ -260,42 +213,13 @@ exit:
     }
   }
   html_content = "";
-  if (oparams) free(oparams);
+  if (oparams) { free(oparams); }
   return status;
 }
 
+/*********************************************************************************************/
 
-void send_message_txt(char *txt) {
-  if (*txt == '@') {
-    txt++;
-    attach_File(txt);
-  } else if (*txt == '&') {
-    txt++;
-    attach_Array(txt);
-  } else if (*txt == '$') {
-    txt++;
-#if defined(ESP32) && defined(USE_WEBCAM)
-    if (num_attachments < MAX_ATTCHMENTS) {
-      attachments[num_attachments] = (char*)malloc(32);
-      uint32_t cnt;
-      uint8_t *buff;
-      uint32_t len, picmax;
-      picmax = WcGetPicstore(-1, 0);
-      cnt = *txt&7;
-      if (cnt < 1 || cnt > picmax) cnt = 1;
-      len = WcGetPicstore(cnt - 1, &buff);
-      if (len) {
-        sprintf(attachments[num_attachments], "img_%1d.jpg", cnt);
-        attach_Data(attachments[num_attachments], buff, len);
-      }
-      num_attachments++;
-    }
-#endif
-  } else {
-    html_content += txt;
-    email_mptr->html.content  = html_content.c_str();
-  }
-}
+#ifdef USE_SCRIPT
 
 void attach_File(char *path) {
   SMTP_Attachment att;
@@ -316,6 +240,17 @@ void attach_File(char *path) {
     email_mptr->resetAttachItem(att);
     num_attachments++;
   }
+}
+
+void attach_Data(char *name, uint8_t *buff, uint32_t len) {
+  SMTP_Attachment att;
+  att.descr.filename = name;
+  att.descr.mime = "application/octet-stream";
+  att.blob.data = buff;
+  att.blob.size = len;
+  att.descr.transfer_encoding = Content_Transfer_Encoding::enc_base64;
+  email_mptr->addAttachment(att);
+  email_mptr->resetAttachItem(att);
 }
 
 float *get_array_by_name(char *name, uint16_t *alen);
@@ -352,53 +287,73 @@ void attach_Array(char *aname) {
   }
 }
 
-void attach_Data(char *name, uint8_t *buff, uint32_t len) {
-  SMTP_Attachment att;
-  att.descr.filename = name;
-  att.descr.mime = "application/octet-stream";
-  att.blob.data = buff;
-  att.blob.size = len;
-  att.descr.transfer_encoding = Content_Transfer_Encoding::enc_base64;
-  email_mptr->addAttachment(att);
-  email_mptr->resetAttachItem(att);
+void send_message_txt(char *txt) {
+  if (*txt == '&') {
+    txt++;
+    attach_Array(txt);
+  } else if (*txt == '@') {
+    txt++;
+    attach_File(txt);
+  } else if (*txt == '$') {
+    txt++;
+#ifdef USE_WEBCAM
+    if (num_attachments < MAX_ATTCHMENTS) {
+      attachments[num_attachments] = (char*)malloc(32);
+      uint32_t cnt;
+      uint8_t *buff;
+      uint32_t len, picmax;
+      picmax = WcGetPicstore(-1, 0);
+      cnt = *txt &7;
+      if (cnt < 1 || cnt > picmax) cnt = 1;
+      len = WcGetPicstore(cnt - 1, &buff);
+      if (len) {
+        sprintf(attachments[num_attachments], "img_%1d.jpg", cnt);
+        attach_Data(attachments[num_attachments], buff, len);
+      }
+      num_attachments++;
+    }
+#endif  // USE_WEBCAM
+  } else {
+    html_content += txt;
+    email_mptr->html.content = html_content.c_str();
+  }
 }
+
+#endif  // USE_SCRIPT
+
+/*********************************************************************************************/
 
 /* Callback function to get the Email sending status */
-void smtpCallback(SMTP_Status status)
-{
-/* Print the current status */
-Serial.println(status.info());
+void smtpCallback(SMTP_Status status) {
+  /* Print the current status */
+  Serial.println(status.info());
 
-/* Print the sending result */
-if (status.success())
-{
-  Serial.println("----------------");
-  Serial.printf("Message sent success: %d\n", status.completedCount());
-  Serial.printf("Message sent failled: %d\n", status.failedCount());
-  Serial.println("----------------\n");
-  struct tm dt;
+  /* Print the sending result */
+  if (status.success()) {
+    Serial.println("----------------");
+    Serial.printf("Message sent success: %d\n", status.completedCount());
+    Serial.printf("Message sent failled: %d\n", status.failedCount());
+    Serial.println("----------------\n");
+    struct tm dt;
 
-  for (size_t i = 0; i < smtp->sendingResult.size(); i++)
-  {
-    /* Get the result item */
-    SMTP_Result result = smtp->sendingResult.getItem(i);
-    localtime_r(&result.timesstamp, &dt);
+    for (size_t i = 0; i < smtp->sendingResult.size(); i++) {
+      /* Get the result item */
+      SMTP_Result result = smtp->sendingResult.getItem(i);
+      localtime_r(&result.timesstamp, &dt);
 
-    Serial.printf("Message No: %d\n", i + 1);
-    Serial.printf("Status: %s\n", result.completed ? "success" : "failed");
-    Serial.printf("Date/Time: %d/%d/%d %d:%d:%d\n", dt.tm_year + 1900, dt.tm_mon + 1, dt.tm_mday, dt.tm_hour, dt.tm_min, dt.tm_sec);
-    Serial.printf("Recipient: %s\n", result.recipients);
-    Serial.printf("Subject: %s\n", result.subject);
+      Serial.printf("Message No: %d\n", i + 1);
+      Serial.printf("Status: %s\n", result.completed ? "success" : "failed");
+      Serial.printf("Date/Time: %d/%d/%d %d:%d:%d\n", dt.tm_year + 1900, dt.tm_mon + 1, dt.tm_mday, dt.tm_hour, dt.tm_min, dt.tm_sec);
+      Serial.printf("Recipient: %s\n", result.recipients);
+      Serial.printf("Subject: %s\n", result.subject);
+    }
+    Serial.println("----------------\n");
   }
-  Serial.println("----------------\n");
 }
-
-}
-
 
 void Tasmota_print(const char *txt) {
 #ifdef DEBUG_EMAIL_PORT
-  AddLog(LOG_LEVEL_INFO, PSTR("ESP32mail: %s"),txt);
+  AddLog(LOG_LEVEL_INFO, PSTR("MAI: %s"),txt);
 #endif
 }
 
