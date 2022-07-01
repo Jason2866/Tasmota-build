@@ -10,15 +10,26 @@ platform_packages           = ${core32solo1_dev.platform_packages}
 build_unflags               = ${core32solo1_dev.build_unflags}
 build_flags                 = ${core32solo1_dev.build_flags}
 
+[core32itead]
+platform                    = ${core32itead_dev.platform}
+platform_packages           = ${core32itead_dev.platform_packages}
+build_unflags               = ${core32itead_dev.build_unflags}
+build_flags                 = ${core32itead_dev.build_flags}
+
 [core32_dev]
-platform                    = https://github.com/tasmota/platform-espressif32/releases/download/v2.0.2.3/platform-espressif32-2.0.2.3.zip
-platform_packages           = framework-arduinoespressif32 @ https://github.com/Jason2866/esp32-arduino-lib-builder/releases/download/731/framework-arduinoespressif32-v4.4_dev-2509ea4227.tar.gz
+platform                    = https://github.com/tasmota/platform-espressif32/releases/download/v2.0.4pre/platform-espressif32-2.0.4pre.zip
+platform_packages           =
 build_unflags               = ${esp32_defaults.build_unflags}
 build_flags                 = ${esp32_defaults.build_flags}
 
-
 [core32solo1_dev]
-platform                    = https://github.com/tasmota/platform-espressif32/releases/download/v2.0.2.3/platform-espressif32-2.0.2.3solo1.zip
-platform_packages           = framework-arduinoespressif32 @ https://github.com/Jason2866/esp32-arduino-lib-builder/releases/download/732/framework-arduinoespressif32-solo1-v4.4_dev-2509ea4227.tar.gz
+platform                    = https://github.com/tasmota/platform-espressif32/releases/download/v2.0.4pre/platform-espressif32-solo1-2.0.4pre.zip
+platform_packages           =
+build_unflags               = ${esp32_defaults.build_unflags}
+build_flags                 = ${esp32_defaults.build_flags}
+
+[core32itead_dev]
+platform                    = https://github.com/tasmota/platform-espressif32/releases/download/v2.0.4pre/platform-espressif32-ITEAD-2.0.4pre.zip
+platform_packages           =
 build_unflags               = ${esp32_defaults.build_unflags}
 build_flags                 = ${esp32_defaults.build_flags}
