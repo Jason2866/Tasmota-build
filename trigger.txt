@@ -1,1 +1,1 @@
-Tasmota Core 2.0.4
+b5e208c134567c92f4ead928f2dc527ebdf938f1
