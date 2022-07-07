@@ -3069,6 +3069,8 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 // #define USE_SONOFF_L1                            // Add support for Sonoff L1 led control
 // #define USE_ELECTRIQ_MOODL                       // Add support for ElectriQ iQ-wifiMOODL RGBW LED controller
 
+#define USE_PROMETHEUS
+
 #define USE_COUNTER                              // Enable counters
 //#define USE_ADC_VCC                              // Display Vcc in Power status. Disable for use as Analog input on selected devices
 
