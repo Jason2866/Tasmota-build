@@ -76,7 +76,7 @@ jobs:
           - tasmota32s3-display
           - tasmota32c3-display
           - tasmota32s3-bluetooth
-          - tasmota32s3-boxusb
+          - tasmota32s3cdc-box
           - tasmota32c3-mi32-homebridge
           - tasmota32s3-mi32-homebridge
           - tasmota32-mi32-homebridge
