@@ -11,7 +11,6 @@
 
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
  */
 
 #ifdef ESP32
@@ -58,7 +57,7 @@ void _analogInit(void) {
   pwm_impl_inited = true;
 }
 
-int32_t _analog_pin2chan(uint32_t pin) {    // returns -1 if uallocated
+int _analog_pin2chan(uint32_t pin) {    // returns -1 if uallocated
   _analogInit();      // make sure the mapping array is initialized
   for (uint32_t channel = 0; channel < MAX_PWMS; channel++) {
     if ((pwm_channel[channel] < 255) && (pwm_channel[channel] == pin)) {
@@ -68,12 +67,19 @@ int32_t _analog_pin2chan(uint32_t pin) {    // returns -1 if uallocated
   return -1;
 }
 
-void _analogWriteFreqRange(void) {
+void _analogWriteFreqRange(uint32_t pin) {
   _analogInit();      // make sure the mapping array is initialized
-  for (uint32_t channel = 0; channel < MAX_PWMS; channel++) {
-    if (pwm_channel[channel] < 255) {
-      ledcSetup(channel, pwm_frequency, pwm_bit_num);
+  if (255 == pin) {
+    for (uint32_t channel = 0; channel < MAX_PWMS; channel++) {
+      if (pwm_channel[channel] < 255) {
+        ledcSetup(channel, pwm_frequency, pwm_bit_num);
+      }
     }
+  } else {
+   int channel = _analog_pin2chan(pin);
+   if (channel >= 0) {
+     ledcSetup(channel, pwm_frequency, pwm_bit_num);
+   }
   }
 }
 
@@ -87,20 +93,20 @@ uint32_t _analogGetResolution(uint32_t x) {
   return bits;
 }
 
-void analogWriteRange(uint32_t range) {
+void analogWriteRange(uint32_t range, uint32_t pin) {
   pwm_bit_num = _analogGetResolution(range);
-  _analogWriteFreqRange();
+  _analogWriteFreqRange(pin);
 }
 
-void analogWriteFreq(uint32_t freq) {
+void analogWriteFreq(uint32_t freq, uint32_t pin) {
   pwm_frequency = freq;
-  _analogWriteFreqRange();
+  _analogWriteFreqRange(pin);
 }
 
-int32_t analogAttach(uint32_t pin, bool output_invert) {    // returns ledc channel used, or -1 if failed
+int analogAttach(uint32_t pin, bool output_invert) {    // returns ledc channel used, or -1 if failed
   _analogInit();      // make sure the mapping array is initialized
   // Find if pin is already attached
-  int32_t chan = _analog_pin2chan(pin);
+  int chan = _analog_pin2chan(pin);
   if (chan >= 0) { return chan; }
   // Find an empty channel
   for (chan = 0; chan < MAX_PWMS; chan++) {
@@ -109,7 +115,7 @@ int32_t analogAttach(uint32_t pin, bool output_invert) {    // returns ledc chan
 
       // ledcAttachPin(pin, channel);  -- replicating here because we want the default duty
       uint8_t group=(chan/8), channel=(chan%8), timer=((chan/2)%4);
-      
+
       // AddLog(LOG_LEVEL_INFO, "PWM: ledc_channel pin=%i out_invert=%i", pin, output_invert);
       ledc_channel_config_t ledc_channel = {
           (int)pin,          // gpio
@@ -122,7 +128,6 @@ int32_t analogAttach(uint32_t pin, bool output_invert) {    // returns ledc chan
           { output_invert ? 1u : 0u },// output_invert
       };
       ledc_channel_config(&ledc_channel);
-
 
       ledcSetup(channel, pwm_frequency, pwm_bit_num);
       // Serial.printf("PWM: New attach pin %d to channel %d\n", pin, channel);
@@ -139,7 +144,6 @@ extern "C" void __wrap__Z11analogWritehi(uint8_t pin, int val) {
   analogWritePhase(pin, val, 0);      // if unspecified, use phase = 0
 }
 
-
 /*
   The primary goal of this function is to add phase control to PWM ledc
   functions.
@@ -148,8 +152,7 @@ extern "C" void __wrap__Z11analogWritehi(uint8_t pin, int val) {
   By default all phases are starting at the same moment. This means
   the the power supply always takes a power hit at the start of each
   new cycle, even if the average power is low.
-
-  Phase control is also of major importance for H-bridge where 
+  Phase control is also of major importance for H-bridge where
   both PWM lines should NEVER be active at the same time.
 
   Unfortunately Arduino Core does not allow any customization nor
@@ -165,7 +168,7 @@ extern uint8_t channels_resolution[MAX_PWMS];
 
 void analogWritePhase(uint8_t pin, uint32_t duty, uint32_t phase)
 {
-  int32_t chan = _analog_pin2chan(pin);
+  int chan = _analog_pin2chan(pin);
   if (chan < 0) {    // not yet allocated, try to allocate
     chan = analogAttach(pin);
     if (chan < 0) { return; }   // failed
