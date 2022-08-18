@@ -56,7 +56,7 @@ The following binary downloads have been compiled with ESP8266/Arduino library c
 
 - **tasmota.bin** = The Tasmota version with most drivers for 1M+ flash. **RECOMMENDED RELEASE BINARY**
 - **tasmota4M.bin** = The Tasmota version with most drivers and filesystem for 4M+ flash.
-- **tasmota-AF.bin** to **tasmota-VN.bin** = The Tasmota version in different languages for 1M+ flash.
+- **tasmota-AD.bin** to **tasmota-VN.bin** = The Tasmota version in different languages for 1M+ flash.
 - **tasmota-lite.bin** = The Lite version without most drivers and sensors for 1M+ flash.
 - **tasmota-knx.bin** = The Knx version without some features but adds KNX support for 1M+ flash.
 - **tasmota-sensors.bin** = The Sensors version adds more useful sensors for 1M+ flash.
@@ -83,7 +83,7 @@ The following binary downloads have been compiled with ESP32/Arduino library cor
 - **tasmota32xy.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C3/S2/S3 and 4M+ flash.
 - **tasmota32xycdc.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C3/S2/S3 with serial over embedded USB CDC only and 4M+ flash.
 - **tasmota32solo1.bin** = The Tasmota version with most drivers including additional sensors and KNX for single core ESP32 and 4M+ flash.
-- **tasmota32-AF.bin** to **tasmota32-VN.bin** = The Tasmota version in different languages for 4M+ flash.
+- **tasmota32-AD.bin** to **tasmota32-VN.bin** = The Tasmota version in different languages for 4M+ flash.
 - **tasmota32-bluetooth.bin** = The Bluetooth version adds BLE support for 4M+ flash.
 - **tasmota32-display.bin** = The Display version without Energy Monitoring but adds display support for 4M+ flash.
 - **tasmota32-ir.bin** = The InfraRed Receiver and transmitter version allowing all available protocols provided by library IRremoteESP8266 but without most other features for 4M+ flash.
@@ -107,34 +107,14 @@ The latter links can be used for OTA upgrades too like ``OtaUrl http://ota.tasmo
 
 [Complete list](BUILDS.md) of available feature and sensors.
 
-## Changelog v12.0.2.4
+## Changelog v12.1.0.1
 ### Added
-- Command ``SetOption45 1..250`` to change default bistable latching relay pulse length of 40 milliseconds
-- Command ``SetOption144 1`` includes a timestamp in zigbee `ZbReceived` messages
-- Command ``GlobalTemp2 1..250`` to select Global Temperature source indexed from teleperiod occurance data [#15834](https://github.com/arendst/Tasmota/issues/15834)
-- Command ``GlobalHum2 1..250`` to select Global Humidity source indexed from teleperiod occurance data [#15834](https://github.com/arendst/Tasmota/issues/15834)
-- Command ``GlobalPress2 1..250`` to select Global Pressure source indexed from teleperiod occurance data [#15834](https://github.com/arendst/Tasmota/issues/15834)
-- Command ``Sleep2 !`` to cancel pending one-shot speed setting [#15954](https://github.com/arendst/Tasmota/issues/15954)
-- Commands ``WifiScan`` and ``WifiTest`` [#16141](https://github.com/arendst/Tasmota/issues/16141)
-- Support for 5-channel light dimmer driver SM2335 used in SwitchBot Color Bulbs [#15839](https://github.com/arendst/Tasmota/issues/15839)
-- Support for Sonoff POWR3xxD and THR3xxD [#15856](https://github.com/arendst/Tasmota/issues/15856)
-- Support for bistable (latching) relays mixed with monostable relays using GPIO Relay_b or Relay_bi as used by Sonoff POWR320D and THR320D
-- Support for Modbus bridge adding commands ``ModbusSend``, ``ModbusBaudrate`` and ``ModbusSerialConfig`` [#16013](https://github.com/arendst/Tasmota/issues/16013)
-- Support for multiple ``IRsend`` GPIOs [#16138](https://github.com/arendst/Tasmota/issues/16138)
-- Support for Catalan language translations by Albert Gonzalez [#16145](https://github.com/arendst/Tasmota/issues/16145)
-- Zigbee added recording of when the battery was last reported [#16146](https://github.com/arendst/Tasmota/issues/16146)
-- Zigbee add Battery auto-probe (can be disabled with ``SetOption143 1``) [#16148](https://github.com/arendst/Tasmota/issues/16148)
-- ESP32 Support for Ultra Low Power (ULP) coprocessor via Berry by Christian Staars [#15916](https://github.com/arendst/Tasmota/issues/15916)
 
 ### Breaking Changed
 
 ### Changed
-- ESP32 Arduino core from v2.0.3 to v2.0.4.1 [#15940](https://github.com/arendst/Tasmota/issues/15940)
-- ESP32 LVGL library from v8.2.0 to v8.3.0 [#16019](https://github.com/arendst/Tasmota/issues/16019)
-- Driver DHT v6 consolidation for both ESP8266 and ESP32 to support SI7021, THS01 and MS01 on ESP32 [#15856](https://github.com/arendst/Tasmota/issues/15856)
 
 ### Fixed
-- Restore EnergyToday after using command ``restart 2`` and power cycle [#16118](https://github.com/arendst/Tasmota/issues/16118)
-- ESP32 SendMail not working over ethernet [#15794](https://github.com/arendst/Tasmota/issues/15794)
+- RTC not detected when lights are present [#16242](https://github.com/arendst/Tasmota/issues/16242)
 
 ### Removed
