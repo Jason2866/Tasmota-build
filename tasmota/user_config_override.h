@@ -1,6 +1,9 @@
 #ifndef _USER_CONFIG_OVERRIDE_H_
 #define _USER_CONFIG_OVERRIDE_H_
 
+#undef OTA_URL
+#define OTA_URL " "
+
 // THIS SECTION IS USED TO REMOVE EVERYTHING LISTED FROM DEFAULT BINARY
 /*
 ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo      ooo oooooooooooo                   .o.       ooooo        ooooo        
@@ -16,8 +19,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USER_TEMPLATE
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR " "
-#undef OTA_URL
-#define OTA_URL " "
 
 #undef USE_ARDUINO_OTA                          // Disable support for Arduino OTA (+13k code)
 #undef USE_DOMOTICZ                             // Disable Domoticz (+6k code, +0.3k mem)
@@ -463,12 +464,12 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #endif  // FIRMWARE_MINICUSTOM *******************************************************************
 
 /*
- oooooooooooo ooooo   .oooooo.    oooooooooo.  oooooooooooo oooooooooooo 
-d'""""""d888' `888'  d8P'  `Y8b   `888'   `Y8b `888'     `8 `888'     `8 
-      .888P    888  888            888     888  888          888         
-     d888'     888  888            888oooo888'  888oooo8     888oooo8    
-   .888P       888  888     ooooo  888    `88b  888    "     888    "    
-  d888'    .P  888  `88.    .88'   888    .88P  888       o  888       o 
+ oooooooooooo ooooo   .oooooo.    oooooooooo.  oooooooooooo oooooooooooo
+d'""""""d888' `888'  d8P'  `Y8b   `888'   `Y8b `888'     `8 `888'     `8
+      .888P    888  888            888     888  888          888
+     d888'     888  888            888oooo888'  888oooo8     888oooo8
+   .888P       888  888     ooooo  888    `88b  888    "     888    "
+  d888'    .P  888  `88.    .88'   888    .88P  888       o  888       o
 .8888888888P  o888o  `Y8bood8P'   o888bood8P'  o888ooooood8 o888ooooood8 */
 
 #ifdef CUSTOM_CONFIG_ZIGBEE  // *******************************************************************
@@ -1003,11 +1004,11 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 
 
 /*
- d888b  d8888b. .d8888. 
-88' Y8b 88  `8D 88'  YP 
-88      88oodD' `8bo.   
-88  ooo 88~~~     `Y8b. 
-88. ~8~ 88      db   8D 
+ d888b  d8888b. .d8888.
+88' Y8b 88  `8D 88'  YP
+88      88oodD' `8bo.
+88  ooo 88~~~     `Y8b.
+88. ~8~ 88      db   8D
  Y888P  88      `8888Y'    */
 
 #ifdef CUSTOM_CONFIG_GPS  // *******************************************************************
@@ -1267,13 +1268,13 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 
 
 /*
-oooooooooo.        .o.       ooooooooooooo ooooooooooooo oooooooooooo ooooooooo.   oooooo   oooo 
-`888'   `Y8b      .888.      8'   888   `8 8'   888   `8 `888'     `8 `888   `Y88.  `888.   .8'  
- 888     888     .8"888.          888           888       888          888   .d88'   `888. .8'   
- 888oooo888'    .8' `888.         888           888       888oooo8     888ooo88P'     `888.8'    
- 888    `88b   .88ooo8888.        888           888       888    "     888`88b.        `888'     
- 888    .88P  .8'     `888.       888           888       888       o  888  `88b.       888      
-o888bood8P'  o88o     o8888o     o888o         o888o     o888ooooood8 o888o  o888o     o888o     
+oooooooooo.        .o.       ooooooooooooo ooooooooooooo oooooooooooo ooooooooo.   oooooo   oooo
+`888'   `Y8b      .888.      8'   888   `8 8'   888   `8 `888'     `8 `888   `Y88.  `888.   .8'
+ 888     888     .8"888.          888           888       888          888   .d88'   `888. .8'
+ 888oooo888'    .8' `888.         888           888       888oooo8     888ooo88P'     `888.8'
+ 888    `88b   .88ooo8888.        888           888       888    "     888`88b.        `888'
+ 888    .88P  .8'     `888.       888           888       888       o  888  `88b.       888
+o888bood8P'  o88o     o8888o     o888o         o888o     o888ooooood8 o888o  o888o     o888o
 */
 #ifdef CUSTOM_CONFIG_BATTERY  // *******************************************************************
 
@@ -1318,13 +1319,13 @@ o888bood8P'  o88o     o8888o     o888o         o888o     o888ooooood8 o888o  o88
 
 #endif  // CUSTOM_CONFIG_BATTERY *******************************************************************
 /*
- .oooooo..o   .oooooo.   ooooooooo.   ooooo ooooooooo.   ooooooooooooo ooooo ooooo      ooo   .oooooo.    
-d8P'    `Y8  d8P'  `Y8b  `888   `Y88. `888' `888   `Y88. 8'   888   `8 `888' `888b.     `8'  d8P'  `Y8b   
-Y88bo.      888           888   .d88'  888   888   .d88'      888       888   8 `88b.    8  888           
- `"Y8888o.  888           888ooo88P'   888   888ooo88P'       888       888   8   `88b.  8  888           
-     `"Y88b 888           888`88b.     888   888              888       888   8     `88b.8  888     ooooo 
-oo     .d8P `88b    ooo   888  `88b.   888   888              888       888   8       `888  `88.    .88'  
-8""88888P'   `Y8bood8P'  o888o  o888o o888o o888o            o888o     o888o o8o        `8   `Y8bood8P'   
+ .oooooo..o   .oooooo.   ooooooooo.   ooooo ooooooooo.   ooooooooooooo ooooo ooooo      ooo   .oooooo.
+d8P'    `Y8  d8P'  `Y8b  `888   `Y88. `888' `888   `Y88. 8'   888   `8 `888' `888b.     `8'  d8P'  `Y8b
+Y88bo.      888           888   .d88'  888   888   .d88'      888       888   8 `88b.    8  888
+ `"Y8888o.  888           888ooo88P'   888   888ooo88P'       888       888   8   `88b.  8  888
+     `"Y88b 888           888`88b.     888   888              888       888   8     `88b.8  888     ooooo
+oo     .d8P `88b    ooo   888  `88b.   888   888              888       888   8       `888  `88.    .88'
+8""88888P'   `Y8bood8P'  o888o  o888o o888o o888o            o888o     o888o o8o        `8   `Y8bood8P'
 */
 #ifdef CUSTOM_CONFIG_SCRIPTING  // *******************************************************************
 
@@ -2366,13 +2367,13 @@ Teleinfo
 
 
 /*
-oooooooooooo ooooo     ooo ooooo        ooooo        ooooooooo.   ooooo     ooo ooooo        oooooooooooo  .oooooo..o 
-`888'     `8 `888'     `8' `888'        `888'        `888   `Y88. `888'     `8' `888'        `888'     `8 d8P'    `Y8 
- 888          888       8   888          888          888   .d88'  888       8   888          888         Y88bo.      
- 888oooo8     888       8   888          888          888ooo88P'   888       8   888          888oooo8     `"Y8888o.  
- 888    "     888       8   888          888          888`88b.     888       8   888          888    "         `"Y88b 
- 888          `88.    .8'   888       o  888       o  888  `88b.   `88.    .8'   888       o  888       o oo     .d8P 
-o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    o888ooooood8 o888ooooood8 8""88888P'  
+oooooooooooo ooooo     ooo ooooo        ooooo        ooooooooo.   ooooo     ooo ooooo        oooooooooooo  .oooooo..o
+`888'     `8 `888'     `8' `888'        `888'        `888   `Y88. `888'     `8' `888'        `888'     `8 d8P'    `Y8
+ 888          888       8   888          888          888   .d88'  888       8   888          888         Y88bo.
+ 888oooo8     888       8   888          888          888ooo88P'   888       8   888          888oooo8     `"Y8888o.
+ 888    "     888       8   888          888          888`88b.     888       8   888          888    "         `"Y88b
+ 888          `88.    .8'   888       o  888       o  888  `88b.   `88.    .8'   888       o  888       o oo     .d8P
+o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    o888ooooood8 o888ooooood8 8""88888P'
 */
 #ifdef CUSTOM_CONFIG_FULLRULES  // *******************************************************************
 
@@ -2648,7 +2649,6 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
 //#define USE_TASMOTA_CLIENT                       // Add support for Arduino Uno/Pro Mini via serial interface including flashing (+2k6 code, 64 mem)
 //  #define USE_TASMOTA_CLIENT_FLASH_SPEED 57600      // Usually 57600 for 3.3V variants and 115200 for 5V variants
 //  #define USE_TASMOTA_CLIENT_SERIAL_SPEED 57600     // Depends on the sketch that is running on the Uno/Pro Mini
-#endif
 
 #ifdef ESP32
   #undef OTA_URL
@@ -2661,17 +2661,18 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
   #define USE_WEBCLIENT_HTTPS
 #endif  // ESP32
 
+#endif
 // CUSTOM_CONFIG_FULLRULES *******************************************************************
 
 
 /*
-ooo        ooooo oooooooooooo   .oooooo.          .o.       
-`88.       .888' `888'     `8  d8P'  `Y8b        .888.      
- 888b     d'888   888         888               .8"888.     
- 8 Y88. .P  888   888oooo8    888              .8' `888.    
- 8  `888'   888   888    "    888     ooooo   .88ooo8888.   
- 8    Y     888   888       o `88.    .88'   .8'     `888.  
-o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o 
+ooo        ooooo oooooooooooo   .oooooo.          .o.
+`88.       .888' `888'     `8  d8P'  `Y8b        .888.
+ 888b     d'888   888         888               .8"888.
+ 8 Y88. .P  888   888oooo8    888              .8' `888.
+ 8  `888'   888   888    "    888     ooooo   .88ooo8888.
+ 8    Y     888   888       o `88.    .88'   .8'     `888.
+o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 */
 #ifdef CUSTOM_CONFIG_MEGA // ************************************************************************
 
@@ -2971,13 +2972,13 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #endif  // CUSTOM_CONFIG_MEGA *****************************************************************************
 
 /*
-   ____     _____       _____        _____    _____      __      _    _____     ____     ______      _____  
-  (    )   (_   _)     (_   _)      / ____\  / ___/     /  \    / )  / ____\   / __ \   (   __ \    / ____\ 
-  / /\ \     | |         | |       ( (___   ( (__      / /\ \  / /  ( (___    / /  \ \   ) (__) )  ( (___   
- ( (__) )    | |         | |        \___ \   ) __)     ) ) ) ) ) )   \___ \  ( ()  () ) (    __/    \___ \  
-  )    (     | |   __    | |   __       ) ) ( (       ( ( ( ( ( (        ) ) ( ()  () )  ) \ \  _       ) ) 
- /  /\  \  __| |___) ) __| |___) )  ___/ /   \ \___   / /  \ \/ /    ___/ /   \ \__/ /  ( ( \ \_))  ___/ /  
-/__(  )__\ \________/  \________/  /____/     \____\ (_/    \__/    /____/     \____/    )_) \__/  /____/ 
+   ____     _____       _____        _____    _____      __      _    _____     ____     ______      _____
+  (    )   (_   _)     (_   _)      / ____\  / ___/     /  \    / )  / ____\   / __ \   (   __ \    / ____\
+  / /\ \     | |         | |       ( (___   ( (__      / /\ \  / /  ( (___    / /  \ \   ) (__) )  ( (___
+ ( (__) )    | |         | |        \___ \   ) __)     ) ) ) ) ) )   \___ \  ( ()  () ) (    __/    \___ \
+  )    (     | |   __    | |   __       ) ) ( (       ( ( ( ( ( (        ) ) ( ()  () )  ) \ \  _       ) )
+ /  /\  \  __| |___) ) __| |___) )  ___/ /   \ \___   / /  \ \/ /    ___/ /   \ \__/ /  ( ( \ \_))  ___/ /
+/__(  )__\ \________/  \________/  /____/     \____\ (_/    \__/    /____/     \____/    )_) \__/  /____/
 
 */
 #ifdef CUSTOM_CONFIG_ALLSENSORS // ************************************************************************
@@ -3308,13 +3309,13 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 
 #ifdef CUSTOM_CONFIG_PLATINUM // **************************************************************************
 /*
-ooooooooo.   ooooo              .o.       ooooooooooooo ooooo ooooo      ooo ooooo     ooo ooo        ooooo 
-`888   `Y88. `888'             .888.      8'   888   `8 `888' `888b.     `8' `888'     `8' `88.       .888' 
- 888   .d88'  888             .8"888.          888       888   8 `88b.    8   888       8   888b     d'888  
- 888ooo88P'   888            .8' `888.         888       888   8   `88b.  8   888       8   8 Y88. .P  888  
- 888          888           .88ooo8888.        888       888   8     `88b.8   888       8   8  `888'   888  
- 888          888       o  .8'     `888.       888       888   8       `888   `88.    .8'   8    Y     888  
-o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     `YbodP'    o8o        o888o 
+ooooooooo.   ooooo              .o.       ooooooooooooo ooooo ooooo      ooo ooooo     ooo ooo        ooooo
+`888   `Y88. `888'             .888.      8'   888   `8 `888' `888b.     `8' `888'     `8' `88.       .888'
+ 888   .d88'  888             .8"888.          888       888   8 `88b.    8   888       8   888b     d'888
+ 888ooo88P'   888            .8' `888.         888       888   8   `88b.  8   888       8   8 Y88. .P  888
+ 888          888           .88ooo8888.        888       888   8     `88b.8   888       8   8  `888'   888
+ 888          888       o  .8'     `888.       888       888   8       `888   `88.    .8'   8    Y     888
+o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     `YbodP'    o8o        o888o
 ###########################################################################################################*/
 
 #undef CODE_IMAGE_STR
