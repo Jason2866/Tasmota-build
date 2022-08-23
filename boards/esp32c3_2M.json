@@ -7,7 +7,7 @@
     "extra_flags": "-DARDUINO_USB_CDC_ON_BOOT=0 -DESP32_2M -DESP32C3",
     "f_cpu": "160000000L",
     "f_flash": "80000000L",
-    "flash_mode": "dout",
+    "flash_mode": "dio",
     "mcu": "esp32c3",
     "variant": "esp32c3",
     "partitions": "partitions/esp32_2M_partition_app1792k_no_ota_spiffs192k.csv"
