@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 - Support for Ethernet in ESP32 safeboot firmware (#16388)
 - Flowrate meter flow amount/duration, show values in table format (#16385)
 - Zigbee prepare for Green Power support (#16407)
+- Command ``SetOption146 1`` to enable display of ESP32 internal temperature
+- Support for DFRobot SEN0390 V30B ambient light sensor (#16105)
 
 ### Changed
 - TasmotaModbus library from v3.5.0 to v3.6.0 (#16351)
