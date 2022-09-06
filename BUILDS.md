@@ -71,12 +71,12 @@ Note: `minimal` variant is not listed as it shouldn't be used outside of the [up
 | USE_SONOFF_L1             | - | x / - | x | x | - | x |
 | USE_ELECTRIQ_MOODL        | - | x / - | x | x | - | x |
 |                           |   |       |   |   |   |   |
-| USE_ENERGY_SENSOR         | x | x / x | x | x | - | - |
-| USE_ENERGY_DUMMY          | x | x / x | x | x | - | - |
+| USE_ENERGY_SENSOR         | - | x / x | x | x | - | - |
+| USE_ENERGY_DUMMY          | - | x / x | x | x | - | - |
 | USE_PZEM004T              | - | x / x | x | x | - | - |
 | USE_PZEM_AC               | - | x / x | x | x | - | - |
 | USE_PZEM_DC               | - | x / x | x | x | - | - |
-| USE_MCP39F501             | x | x / - | x | x | - | - |
+| USE_MCP39F501             | - | x / - | x | x | - | - |
 | USE_SDM72                 | - | - / x | - | x | - | - |
 | USE_SDM120                | - | - / x | - | x | - | - |
 | USE_SDM230                | - | - / x | - | - | - | - |
@@ -85,7 +85,7 @@ Note: `minimal` variant is not listed as it shouldn't be used outside of the [up
 | USE_DDSU666               | - | - / x | - | x | - | - |
 | USE_SOLAX_X1              | - | - / - | - | - | - | - |
 | USE_LE01MR                | - | - / - | - | - | - | - |
-| USE_BL09XX                | x | x / x | x | x | - | - |
+| USE_BL09XX                | - | x / x | x | x | - | - |
 | USE_TELEINFO              | - | - / - | - | - | - | - |
 | USE_IEM3000               | - | - / - | - | - | - | - |
 | USE_WE517                 | - | - / - | - | - | - | - |
