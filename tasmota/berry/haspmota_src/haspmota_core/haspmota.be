@@ -741,11 +741,15 @@ class lvh_obj
       end
       # print("f=", f, v, kv, self._lv_obj, self)
       if type(f) == 'function'
-        if string.find(kv, "style_") == 0
-          # style function need a selector as second parameter
-          f(self._lv_obj, v, 0 #- lv.PART_MAIN | lv.STATE_DEFAULT -#)
-        else
-          f(self._lv_obj, v)
+        try
+          if string.find(kv, "style_") == 0
+            # style function need a selector as second parameter
+            f(self._lv_obj, v, 0 #- lv.PART_MAIN | lv.STATE_DEFAULT -#)
+          else
+            f(self._lv_obj, v)
+          end
+        except .. as e, m
+          raise e, m + " for " + k
         end
         return
       else
@@ -832,6 +836,7 @@ class lvh_obj
 
     # print(">> rule matched", "val=", val)
     var val_n = real(val)         # force float type
+    if val_n == nil  return false end   # if the matched value is not a number, ignore
     var func = self._val_rule_function
     if func != nil
       try
