@@ -355,19 +355,6 @@ bool loadZigbeeDevices(void) {
   const char * storage_class = PSTR("");
   uint32_t file_version = 4;        // currently supporting v3 and v4
 
-#ifdef USE_ZIGBEE_EEPROM
-  if (zigbee.eeprom_ready) {
-    f.init(ZIGB_NAME4);                   // try v4 first
-    if (!f.valid()) {
-      f.init(ZIGB_NAME2);                 // else try v2
-      if (f.valid()) { file_version = 2; }  // v2 found
-    }
-    if (f.valid()) {
-      storage_class = PSTR("EEPROM");
-    }
-  }
-#endif // USE_ZIGBEE_EEPROM
-
 #ifdef USE_UFILESYS
   File file;
   if (!f.valid() && dfsp) {
@@ -382,6 +369,19 @@ bool loadZigbeeDevices(void) {
     }
   }
 #endif // USE_UFILESYS
+
+#ifdef USE_ZIGBEE_EEPROM
+  if (!f.valid() && zigbee.eeprom_ready) {
+    f.init(ZIGB_NAME4);                   // try v4 first
+    if (!f.valid()) {
+      f.init(ZIGB_NAME2);                 // else try v2
+      if (f.valid()) { file_version = 2; }  // v2 found
+    }
+    if (f.valid()) {
+      storage_class = PSTR("EEPROM");
+    }
+  }
+#endif // USE_ZIGBEE_EEPROM
 
 #ifdef ESP8266
   if (!f.valid() && flash_valid()) {
@@ -458,7 +458,7 @@ void saveZigbeeDevices(void) {
 // TODO can we prioritize filesystem instead of eeprom?
 #ifdef USE_ZIGBEE_EEPROM
   if (!f.valid() && zigbee.eeprom_ready) {
-    f.init(ZIGB_NAME2);
+    f.init(ZIGB_NAME4);
     storage_class = PSTR("EEPROM");
   }
 #endif
@@ -506,7 +506,7 @@ void saveZigbeeDevices(void) {
     ESP.flashRead(z_spi_start_sector * SPI_FLASH_SEC_SIZE, (uint32_t*) spi_buffer, SPI_FLASH_SEC_SIZE);
 
     Z_Flashentry *flashdata = (Z_Flashentry*)(spi_buffer + z_block_offset);
-    flashdata->name = ZIGB_NAME2;     // v2
+    flashdata->name = ZIGB_NAME4;     // v4
     flashdata->len = buf_len;
     flashdata->start = 0;
 
