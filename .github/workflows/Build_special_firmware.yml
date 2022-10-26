@@ -103,6 +103,7 @@ jobs:
           curl -O https://github.com/tasmota/install/raw/main/firmware/development/tasmota32s3cdc-safeboot
           mkdir -p ./firmware/firmware
           mv tasmota32* ./firmware/firmware
+          ls ./firmware/firmware
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - uses: actions/upload-artifact@v3
