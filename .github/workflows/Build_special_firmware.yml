@@ -101,6 +101,7 @@ jobs:
           curl -O https://github.com/tasmota/install/raw/main/firmware/development/tasmota32s2cdc-safeboot
           curl -O https://github.com/tasmota/install/raw/main/firmware/development/tasmota32s3-safeboot
           curl -O https://github.com/tasmota/install/raw/main/firmware/development/tasmota32s3cdc-safeboot
+          mkdir -p ./firmware/firmware
           mv tasmota32* ./firmware/firmware
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
