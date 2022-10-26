@@ -93,7 +93,7 @@ jobs:
         run: |
           pip install wheel
           pip install -U https://github.com/platformio/platformio/archive/develop.zip
-          copy_safeboot.py
+          python copy_safeboot.py
           mkdir -p ./firmware/firmware
           mv tasmota32* ./firmware/firmware
           ls ./firmware/firmware
