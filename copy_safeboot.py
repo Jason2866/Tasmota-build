@@ -2,7 +2,7 @@ from urllib import request
 
 URL = "https://github.com/arendst/Tasmota-firmware/raw/main/firmware/tasmota32/tasmota32-safeboot.bin"
 response = request.urlretrieve(URL, "tasmota32-safeboot.bin")
-t
+
 URL = "https://github.com/arendst/Tasmota-firmware/raw/main/firmware/tasmota32/tasmota32solo1-safeboot.bin"
 response = request.urlretrieve(URL, "tasmota32solo1-safeboot.bin")
 
