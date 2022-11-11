@@ -221,6 +221,16 @@ void ZeroCrossInit(uint32_t offset) {
 
 /********************************************************************************************/
 
+void XdrvXsnsCall(uint32_t function) {
+  XdrvCall(function);
+  XsnsCall(function);
+}
+
+void XsnsXdrvCall(uint32_t function) {
+  XsnsCall(function);
+  XdrvCall(function);
+}
+
 void SetLatchingRelay(power_t lpower, uint32_t state) {
   // TasmotaGlobal.power xx00 - toggle REL1 (Off) and REL3 (Off) - device 1 Off, device 2 Off
   // TasmotaGlobal.power xx01 - toggle REL2 (On)  and REL3 (Off) - device 1 On,  device 2 Off
@@ -276,8 +286,7 @@ void SetDevicePower(power_t rpower, uint32_t source) {
   }
 
   XdrvMailbox.index = rpower;
-  XdrvCall(FUNC_SET_POWER);               // Signal power state
-  XsnsCall(FUNC_SET_POWER);               // Signal power state
+  XdrvXsnsCall(FUNC_SET_POWER);           // Signal power state
 
   XdrvMailbox.index = rpower;
   XdrvMailbox.payload = source;
@@ -889,8 +898,7 @@ void GetSensorValues(void) {
   char *start = ResponseData();
   int data_start = ResponseLength();
 
-  XsnsCall(FUNC_JSON_APPEND);
-  XdrvCall(FUNC_JSON_APPEND);
+  XsnsXdrvCall(FUNC_JSON_APPEND);
 
   if (data_start == ResponseLength()) { return; }
 
@@ -1137,8 +1145,7 @@ void PerformEverySecond(void)
         MqttPublishTeleState();
         MqttPublishTeleperiodSensor();
 
-        XsnsCall(FUNC_AFTER_TELEPERIOD);
-        XdrvCall(FUNC_AFTER_TELEPERIOD);
+        XsnsXdrvCall(FUNC_AFTER_TELEPERIOD);
       } else {
         // Global values (Temperature, Humidity and Pressure) update every 10 seconds
         if (!(TasmotaGlobal.tele_period % 10)) {
@@ -2072,7 +2079,7 @@ void GpioInit(void)
     if (mpin) { SetPin(i, mpin); }                  // Anything above GPIO_NONE and below GPIO_SENSOR_END
   }
 
-//  AddLogBufferSize(LOG_LEVEL_DEBUG, (uint8_t*)TasmotaGlobal.gpio_pin, nitems(TasmotaGlobal.gpio_pin), sizeof(TasmotaGlobal.gpio_pin[0]));
+//  AddLog(LOG_LEVEL_DEBUG, PSTR("DBG: TasmotaGlobal.gpio_pin %*_V"), nitems(TasmotaGlobal.gpio_pin), (uint8_t*)TasmotaGlobal.gpio_pin);
 
   if (ResetReasonPowerOn()) {
     TasmotaGlobal.power_on_delay = Settings->param[P_POWER_ON_DELAY2];  // SetOption47 - Delay switching relays to reduce power surge at power on
