@@ -3395,7 +3395,7 @@ void CmndUndocA(void)
  * Interface
 \*********************************************************************************************/
 
-bool Xdrv04(uint8_t function)
+bool Xdrv04(uint32_t function)
 {
   bool result = false;
 
@@ -3427,6 +3427,12 @@ bool Xdrv04(uint8_t function)
         break;
       case FUNC_BUTTON_MULTI_PRESSED:
         result = XlgtCall(FUNC_BUTTON_MULTI_PRESSED);
+        break;
+      case FUNC_NETWORK_UP:
+        XlgtCall(FUNC_NETWORK_UP);
+        break;
+      case FUNC_NETWORK_DOWN:
+        XlgtCall(FUNC_NETWORK_DOWN);
         break;
 #ifdef USE_WEBSERVER
       case FUNC_WEB_ADD_MAIN_BUTTON:

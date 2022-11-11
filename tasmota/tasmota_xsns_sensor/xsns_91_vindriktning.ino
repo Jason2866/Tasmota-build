@@ -64,7 +64,7 @@ bool VindriktningReadData(void) {
   VindriktningSerial->readBytes(buffer, VINDRIKTNING_DATASET_SIZE);
   VindriktningSerial->flush();  // Make room for another burst
 
-  AddLogBuffer(LOG_LEVEL_DEBUG_MORE, buffer, VINDRIKTNING_DATASET_SIZE);
+  AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("VDN: %*_H"), VINDRIKTNING_DATASET_SIZE, buffer);
 
   uint8_t crc = 0;
   for (uint32_t i = 0; i < VINDRIKTNING_DATASET_SIZE; i++) {
@@ -165,7 +165,7 @@ void VindriktningShow(bool json) {
  * Interface
 \*********************************************************************************************/
 
-bool Xsns91(uint8_t function) {
+bool Xsns91(uint32_t function) {
   bool result = false;
 
   if (Vindriktning.type) {

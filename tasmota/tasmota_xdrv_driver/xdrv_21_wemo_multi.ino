@@ -427,7 +427,7 @@ void WemoRespondToMSearch(int echo_type) {
  * Interface
 \*********************************************************************************************/
 
-bool Xdrv21(uint8_t function)
+bool Xdrv21(uint32_t function)
 {
   bool result = false;
 
@@ -452,6 +452,12 @@ bool Xdrv21(uint8_t function)
           wemoDevice[numOfWemoSwitch]->RegisterHandlers();
           numOfWemoSwitch++;
         }
+        break;
+      case FUNC_NETWORK_UP:
+        UdpConnect();
+        break;
+      case FUNC_NETWORK_DOWN:
+        UdpDisconnect();
         break;
     }
   }

@@ -614,7 +614,7 @@ bool CLLFlashFirmware(uint8_t* data, uint32_t size)
         uint32_t block = 0;
         unsigned int addr = 0x0000;
         AddLog(LOG_LEVEL_INFO,PSTR("CCL: will flash ...."));
-        AddLogBuffer(LOG_LEVEL_DEBUG,data,16); // quick check to compare with a hex editor
+        AddLog(LOG_LEVEL_DEBUG,PSTR("CCL: data %16_H"), data); // quick check to compare with a hex editor
 
         while((block*512)<size)
         {
@@ -671,7 +671,7 @@ void CCLoadershow(bool json) {
  * Interface
 \*********************************************************************************************/
 
-bool Xdrv46(uint8_t function) {
+bool Xdrv46(uint32_t function) {
   if (!TasmotaGlobal.gpio_optiona.enable_ccloader) { return false; }
 
   bool result = false;
