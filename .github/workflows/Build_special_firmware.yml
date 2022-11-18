@@ -89,10 +89,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-          cache: 'wheel'
+          cache: 'pip'
       - name: Install dependencies
         run: |
-          #pip install wheel
+          pip install wheel
           pip install -U https://github.com/platformio/platformio/archive/develop.zip
           curl -O https://raw.githubusercontent.com/Jason2866/Tasmota-build/start_build/copy_safeboot.py
           python copy_safeboot.py
