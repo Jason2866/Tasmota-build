@@ -1,4 +1,4 @@
-name: Build_special_firmware
+name: Build special firmware using cache
 
 on:
   workflow_dispatch:
