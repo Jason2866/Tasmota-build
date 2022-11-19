@@ -85,14 +85,28 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: special_builder
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+           ${{ runner.os }}-pip-
+      - name: Cache PlatformIO
+        uses: actions/cache@v2
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade platformio
       - name: Install dependencies
         run: |
-          pip install wheel
-          pip install -U https://github.com/platformio/platformio/archive/develop.zip
           curl -O https://raw.githubusercontent.com/Jason2866/Tasmota-build/start_build/copy_safeboot.py
           python copy_safeboot.py
           mkdir -p ./firmware/firmware
