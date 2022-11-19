@@ -96,7 +96,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: ${{ runner.os }}-${{ hashFiles('**/.piopm') }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
