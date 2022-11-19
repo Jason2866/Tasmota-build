@@ -104,7 +104,8 @@ jobs:
       - name: Install PlatformIO
         run: |
           python -m pip install --upgrade pip
-          pip install --upgrade platformio
+          #pip install --upgrade platformio
+          pip install -U https://github.com/platformio/platformio/archive/develop.zip
       - name: Install dependencies
         run: |
           curl -O https://raw.githubusercontent.com/Jason2866/Tasmota-build/start_build/copy_safeboot.py
