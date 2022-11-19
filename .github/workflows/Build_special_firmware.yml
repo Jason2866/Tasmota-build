@@ -1,0 +1,168 @@
+name: Build_special_firmware
+
+on:
+  workflow_dispatch:
+  push:
+    branches: start_build
+    paths-ignore:
+    - '.github/**' # Ignore changes towards the .github directory
+
+jobs:
+  tasmota_pull:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: special_builder
+    - name: Use latest Tasmota development
+      run: |
+        git config --local user.name "Github BUILD"
+        git config --local user.email github-actions@github.com
+        git remote add -f Tasmota "https://github.com/arendst/Tasmota.git" --track development
+        git switch -c work
+        git merge Tasmota/development --allow-unrelated-histories &> status.txt
+        echo "$(<status.txt)"
+    - name: Push updates of latest Tasmota development to repo
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.MASTER_ACCESS_TOKEN }}
+        branch: 'special_builder'
+
+  special:
+    needs: [tasmota_pull]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        variant:
+          - tasmota-tls
+          - tasmota-gps
+          - tasmota-battery
+          - tasmota-scripting
+          - tasmota-mega
+          - tasmota-allsensors
+          - tasmota-teleinfo
+          - tasmota-thermostat
+          - tasmota-rangeextender
+          - tasmota-fullrules
+          - tasmota-platinum
+          - tasmota-titanium
+          - tasmota-minicustom
+          - tasmota32-teleinfo
+          - tasmota32c3-teleinfo
+          - tasmota32s2-teleinfo
+          - tasmota32-thermostat
+          - tasmota32solo1-thermostat
+          - tasmota32solo1-bluetooth
+          - tasmota32-zigbee
+          - tasmota32-zigbeebridge
+          - tasmota32-gps
+          - tasmota32-battery
+          - tasmota32-scripting
+          - tasmota32-mega
+          - tasmota32-allsensors
+          - tasmota32-fullrules
+          - tasmota32-platinum
+          - tasmota32-titanium
+          - tasmota32-rangeextender
+          - tasmota32c3_2M
+          - tasmota32c3-bluetooth
+          - tasmota32s2-lvgl
+          - tasmota32s3-lvgl
+          - tasmota32s3cdc-qio_opi
+          - tasmota32c3-lvgl
+          - tasmota32s2-display
+          - tasmota32s3-display
+          - tasmota32c3-display
+          - tasmota32s3-bluetooth
+          - tasmota32s3cdc-box
+          - tasmota32c3-mi32-homebridge
+          - tasmota32s3-mi32-homebridge
+          - tasmota32-mi32-homebridge
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: special_builder
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          pip install wheel
+          pip install -U https://github.com/platformio/platformio/archive/develop.zip
+          curl -O https://raw.githubusercontent.com/Jason2866/Tasmota-build/start_build/copy_safeboot.py
+          python copy_safeboot.py
+          mkdir -p ./firmware/firmware
+          mv tasmota32* ./firmware/firmware
+          ls -l ./firmware/firmware
+      - name: Run PlatformIO
+        run: platformio run -e ${{ matrix.variant }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: firmware
+          path: ./build_output
+
+  Upload:
+    needs: [special]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: firmware
+        path: ./mv_firmware
+    - name: Display structure of downloaded files
+      run: |
+        ls -R
+      working-directory: ./mv_firmware
+    - name: Move firmware files in sub-folders
+      run: |
+        mkdir -p ./firmware/tasmota32/other
+        mkdir -p ./firmware/tasmota/other
+        mkdir -p ./firmware/map
+        cp -rf ./mv_firmware/map/* ./firmware/map/
+        cp -rf ./mv_firmware/firmware/tasmota-* ./firmware/tasmota/other/
+        cp -rf ./mv_firmware/firmware/tasmota32* ./firmware/tasmota32/other/
+        rm -rf ./mv_firmware
+    - name: Build commit message
+      id: step_one
+      run: |
+        tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
+        tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
+        echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
+    - name: Display files to transfer
+      run: ls -R ./*
+    - name: Push Firmware files to tmp_copy repo
+      uses: Jason2866/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: 'firmware'
+        destination_repo: 'Jason2866/tmp_copy'
+        destination_branch: 'firmware'
+        user_email: 'github-actions@github.com'
+        user_name: 'github-actions'
+        commit_message: '${{ env.tas_com }}'
+
+  Start_final_copy:
+    needs: Upload
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Creat trigger.txt
+      run: |
+         echo ${{ github.run_number }}  &> trigger.txt
+         echo "$(<trigger.txt)"
+    - name: Push trigger.txt to start workflow copy in tmp repo
+      uses: Jason2866/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: 'trigger.txt'
+        destination_repo: 'Jason2866/tmp_copy'
+        destination_branch: 'action-special'
+        user_email: 'github-actions@github.com'
+        user_name: 'github-actions'
