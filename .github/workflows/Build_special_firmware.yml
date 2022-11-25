@@ -91,6 +91,7 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install wheel
           pip install -U https://github.com/platformio/platformio/archive/develop.zip
           curl -O https://raw.githubusercontent.com/Jason2866/Tasmota-build/start_build/copy_safeboot.py
