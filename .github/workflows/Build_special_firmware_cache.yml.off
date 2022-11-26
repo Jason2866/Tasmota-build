@@ -9,7 +9,7 @@ on:
 
 jobs:
   tasmota_pull:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: false
     steps:
     - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
 
   special:
     needs: [tasmota_pull]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -122,7 +122,7 @@ jobs:
 
   Upload:
     needs: [special]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     steps:
     - uses: actions/download-artifact@v3
@@ -164,7 +164,7 @@ jobs:
 
   Start_final_copy:
     needs: Upload
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - name: Creat trigger.txt
