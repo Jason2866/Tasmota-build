@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Serial Modbus transmit enable GPIOs to all modbus energy drivers and modbus bridge (#17247)
 - Berry crypto module, with AES_GCM by default and EC_CC25519 optional
+- IPv6 support for Ethernet (ESP32)
 
 ### Breaking Changed
 
@@ -16,6 +17,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - TasmotaSerial ``read(buffer, size)`` regression from v9.3.0
+- RCSwitch exception 0/6 on some protocols (#17285)
+- ESP32 exception 28 when RtcNtpServer is enabled on restart (#17338)
 
 ### Removed
 
