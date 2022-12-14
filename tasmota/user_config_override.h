@@ -518,6 +518,13 @@ d'""""""d888' `888'  d8P'  `Y8b   `888'   `Y8b `888'     `8 `888'     `8
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
 #endif  // ESP32
 
 #define USE_UFILESYS
@@ -1406,6 +1413,13 @@ oo     .d8P `88b    ooo   888  `88b.   888   888              888       888   8 
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
 #endif  // ESP32
 
 // -- Optional modules ----------------------------
@@ -2050,6 +2064,14 @@ Thermostat
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
 
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
+
   #define USE_BLE_ESP32                            // Enable new BLE driver
   #define USE_EQ3_ESP32
   #define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
@@ -2665,6 +2687,14 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
 #endif  // ESP32
 
 #endif
@@ -2726,6 +2756,14 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
 #endif  // ESP32
 
 //#define USE_SCRIPT                               // Add support for script
@@ -3033,6 +3071,14 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
 #endif  // ESP32
 
 //#define USE_SCRIPT                               // Add support for script
@@ -3361,6 +3407,14 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
 #endif  // ESP32
 
 //#ifdef  ESP8266
@@ -3655,6 +3709,14 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+
+  #define USE_ETHERNET
+  #undef  ETH_TYPE
+  #define ETH_TYPE 0 // ETH_PHY_LAN8720
+  #undef  ETH_CLKMODE
+  #define ETH_CLKMODE 3 // ETH_CLOCK_GPIO17_OUT
+  #undef  ETH_ADDRESS
+  #define ETH_ADDRESS 1 // PHY1
 #endif  // ESP32
 
 //#ifdef  ESP8266
