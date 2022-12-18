@@ -2774,15 +2774,15 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define ROTARY_MAX_STEPS     10                // Rotary step boundary
 
 #ifdef  ESP8266
-    #define USE_SONOFF_RF                        // Add support for Sonoff Rf Bridge
-    #define USE_RF_FLASH                         // Add support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB (+3k code)
-    #define USE_SONOFF_IFAN                      // Add support for Sonoff iFan02 and iFan03 (+2k code)
-    #define USE_SONOFF_SC                        // Add support for Sonoff Sc (+1k1 code)
-    #define USE_ARMTRONIX_DIMMERS                // Add support for Armtronix Dimmers (+1k4 code)
+    //#define USE_SONOFF_RF                        // Add support for Sonoff Rf Bridge
+    //#define USE_RF_FLASH                         // Add support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB (+3k code)
+    //#define USE_SONOFF_IFAN                      // Add support for Sonoff iFan02 and iFan03 (+2k code)
+    //#define USE_SONOFF_SC                        // Add support for Sonoff Sc (+1k1 code)
+    //#define USE_ARMTRONIX_DIMMERS                // Add support for Armtronix Dimmers (+1k4 code)
     #define USE_PS_16_DZ                         // Add support for PS-16-DZ Dimmer and Sonoff L1 (+2k code)
-    #define USE_ARILUX_RF                        // Add support for Arilux RF remote controller (+1k code, 252 iram (non 2.3.0))
-    #define USE_EXS_DIMMER                       // Add support for ES-Store WiFi Dimmer (+2k6 code)
-    #define USE_SONOFF_D1                        // Add support for Sonoff D1 Dimmer
+    //#define USE_ARILUX_RF                        // Add support for Arilux RF remote controller (+1k code, 252 iram (non 2.3.0))
+    //#define USE_EXS_DIMMER                       // Add support for ES-Store WiFi Dimmer (+2k6 code)
+    //#define USE_SONOFF_D1                        // Add support for Sonoff D1 Dimmer
     #define USE_PWM_DIMMER                       // Add support for MJ-SD01/acenx/NTONPOWER PWM dimmers (+4k5 code)
     #define USE_PWM_DIMMER_REMOTE                // Add support for remote switches to PWM Dimmer, also adds device groups support (+0k7 code, also includes device groups)
 #endif
