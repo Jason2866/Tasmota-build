@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [12.3.1.2]
 ### Added
 - Berry crypto add ``EC_P256`` and ``PBKDF2_HMAC_SHA256`` algorithms required by Matter protocol
+- Berry crypto add ``random`` to generate series of random bytes
 
 ### Breaking Changed
 
@@ -14,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Shutter default motorstop set to 0 (#17403)
+- Shutter default tilt configuration (#17484)
 
 ### Removed
 
