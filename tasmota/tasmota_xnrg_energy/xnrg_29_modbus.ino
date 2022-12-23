@@ -36,7 +36,7 @@
  *   Voltage       - Voltage register entered as decimal or hexadecimal for one phase (0x0000) or up to three phases ([0x0000,0x0002,0x0004]) or
  *                   Additional defined parameters
  *                   Value pair description:
- *                   {"R":0,"T":0,"M":1}
+ *                   {"R":0,"T":0,"F":0}
  *                   R - Modbus register entered as decimal or hexadecimal for one phase (0x0160) or up to three phases ([0x0160,0x0162,0x0164])
  *                   T - Datatype - optional. default is 0 - float:
  *                       0 - float
@@ -48,7 +48,17 @@
  *                       6 = 4-byte signed with swapped words
  *                       7 = not used
  *                       8 = 4-byte unsigned with swapped words
- *                   M - Multiply, if negative, or divide, if positive, the read register by 1 to 10000 - optional. default = 1
+ *                   F - Register factor positive for multiplication or negative for division - optional. default is 0 - no action
+ *                       -4 - divide by 10000
+ *                       -3 - divide by 1000
+ *                       -2 - divide by 100
+ *                       -1 - divide by 10
+ *                       0 - no action
+ *                       1 - multiply by 10
+ *                       2 - multiply by 100
+ *                       3 - multiply by 1000
+ *                       4 - multiply by 10000
+ *                   M - [LEGACY - replaced by "F"] Divide register by 1 to 10000 - optional. default = 0 (no action)
  *   Current       - Current register entered as decimal or hexadecimal for one phase (0x0006) or up to three phases ([0x0006,0x0008,0x000A]) or
  *                   See additional defines like voltage.
  *   Power         - Active power register entered as decimal or hexadecimal for one phase (0x000C) or up to three phases ([0x000C,0x000E,0x0010]) or
@@ -68,7 +78,7 @@
  * Optional user defined registers:
  *   User          - Additional user defined registers
  *                   Value pair description:
- *                   "User":{"R":0x0024,"T":0,"M":1,"J":"PhaseAngle","G":"Phase Angle","U":"Deg","D":2}
+ *                   "User":{"R":0x0024,"T":0,"F":0,"J":"PhaseAngle","G":"Phase Angle","U":"Deg","D":2}
  *                   R - Modbus register entered as decimal or hexadecimal for one phase (0x0160) or up to three phases ([0x0160,0x0162,0x0164])
  *                   T - Datatype - optional. default is 0 - float:
  *                       0 - float
@@ -80,7 +90,17 @@
  *                       6 = 4-byte signed with swapped words
  *                       7 = not used
  *                       8 = 4-byte unsigned with swapped words
- *                   M - Multiply, if negative, or divide, if positive, the read register by 1 to 10000 - optional. default = 1
+ *                   F - Register factor positive for multiplication or negative for division - optional. default is 0 - no action
+ *                       -4 - divide by 10000
+ *                       -3 - divide by 1000
+ *                       -2 - divide by 100
+ *                       -1 - divide by 10
+ *                       0 - no action
+ *                       1 - multiply by 10
+ *                       2 - multiply by 100
+ *                       3 - multiply by 1000
+ *                       4 - multiply by 10000
+ *                   M - [LEGACY - replaced by "F"] Divide register by 1 to 10000 - optional. default = 0 (no action)
  *                   J - JSON register name (preferrably without spaces like "PhaseAngle")
  *                   G - GUI register name
  *                   U - GUI unit name
@@ -99,25 +119,27 @@
  * rule3 on file#modbus do {"Name":"SDM230","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":0,"Current":6,"Power":12,"ApparentPower":18,"ReactivePower":24,"Factor":30,"Frequency":70,"Total":342,"ExportActive":0x004A} endon
  * rule3 on file#modbus do {"Name":"SDM230 with hex registers","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":0x0000,"Current":0x0006,"Power":0x000C,"ApparentPower":0x0012,"ReactivePower":0x0018,"Factor":0x001E,"Frequency":0x0046,"Total":0x0156,"ExportActive":0x004A} endon
  * rule3 on file#modbus do {"Name":"DDSU666","Baud":9600,"Config":8N1","Address":1,"Function":4,"Voltage":0x2000,"Current":0x2002,"Power":0x2004,"ReactivePower":0x2006,"Factor":0x200A,"Frequency":0x200E,"Total":0x4000,"ExportActive":0x400A} endon
+ * rule3 on file#modbus do {"Name":"PZEM014","Baud":9600,"Config":8N1","Address":1,"Function":4,"Voltage":{"R":0,"T":3,"F":-1},"Current":{"R":1,"T":8,"F":-3},"Power":{"R":3,"T":8,"F":-1},"Factor":{"R":8,"T":3,"F":-2},"Frequency":{"R":7,"T":3,"F":-1},"Total":{"R":5,"T":8,"F":-3}} endon
+ * rule3 on file#modbus do {"Name":"Solax X3MIC","Baud":9600,"Config":8N1","Address":1,"Function":4,"Voltage":{"R":0x0404,"T":3,"F":-1},"Power":{"R":0x040e,"T":3,"F":0},"Total":{"R":0x0423,"T":8,"F":-3}} endon
  *
  * Example using default Energy registers and some user defined registers:
  * rule3 on file#modbus do {"Name":"SDM72","Baud":9600,"Config":8N1","Address":0x01,"Function":0x04,"Power":0x0034,"Total":0x0156,"ExportActive":0x004A,"User":[{"R":0x0502,"J":"ImportActive","G":"Import Active","U":"kWh","D":24},{"R":0x0502,"J":"ExportPower","G":"Export Power","U":"W","D":23},{"R":0x0500,"J":"ImportPower","G":"Import Power","U":"W","D":23}]} endon
  * rule3 on file#modbus do {"Name":"SDM120","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":0,"Current":6,"Power":12,"ApparentPower":18,"ReactivePower":24,"Factor":30,"Frequency":70,"Total":342,"ExportActive":0x004A,"User":[{"R":0x0048,"J":"ImportActive","G":"Import Active","U":"kWh","D":24},{"R":0x004E,"J":"ExportReactive","G":"Export Reactive","U":"kVArh","D":24},{"R":0x004C,"J":"ImportReactive","G":"Import Reactive","U":"kVArh","D":24},{"R":0x0024,"J":"PhaseAngle","G":"Phase Angle","U":"Deg","D":2}]} endon
  * rule3 on file#modbus do {"Name":"SDM230 with two user registers","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":0,"Current":6,"Power":12,"ApparentPower":18,"ReactivePower":24,"Factor":30,"Frequency":70,"Total":342,"ExportActive":0x004A,"User":[{"R":0x004E,"J":"ExportReactive","G":"Export Reactive","U":"kVArh","D":3},{"R":0x0024,"J":"PhaseAngle","G":"Phase Angle","U":"Deg","D":2}]} endon
  * rule3 on file#modbus do {"Name":"SDM630","Baud":9600,"Config":8N1","Address":1,"Function":4,"Voltage":[0,2,4],"Current":[6,8,10],"Power":[12,14,16],"ApparentPower":[18,20,22],"ReactivePower":[24,26,28],"Factor":[30,32,34],"Frequency":70,"Total":342,"ExportActive":[352,354,356],"User":{"R":[346,348,350],"J":"ImportActive","G":"Import Active","U":"kWh","D":24}} endon
- * rule3 on file#modbus do {"Name":"X3MIC","Baud":9600,"Config":8N1","Address":1,"Function":4,"Voltage":{"R":0x0404,"T":3,"M":10},"Power":{"R":0x040e,"T":3,"M":1},"Total":{"R":0x0423,"T":8,"M":1000}} endon
  *
  * Note:
  * - To enter long rules using the serial console and solve error "Serial buffer overrun" you might need to enlarge the serial input buffer with command serialbuffer 800
  * - Changes to rule file are only executed on restart
  *
  * Restrictions:
- * - Supports Modbus floating point registers
+ * - Supports Modbus single and double integer registers in addition to floating point registers
  * - Max number of user defined registers is defined by one rule buffer (511 characters uncompressed, around 800 characters compressed)
  *
  * To do:
  * - Support all three rule slots
  * - Support other modbus register like integers
+ * - Support multiple devices on modbus
  *
  * Test set:
  * rule3 on file#modbus do {"Name":"SDM230 test1","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":[0,0,0],"Current":[6,6,6],"Power":[12,12,12],"ApparentPower":[18,18,18],"ReactivePower":[24,24,24],"Factor":[30,30,30],"Frequency":[70,70,70],"Total":[342,342,342]} endon
@@ -128,7 +150,7 @@
  * rule3 on file#modbus do {"Name":"SDM120 test1","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":0,"Current":6,"Power":12,"ApparentPower":18,"ReactivePower":24,"Factor":30,"Frequency":70,"Total":342,"ExportActive":0x004A,"User":[{"R":0x0048,"J":"ImportActive","G":"Import Active","U":"kWh","D":24},{"R":0x004E,"J":"ExportReactive","G":"Export Reactive","U":"kVArh","D":24},{"R":0x004C,"J":"ImportReactive","G":"Import Reactive","U":"kVArh","D":24},{"R":0x0024,"J":"PhaseAngle","G":"Phase Angle","U":"Deg","D":2}]} endon
  *
  * rule3 on file#modbus do {"Name":"SDM230 test6","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":{"R":0,"T":0,"M":1},"Current":{"R":6,"T":0,"M":1},"Power":{"R":12,"T":0,"M":1},"Frequency":70,"Total":342} endon
- * rule3 on file#modbus do {"Name":"SDM230 test6","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":{"R":0,"T":0,"M":1},"Current":{"R":6,"T":0,"M":1},"Power":{"R":12,"T":0,"M":1},"Frequency":70,"Total":342,"User":{"R":0x0048,"T":0,"M":10,"J":"ImportActive","G":"Import Active","U":"kWh","D":24}} endon
+ * rule3 on file#modbus do {"Name":"SDM230 test6","Baud":2400,"Config":8N1","Address":1,"Function":4,"Voltage":{"R":0,"T":0,"F":0},"Current":{"R":6,"T":0,"F":0},"Power":{"R":12,"T":0,"F":0},"Frequency":70,"Total":342,"User":{"R":0x0048,"T":0,"F":-1,"J":"ImportActive","G":"Import Active","U":"kWh","D":24}} endon
 \*********************************************************************************************/
 
 #define XNRG_29                   29
@@ -139,8 +161,6 @@
 #define ENERGY_MODBUS_FUNC        0x04                 // Default Modbus function code
 
 #define ENERGY_MODBUS_DATATYPE    0                    // Default Modbus datatype is 4-byte float
-#define ENERGY_MODBUS_DIVIDER     1                    // Default Modbus data divider
-
 #define ENERGY_MODBUS_DECIMALS    0                    // Default user decimal resolution
 
 #define ENERGY_MODBUS_TICKER                           // Enable for ESP8266 when using softwareserial solving most modbus serial retries
@@ -148,17 +168,17 @@
 //#define ENERGY_MODBUS_DEBUG
 //#define ENERGY_MODBUS_DEBUG_SHOW
 
-const uint16_t nrg_mbs_reg_not_used = 1;               // Odd number 1 is unused register
+const uint16_t nrg_mbs_reg_not_used = 0xFFFF;          // Odd number 65535 is unused register
 
-enum EnergyModbusDataType { NRG_DT_FLOAT,              // 4-byte float
-                            NRG_DT_S16,                // 2-byte signed
-                            NRG_DT_S32,                // 4-byte signed
-                            NRG_DT_U16,                // 2-byte unsigned
-                            NRG_DT_U32,                // 4-byte unsigned
-                            NRG_DT_x16_nu1,
-                            NRG_DT_S32_SW,             // 4-byte signed with swapped words
-                            NRG_DT_x16_nu2,
-                            NRG_DT_U32_SW,             // 4-byte unsigned with swapped words
+enum EnergyModbusDataType { NRG_DT_FLOAT,              // 0 = 4-byte float
+                            NRG_DT_S16,                // 1 = 2-byte signed
+                            NRG_DT_S32,                // 2 = 4-byte signed
+                            NRG_DT_U16,                // 3 = 2-byte unsigned
+                            NRG_DT_U32,                // 4 = 4-byte unsigned
+                            NRG_DT_x16_nu1,            // 5 =
+                            NRG_DT_S32_SW,             // 6 = 4-byte signed with swapped words
+                            NRG_DT_x16_nu2,            // 7 =
+                            NRG_DT_U32_SW,             // 8 = 4-byte unsigned with swapped words
                             NRG_DT_MAX };
 
 enum EnergyModbusResolutions { NRG_RES_VOLTAGE = 21,   // V
@@ -216,7 +236,7 @@ struct NRGMBSPARAM {
 
 typedef struct NRGMBSREGISTER {
   uint16_t address[ENERGY_MAX_PHASES];
-  int16_t divider;
+  int16_t factor;
   uint32_t datatype;
 } NrgMbsRegister_t;
 NrgMbsRegister_t *NrgMbsReg = nullptr;
@@ -342,10 +362,17 @@ void EnergyModbusLoop(void) {
           break;
         }
       }
-      if (NrgMbsReg[NrgMbsParam.state].divider < 1) {
-        value *= (NrgMbsReg[NrgMbsParam.state].divider * -1);
+      uint32_t factor = 1;
+      // 1 = 10, 2 = 100, 3 = 1000, 4 = 10000
+      uint32_t scaler = abs(NrgMbsReg[NrgMbsParam.state].factor);
+      while (scaler) {
+        factor *= 10;
+        scaler--;
+      }
+      if (NrgMbsReg[NrgMbsParam.state].factor < 0) {
+        value /= factor;
       } else {
-        value /= NrgMbsReg[NrgMbsParam.state].divider;
+        value *= factor;
       }
 
       switch (NrgMbsParam.state) {
@@ -417,7 +444,7 @@ void EnergyModbusLoop(void) {
 
 #ifdef USE_RULES
 bool EnergyModbusReadUserRegisters(JsonParserObject user_add_value, uint32_t add_index) {
-  // {"R":0x004E,"T":0,"M":1,"J":"ExportReactive","G":"Export Reactive","U":"kVArh","D":3}
+  // {"R":0x004E,"T":0,"F":0,"J":"ExportReactive","G":"Export Reactive","U":"kVArh","D":3}
   uint32_t reg_index = NRG_MBS_MAX_REGS + add_index;
   JsonParserToken val;
   val = user_add_value[PSTR("R")];               // Register address
@@ -443,10 +470,21 @@ bool EnergyModbusReadUserRegisters(JsonParserObject user_add_value, uint32_t add
     // "T":0
     NrgMbsReg[reg_index].datatype = val.getUInt();
   }
-  val = user_add_value[PSTR("M")];               // Register divider
+  val = user_add_value[PSTR("F")];               // Register factor
   if (val) {
-    // "M":1 or "M":-10
-    NrgMbsReg[reg_index].divider = val.getInt();
+    // "F":1 or "F":-2
+    NrgMbsReg[reg_index].factor = val.getInt();
+  }
+  val = user_add_value[PSTR("M")];               // [LEGACY] Register divider
+  if (val) {
+    // "M":1
+    int32_t divider = val.getUInt();
+    int factor = 0;
+    while (divider > 1) {
+      divider /= 10;
+      factor--;
+    }
+    NrgMbsReg[reg_index].factor = factor;
   }
   val = user_add_value[PSTR("J")];               // JSON value name
   if (val) {
@@ -472,13 +510,13 @@ bool EnergyModbusReadUserRegisters(JsonParserObject user_add_value, uint32_t add
   }
 
 #ifdef ENERGY_MODBUS_DEBUG
-  AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Idx %d, R [%04X,%04X,%04X], T %d, M %d, J '%s', G '%s', U '%s', D %d"),
+  AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Idx %d, R [%04X,%04X,%04X], T %d, F %d, J '%s', G '%s', U '%s', D %d"),
     add_index,
     NrgMbsReg[reg_index].address[0],
     NrgMbsReg[reg_index].address[1],
     NrgMbsReg[reg_index].address[2],
     NrgMbsReg[reg_index].datatype,
-    NrgMbsReg[reg_index].divider,
+    NrgMbsReg[reg_index].factor,
     NrgMbsUser[add_index].json_name,
     NrgMbsUser[add_index].gui_name,
     NrgMbsUser[add_index].gui_unit,
@@ -529,7 +567,6 @@ bool EnergyModbusReadRegisters(void) {
   // Init defaults
   for (uint32_t i = 0; i < NrgMbsParam.total_regs; i++) {
     NrgMbsReg[i].datatype = ENERGY_MODBUS_DATATYPE;
-    NrgMbsReg[i].divider = ENERGY_MODBUS_DIVIDER;
     for (uint32_t j = 0; j < ENERGY_MAX_PHASES; j++) {
       NrgMbsReg[i].address[j] = nrg_mbs_reg_not_used;
     }
@@ -576,12 +613,12 @@ bool EnergyModbusReadRegisters(void) {
     if (val) {
       // "Voltage":0
       // "Voltage":[0,0,0]
-      // "Voltage":{"R":0,"T":0,"M":1}
-      // "Voltage":{"R":[0,0,0],"T":0,"M":1}
+      // "Voltage":{"R":0,"T":0,"F":0}
+      // "Voltage":{"R":[0,0,0],"T":0,"F":0}
       uint32_t phase = 0;
       if (val.isObject()) {
-        // "Voltage":{"R":0,"T":0,"M":1}
-        // "Voltage":{"R":[0,0,0],"T":0,"M":1}
+        // "Voltage":{"R":0,"T":0,"F":0}
+        // "Voltage":{"R":[0,0,0],"T":0,"F":0}
         JsonParserObject register_add_values = val.getObject();
         val = register_add_values[PSTR("R")];    // Register address
         if (val.isArray()) {
@@ -602,10 +639,21 @@ bool EnergyModbusReadRegisters(void) {
           // "T":0
           NrgMbsReg[names].datatype = val.getUInt();
         }
-        val = register_add_values[PSTR("M")];    // Register divider
+        val = register_add_values[PSTR("F")];    // Register factor
         if (val) {
-          // "M":1 or "M":-10
-          NrgMbsReg[names].divider = val.getInt();
+          // "F":1 or "F":-2
+          NrgMbsReg[names].factor = val.getInt();
+        }
+        val = register_add_values[PSTR("M")];    // [LEGACY] Register divider
+        if (val) {
+          // "M":1
+          int32_t divider = val.getUInt();
+          int factor = 0;
+          while (divider > 1) {
+            divider /= 10;
+            factor--;
+          }
+          NrgMbsReg[names].factor = factor;
         }
       } else if (val.isArray()) {
         // "Voltage":[0,0,0]
@@ -644,13 +692,13 @@ bool EnergyModbusReadRegisters(void) {
       }
 
 #ifdef ENERGY_MODBUS_DEBUG
-      AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Idx %d, R [%04X,%04X,%04X], T %d, M %d"),
+      AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Idx %d, R [%04X,%04X,%04X], T %d, F %d"),
         names,
         NrgMbsReg[names].address[0],
         NrgMbsReg[names].address[1],
         NrgMbsReg[names].address[2],
         NrgMbsReg[names].datatype,
-        NrgMbsReg[names].divider);
+        NrgMbsReg[names].factor);
 #endif
 
     }
@@ -686,9 +734,6 @@ bool EnergyModbusReadRegisters(void) {
   for (uint32_t i = 0; i < NrgMbsParam.total_regs; i++) {
     if (NrgMbsReg[i].datatype >= NRG_DT_MAX) {
       NrgMbsReg[i].datatype = ENERGY_MODBUS_DATATYPE;
-    }
-    if (0 == NrgMbsReg[i].divider) {
-      NrgMbsReg[i].divider = ENERGY_MODBUS_DIVIDER;
     }
   }
 
