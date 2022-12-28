@@ -33,9 +33,9 @@ While fallback or downgrading is common practice it was never supported due to S
 
 This release will be supported from ESP8266/Arduino library Core version **2.7.4.9** due to reported security and stability issues on previous Core version. This will also support gzipped binaries.
 
-This release will be supported from ESP32/Arduino library Core version **2.0.5.3**.
+This release will be supported from ESP32/Arduino library Core version **2.0.6**.
 
-Support of ESP8266 Core versions before 2.7.4.9 and ESP32 Core versions before 2.0.5.3 have been removed.
+Support of ESP8266 Core versions before 2.7.4.9 and ESP32 Core versions before 2.0.6 have been removed.
 
 ## Support of TLS
 
@@ -77,7 +77,7 @@ Historical binaries can be downloaded from
 The latter links can be used for OTA upgrades too like ``OtaUrl http://ota.tasmota.com/tasmota/release/tasmota.bin.gz``
 
 ### ESP32, ESP32-C3, ESP32-S2 and ESP32-S3 based
-The following binary downloads have been compiled with ESP32/Arduino library core version **2.0.5.4**.
+The following binary downloads have been compiled with ESP32/Arduino library core version **2.0.6**.
 
 - **tasmota32.bin** = The Tasmota version with most drivers including additional sensors and KNX for 4M+ flash.  **RECOMMENDED RELEASE BINARY**
 - **tasmota32xy.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C3/S2/S3 and 4M+ flash.
@@ -111,17 +111,22 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Added
 - Support for up to 3 single phase modbus energy monitoring device using generic Energy Modbus driver- Support for RGB displays [#17414](https://github.com/arendst/Tasmota/issues/17414)
 - Support for IPv6 DNS records (AAAA) and IPv6 ``Ping`` for ESP32 and ESP8266 [#17417](https://github.com/arendst/Tasmota/issues/17417)
+- Support for IPv6 only networks on Ethernet (not yet Wifi)
 - Berry support for ``crypto.SHA256`` [#17430](https://github.com/arendst/Tasmota/issues/17430)
 - Berry crypto add ``EC_P256`` and ``PBKDF2_HMAC_SHA256`` algorithms required by Matter protocol [#17473](https://github.com/arendst/Tasmota/issues/17473)
+- Berry crypto add ``random`` to generate series of random bytes
+- Berry crypto add ``HKDF_HMAC_SHA256``
+- Berry crypto add ``SPAKE2P_Matter`` for Matter support
 
 ### Breaking Changed
 
 ### Changed
-- ESP32 Framework (Core) from v2.0.5.3 to v2.0.5.4 (IPv6 support)
+- ESP32 Framework (Core) from v2.0.5.3 to v2.0.6 (IPv6 support)
 - TuyaMcu rewrite by btsimonh [#17051](https://github.com/arendst/Tasmota/issues/17051)
 - Tasmota OTA scripts now support both unzipped and gzipped file uploads [#17378](https://github.com/arendst/Tasmota/issues/17378)
 
 ### Fixed
+- Modbus transmit enable GPIO enabled once during write buffer
 - Shutter default motorstop set to 0 [#17403](https://github.com/arendst/Tasmota/issues/17403)
 - Shutter default tilt configuration [#17484](https://github.com/arendst/Tasmota/issues/17484)
 

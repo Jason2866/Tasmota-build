@@ -29,7 +29,8 @@ enum LoggingLevels {LOG_LEVEL_NONE, LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_D
 
 TasmotaModbus::TasmotaModbus(int receive_pin, int transmit_pin, int tx_enable_pin) : TasmotaSerial(receive_pin, transmit_pin, 2)
 {
-  setTransmitEnablePin(tx_enable_pin);
+//  setTransmitEnablePin(tx_enable_pin);
+  mb_tx_enable_pin = tx_enable_pin;
   mb_address = 0;
 }
 
@@ -58,6 +59,10 @@ int TasmotaModbus::Begin(long speed, uint32_t config)
   if (begin(speed, config)) {
     result = 1;
     if (hardwareSerial()) { result = 2; }
+    if (mb_tx_enable_pin > -1) {
+      pinMode(mb_tx_enable_pin, OUTPUT);
+      digitalWrite(mb_tx_enable_pin, LOW);
+    }
   }
   return result;
 }
@@ -150,7 +155,14 @@ uint8_t TasmotaModbus::Send(uint8_t device_address, uint8_t function_code, uint1
 #endif
 
   flush();
+  if (mb_tx_enable_pin > -1) {
+    digitalWrite(mb_tx_enable_pin, HIGH);
+  }
   write(frame, framepointer);
+  if (mb_tx_enable_pin > -1) {
+    delayMicroseconds(800);  // delay(1) will exception here
+    digitalWrite(mb_tx_enable_pin, LOW);
+  }
   free(frame);
   return 0;
 }
