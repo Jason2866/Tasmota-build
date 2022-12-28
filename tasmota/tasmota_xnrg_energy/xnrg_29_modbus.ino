@@ -103,9 +103,9 @@
  *                       3 - multiply by 1000
  *                       4 - multiply by 10000
  *                   M - [LEGACY - replaced by "F"] Divide register by 1 to 10000 - optional. default = 0 (no action)
- *                   J - JSON register name (preferrably without spaces like "PhaseAngle")
- *                   G - GUI register name
- *                   U - GUI unit name
+ *                   J - JSON register name (preferrably without spaces like "PhaseAngle") - mandatory. It needs to be different from the Tasmota default embedded register names
+ *                   G - GUI register name - optional. If not defined the register will not be shown in the GUI
+ *                   U - GUI unit name - optional. default is none
  *                   D - Number of decimals for floating point presentation (0 to 20) or a code correspondig to Tasmota resolution command settings:
  *                       21 - VoltRes (V)
  *                       22 - AmpRes (A)
@@ -238,9 +238,9 @@ struct NRGMBSPARAM {
   uint8_t function;
   uint8_t total_regs;
   uint8_t user_adds;
-  uint8_t phase;
   uint8_t state;
   uint8_t retry;
+  int8_t phase;
   bool mutex;
 } NrgMbsParam;
 
@@ -419,45 +419,50 @@ void EnergyModbusLoop(void) {
             NrgMbsUser[NrgMbsParam.state - NRG_MBS_MAX_REGS].data[NrgMbsParam.phase] = value;
           }
       }
-
-      uint32_t phase = 0;
-      do {
-        NrgMbsParam.phase++;
-        if (NrgMbsParam.phase >= Energy.phase_count) {
-          NrgMbsParam.phase = 0;
-          NrgMbsParam.state++;
-          if (NrgMbsParam.state >= NrgMbsParam.total_regs) {
-            NrgMbsParam.state = 0;
-            NrgMbsParam.phase = 0;
-            EnergyUpdateTotal();                 // update every cycle after all registers have been read
-            break;
-          }
-        }
-        delay(0);
-        if (NrgMbsParam.devices == 1) {
-          phase = NrgMbsParam.phase;
-        }
-      } while (NrgMbsReg[NrgMbsParam.state].address[phase] == nrg_mbs_reg_not_used);
     }
   } // end data ready
 
-  uint32_t address = 0;
-  uint32_t phase = NrgMbsParam.phase;
-  if (NrgMbsParam.devices > 1) {
-    address = NrgMbsParam.phase;
-    phase = 0;
-  }
   if (0 == NrgMbsParam.retry || data_ready) {
     NrgMbsParam.retry = 1;
+
+    uint32_t address = 0;
+    uint32_t phase = 0;
+    do {
+      NrgMbsParam.phase++;
+      if (NrgMbsParam.phase >= Energy.phase_count) {
+        NrgMbsParam.phase = 0;
+        NrgMbsParam.state++;
+        if (NrgMbsParam.state >= NrgMbsParam.total_regs) {
+          NrgMbsParam.state = 0;
+          NrgMbsParam.phase = 0;
+          EnergyUpdateTotal();                 // update every cycle after all registers have been read
+        }
+      }
+      delay(0);
+      if (NrgMbsParam.devices == 1) {
+        phase = NrgMbsParam.phase;
+      } else {
+        address = NrgMbsParam.phase;
+      }
+    } while (NrgMbsReg[NrgMbsParam.state].address[phase] == nrg_mbs_reg_not_used);
+
     // Even data type is single register, Odd data type is double registers
     register_count = 2 - (NrgMbsReg[NrgMbsParam.state].datatype & 1);
+
+#ifdef ENERGY_MODBUS_DEBUG
+    AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("NRG: Modbus send Device %d, Function %d, Register %04X (%d/%d), Size %d"),
+      NrgMbsParam.device_address[address], NrgMbsParam.function,
+      NrgMbsReg[NrgMbsParam.state].address[phase], NrgMbsParam.state, phase,
+      register_count);
+#endif
+
     EnergyModbus->Send(NrgMbsParam.device_address[address], NrgMbsParam.function, NrgMbsReg[NrgMbsParam.state].address[phase], register_count);
   } else {
     NrgMbsParam.retry--;
 
 #ifdef ENERGY_MODBUS_DEBUG
     if (NrgMbsParam.devices > 1) {
-      AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Modbus retry device %d state %d"), NrgMbsParam.device_address[address], NrgMbsParam.state);
+      AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Modbus retry device %d state %d"), NrgMbsParam.device_address[NrgMbsParam.phase], NrgMbsParam.state);
     } else {
       AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Modbus retry state %d phase %d"), NrgMbsParam.state, NrgMbsParam.phase);
     }
@@ -534,20 +539,17 @@ bool EnergyModbusReadUserRegisters(JsonParserObject user_add_value, uint32_t add
   val = user_add_value[PSTR("J")];               // JSON value name
   if (val) {
     NrgMbsUser[add_index].json_name = SetStr(val.getStr());
+    char json_name[32];
+    if (GetCommandCode(json_name, sizeof(json_name), NrgMbsUser[add_index].json_name, kEnergyModbusValues) > -1) {
+      return false;                              // Duplicate JSON name
+    }
   } else {
-    return false;
+    return false;                                // No mandatory JSON name
   }
   val = user_add_value[PSTR("G")];               // GUI value name
-  if (val) {
-    NrgMbsUser[add_index].gui_name = SetStr(val.getStr());
-  } else {
-    return false;
-  }
-  NrgMbsUser[add_index].gui_unit = EmptyStr;
+  NrgMbsUser[add_index].gui_name = (val) ? SetStr(val.getStr()) : EmptyStr;
   val = user_add_value[PSTR("U")];               // GUI value Unit
-  if (val) {
-    NrgMbsUser[add_index].gui_unit = SetStr(val.getStr());
-  }
+  NrgMbsUser[add_index].gui_unit = (val) ? SetStr(val.getStr()) : EmptyStr;
   NrgMbsUser[add_index].resolution = ENERGY_MODBUS_DECIMALS;
   val = user_add_value[PSTR("D")];               // Decimal resolution
   if (val) {
@@ -556,7 +558,7 @@ bool EnergyModbusReadUserRegisters(JsonParserObject user_add_value, uint32_t add
 
 #ifdef ENERGY_MODBUS_DEBUG
   AddLog(LOG_LEVEL_DEBUG, PSTR("NRG: Idx %d (%s), R [%04X,%04X,%04X], T %d, F %d, J '%s', G '%s', U '%s', D %d"),
-    add_index, NrgMbsUser[add_index].json_name,
+    reg_index, NrgMbsUser[add_index].json_name,
     NrgMbsReg[reg_index].address[0],
     NrgMbsReg[reg_index].address[1],
     NrgMbsReg[reg_index].address[2],
@@ -797,7 +799,7 @@ bool EnergyModbusReadRegisters(void) {
 #endif
 
 //  NrgMbsParam.state = 0;    // Set by calloc()
-//  NrgMbsParam.phase = 0;
+  NrgMbsParam.phase = -1;
 
   return true;
 #endif  // USE_RULES
@@ -911,10 +913,12 @@ void EnergyModbusShow(bool json) {
         ResponseAppend_P(PSTR(",\"%s\":%s"), NrgMbsUser[i].json_name, EnergyFormat(value_chr, values, resolution, single));
 #ifdef USE_WEBSERVER
       } else {
-        WSContentSend_PD(PSTR("{s}%s{m}%s %s{e}"),
-          NrgMbsUser[i].gui_name,
-          WebEnergyFormat(value_chr, values, resolution, single),
-          NrgMbsUser[i].gui_unit);
+        if (strlen(NrgMbsUser[i].gui_name)) {    // Skip empty GUI names
+          WSContentSend_PD(PSTR("{s}%s{m}%s %s{e}"),
+            NrgMbsUser[i].gui_name,
+            WebEnergyFormat(value_chr, values, resolution, single),
+            NrgMbsUser[i].gui_unit);
+        }
 #endif  // USE_WEBSERVER
       }
     }
