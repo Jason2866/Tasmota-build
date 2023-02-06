@@ -144,18 +144,18 @@ void TasDiscoverMessage(void) {
                         "\"swc\":["));                         // Switch modes (start)
 
   // Enable Discovery for Switches only if SetOption114 is enabled
-  for (uint32_t i = 0; i < MAX_SWITCHES; i++) {
-    ResponseAppend_P(PSTR("%s%d"), (i > 0 ? "," : ""), (PinUsed(GPIO_SWT1, i) && Settings->flag5.mqtt_switches) ? Settings->switchmode[i] : -1);
+  for (uint32_t i = 0; i < MAX_SWITCHES_SET; i++) {
+    ResponseAppend_P(PSTR("%s%d"), (i > 0 ? "," : ""), (SwitchUsed(i) && Settings->flag5.mqtt_switches) ? Settings->switchmode[i] : -1);
   }
 
   ResponseAppend_P(PSTR("],"                                   // Switch modes (end)
                         "\"swn\":["));                         // Switch names (start)
 
   // Enable Discovery for Switches only if SetOption114 is enabled
-  for (uint32_t i = 0; i < MAX_SWITCHES; i++) {
+  for (uint32_t i = 0; i < MAX_SWITCHES_SET; i++) {
     char sname[TOPSZ];
     snprintf_P(sname, sizeof(sname), PSTR("\"%s\""), GetSwitchText(i).c_str());
-    ResponseAppend_P(PSTR("%s%s"), (i > 0 ? "," : ""), (PinUsed(GPIO_SWT1, i) && Settings->flag5.mqtt_switches) ? sname : PSTR("null"));
+    ResponseAppend_P(PSTR("%s%s"), (i > 0 ? "," : ""), (SwitchUsed(i) && Settings->flag5.mqtt_switches) ? sname : PSTR("null"));
   }
 
   ResponseAppend_P(PSTR("],"                                   // Switch names (end)
@@ -163,11 +163,11 @@ void TasDiscoverMessage(void) {
 
   bool SerialButton = false;
   // Enable Discovery for Buttons only if SetOption73 is enabled
-  for (uint32_t i = 0; i < MAX_KEYS; i++) {
+  for (uint32_t i = 0; i < MAX_KEYS_SET; i++) {
 #ifdef ESP8266
     SerialButton = ((0 == i) && (SONOFF_DUAL == TasmotaGlobal.module_type ));
 #endif  // ESP8266
-    ResponseAppend_P(PSTR("%s%d"), (i > 0 ? "," : ""), (SerialButton ? 1 : (PinUsed(GPIO_KEY1, i)) && Settings->flag3.mqtt_buttons));
+    ResponseAppend_P(PSTR("%s%d"), (i > 0 ? "," : ""), (SerialButton ? 1 : (ButtonUsed(i)) && Settings->flag3.mqtt_buttons));
   }
 
   ResponseAppend_P(PSTR("],"                                   // Button flag (end)
