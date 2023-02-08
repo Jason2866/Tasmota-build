@@ -2936,7 +2936,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #define USE_HM10                                 // Add support for HM-10 as a BLE-bridge for the LYWSD03 (+5k1 code)
 #endif
 #ifdef  ESP32
-#define USE_MI_ESP32
+//#define USE_MI_ESP32
 #endif
 
 #define USE_HRXL                                 // Add support for MaxBotix HRXL-MaxSonar ultrasonic range finders (+0k7)
