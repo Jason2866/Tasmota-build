@@ -27,8 +27,6 @@
 
 #define MAX_RELAY_BUTTON1       5            // Max number of relay controlled by BUTTON1
 
-#define BUTTON_INVERT           0x02         // Invert bitmask
-
 const uint8_t BUTTON_PROBE_INTERVAL = 10;      // Time in milliseconds between button input probe
 const uint8_t BUTTON_FAST_PROBE_INTERVAL = 2;  // Time in milliseconds between button input probe for AC detection
 const uint8_t BUTTON_AC_PERIOD = (20 + BUTTON_FAST_PROBE_INTERVAL - 1) / BUTTON_FAST_PROBE_INTERVAL;   // Duration of an AC wave in probe intervals
@@ -256,20 +254,19 @@ void ButtonInit(void) {
       if (XdrvCall(FUNC_ADD_BUTTON)) {
         /*
            At entry:
-           XdrvMailbox.index = key index
+           XdrvMailbox.index = button index
            At exit:
            XdrvMailbox.index bit 0 = current state
-           XdrvMailbox.index bit 1 = invert signal
         */
         Button.present++;
         bitSet(Button.virtual_pin_used, i);    // This pin is used
         bool state = (XdrvMailbox.index &1);
         ButtonSetVirtualPinState(i, state);    // Virtual hardware pin state
-        bool invert = (XdrvMailbox.index &BUTTON_INVERT);
-        if (invert) { ButtonInvertFlag(i); }   // Set inverted flag
+        if (!state) { ButtonInvertFlag(i); }   // Set inverted flag
+        // last_state[i] must be 1 to indicate no button pressed
         Button.last_state[i] = (bitRead(Button.virtual_pin, i) != bitRead(Button.inverted_mask, i));
 
-        AddLog(LOG_LEVEL_DEBUG, PSTR("BTN: Add vButton%d, State %d, Info %02X"), Button.present, Button.last_state[i], XdrvMailbox.index);
+        AddLog(LOG_LEVEL_DEBUG, PSTR("BTN: Add vButton%d, State %d"), Button.present, Button.last_state[i]);
 
         used = true;
       }
@@ -503,6 +500,7 @@ void ButtonHandler(void) {
               XdrvMailbox.payload = Button.press_counter[button_index];
               if (XdrvCall(FUNC_BUTTON_MULTI_PRESSED)) {
                 // Serviced
+//                AddLog(LOG_LEVEL_DEBUG, PSTR("BTN: FUNC_BUTTON_MULTI_PRESSED serviced"));
               } else
 
 #ifdef ROTARY_V1
@@ -521,20 +519,9 @@ void ButtonHandler(void) {
                       } else {
                         SendKey(KEY_BUTTON, button_index +1, Button.press_counter[button_index] +9);    // 2,3,4 and 5 press send just the key value (11,12,13 and 14) for rules
                         if (0 == button_index) {               // BUTTON1 can toggle up to 5 relays if present. If a relay is not present will send out the key value (2,11,12,13 and 14) for rules
-                          bool valid_relay = PinUsed(GPIO_REL1, Button.press_counter[button_index]-1);
-#ifdef ESP8266
-                          if ((SONOFF_DUAL == TasmotaGlobal.module_type) || (CH4 == TasmotaGlobal.module_type)) {
-                            valid_relay = (Button.press_counter[button_index] <= TasmotaGlobal.devices_present);
-                          }
-#endif  // ESP8266
-#ifdef USE_SHELLY_PRO
-                          if (TasmotaGlobal.gpio_optiona.shelly_pro) {
-                            valid_relay = (Button.press_counter[button_index] <= TasmotaGlobal.devices_present);
-                          }
-#endif  // USE_SHELLY_PRO
-                          if ((Button.press_counter[button_index] > 1) && valid_relay && (Button.press_counter[button_index] <= MAX_RELAY_BUTTON1)) {
+                          uint32_t max_device = (TasmotaGlobal.devices_present < MAX_RELAY_BUTTON1) ? TasmotaGlobal.devices_present : MAX_RELAY_BUTTON1;
+                          if ((Button.press_counter[button_index] > 1) && (Button.press_counter[button_index] <= max_device)) {
                             ExecuteCommandPower(button_index + Button.press_counter[button_index], POWER_TOGGLE, SRC_BUTTON);   // Execute Toggle command internally
-//                            AddLog(LOG_LEVEL_DEBUG, PSTR("BTN: Relay%d found on GPIO%d"), Button.press_counter[button_index], Pin(GPIO_REL1, Button.press_counter[button_index]-1));
                           }
                         }
                       }
