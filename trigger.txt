@@ -1,1 +1,2 @@
-dbed1772f655504b786c5689b1f1cf2deabaa45e
+minimal
+scripting
