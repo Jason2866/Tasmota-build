@@ -315,6 +315,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "mini-custom"
 
+#define FIRMWARE_MINIMAL_ONLY
+
 #undef FIRMWARE_LITE                             // Disable tasmota-lite with no sensors
 #undef FIRMWARE_SENSORS                          // Disable tasmota-sensors with useful sensors enabled
 #undef FIRMWARE_KNX_NO_EMULATION                 // Disable tasmota-knx with KNX but without Emulation
@@ -328,7 +330,10 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef FIRMWARE_LVGL
 #undef FIRMWARE_TASMOTA32
 
+#undef USE_IMPROV                                // Disable support for IMPROV serial protocol as used by esp-web-tools (+2k code)
+#undef USE_TASMESH                               // Disable Tasmota Mesh using ESP-NOW (+11k code)
 #undef USE_ARDUINO_OTA                           // Disable support for Arduino OTA
+#undef USE_INFLUXDB                              // Disable influxdb support (+5k code)
 #undef USE_DOMOTICZ                              // Disable Domoticz
 #undef USE_HOME_ASSISTANT                        // Disable Home Assistant
 #undef USE_TELEGRAM                              // Disable support for Telegram protocol (+49k code, +7.0k mem and +4.8k additional during connection handshake)
