@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [12.4.0.2]
 ### Added
+- Support for multiple MCP23008 as switch/button/relay
 
 ### Breaking Changed
 - Shelly Pro 4PM using standard MCP23xxx driver and needs one time Auto-Configuration
@@ -12,6 +13,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 ### Fixed
+- TuyaMcu v1 sequence fix (#17625)
+- TuyaMcu v1 timer integer overflow (#18048)
 
 ### Removed
 
