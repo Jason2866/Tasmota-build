@@ -14,6 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        token: ${{ secrets.MASTER_ACCESS_TOKEN }}
         fetch-depth: 0
         ref: special_builder
     - name: Use latest Tasmota development
