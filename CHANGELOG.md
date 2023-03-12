@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Berry `webclient` `set_follow_redirects(bool)`
 - Berry `webclient` `collect_headers()` and `set_headers`
 - Display TM1650 commands like TM1637 (#18109)
+- Berry add `web_get_arg` event to drivers when `FUNC_WEB_GET_ARG` event is processed
 
 ### Breaking Changed
 - Shelly Pro 4PM using standard MCP23xxx driver and needs one time Auto-Configuration
@@ -21,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Refactored Berry rule engine and support for arrays
 - ESP32 LVGL library from v8.3.3 to v8.3.5 (no functional change)
 - Removed absolute url from filesystem (#18148)
+- ``UrlFetch`` now follows redirects
 
 ### Fixed
 - TuyaMcu v1 sequence fix (#17625)
