@@ -759,7 +759,7 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 // {"NAME":"ZB-GW03-V1.2","GPIO":[1,1,3552,1,3584,1,1,1,5793,5792,320,544,5536,1,5600,1,0,1,1,5568,0,1,1,1,0,0,0,0,608,640,32,1,1,0,0,1],"FLAG":0,"BASE":1}
 
 #undef OTA_URL
-#define OTA_URL                " "  // [OtaUrl]
+#define OTA_URL "https://github.com/tasmota/install/raw/firmware/firmware/unofficial/tasmota32-zigbeebridge.bin"  // [OtaUrl]
 
 #undef  SERIAL_LOG_LEVEL
 #define SERIAL_LOG_LEVEL LOG_LEVEL_NONE
