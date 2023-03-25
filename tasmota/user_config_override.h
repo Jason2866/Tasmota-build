@@ -3033,7 +3033,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
   #define USE_WEBSEND_RESPONSE                   // Enable command WebSend response message (+1k code)
 #define USE_EMULATION_HUE                      // Enable Hue Bridge emulation for Alexa (+18k code, +2k mem)
-#define USE_EMULATION_WEMO                     // Enable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
+//#define USE_EMULATION_WEMO                     // Enable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
 
 #define USE_TIMERS                               // Add support for up to 16 timers (+2k2 code)
   #define USE_TIMERS_WEB                         // Add timer webpage support (+4k5 code)
