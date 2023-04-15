@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Matter support for Light and Relays on ESP32 by Stephan Hadinger (#18320)
 - ESP32 WIP support for 16 shutters using `#define USE_SHUTTER_ESP32` in addition to `USE_SHUTTER` by Stefan Bode (#18295)
 - Berry `webserver.html_escape()` reusing the internal HTML escaping function
+- Support for GDK101 gamma radiation sensor by Petr Novacek (#18390)
 
 ### Breaking Changed
 
@@ -16,6 +17,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - ESP32 ``Upload``, ``Upgrade``, ``WebGetConfig``, ``WebQuery`` and ``WebSend`` random HTTP(S) connection timeout set to 5 sec (commit 542eca3)
+- ESP32 energy monitoring set StartTotalTime regression from v12.3.1.5 (#18385)
 
 ### Removed
 
