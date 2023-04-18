@@ -112,9 +112,11 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ## Changelog v12.5.0.1
 ### Added
+- Matter sensors Humidity, Pressure, Illuminance [#18441](https://github.com/arendst/Tasmota/issues/18441)
 
 ### Breaking Changed
 
 ### Changed
 
 ### Fixed
+- ESP8266 Energy Export Active no update regression from v12.3.1.3
