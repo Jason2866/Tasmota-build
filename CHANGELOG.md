@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [12.5.0.1]
 ### Added
 - Matter sensors Humidity, Pressure, Illuminance; optimize memory (#18441)
+- Command ``SetOption152 0/1`` to select two (default) or one pin bistable relay control (#18386)
 
 ### Breaking Changed
 
@@ -13,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - ESP8266 Energy Export Active no update regression from v12.3.1.3
+- NovaSDS GUI values (#18444)
 
 ### Removed
 
