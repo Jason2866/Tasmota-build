@@ -78,6 +78,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_SONOFF_SC                            // Disable support for Sonoff Sc (+1k1 code)
 #undef USE_TUYA_MCU                             // Disable support for Tuya Serial Dimmer
 #undef USE_ARMTRONIX_DIMMERS                    // Disable support for Armtronix Dimmers (+1k4 code)
+#undef USE_AC_ZERO_CROSS_DIMMER
 #undef USE_PS_16_DZ                             // Disable support for PS-16-DZ Dimmer (+2k code)
 #undef USE_SONOFF_IFAN                          // Disable support for Sonoff iFan02 and iFan03 (+2k code)
 #undef USE_BUZZER                               // Disable support for a buzzer (+0k6 code)
@@ -2717,7 +2718,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
   #define USE_WEBSEND_RESPONSE                   // Enable command WebSend response message (+1k code)
 #define USE_EMULATION_HUE                      // Enable Hue Bridge emulation for Alexa (+18k code, +2k mem)
-#define USE_EMULATION_WEMO                     // Enable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
+//#define USE_EMULATION_WEMO                     // Enable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
 
 #define USE_TIMERS                               // Add support for up to 16 timers (+2k2 code)
   #define USE_TIMERS_WEB                         // Add timer webpage support (+4k5 code)
@@ -2743,6 +2744,8 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+
+  #define USE_AC_ZERO_CROSS_DIMMER
 
   #define USE_ETHERNET
   #undef  ETH_TYPE
@@ -3399,6 +3402,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
   #define USE_BERRY_PSRAM
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
+
+  #define USE_AC_ZERO_CROSS_DIMMER
 
   #define USE_ETHERNET
   #undef  ETH_TYPE
