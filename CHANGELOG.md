@@ -11,12 +11,14 @@ All notable changes to this project will be documented in this file.
 - Matter UI to change endpoints configuration (#18498)
 - Matter support for Shutters (without Tilt) (#18509)
 - Support for TC74 temperature sensor by Michael Loftis (#18042)
+- Matter support for Shutters with Tilt
 
 ### Breaking Changed
 
 ### Changed
 - ESP32 Framework (Core) from v2.0.7 to v2.0.8
 - Refactored Zero Cross Dimmer (#18481)
+- ESP32 LVGL library from v8.3.6 to v8.3.7 (no functional change)
 
 ### Fixed
 - ESP8266 Energy Export Active no update regression from v12.3.1.3
