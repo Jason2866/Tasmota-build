@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Support for GM861 1D and 2D bar code reader (#18399)
 - Berry `re` (regex) add `match2` and optional offset
 - Support for PCA9557 8-bit I/O expander (#18632)
+- Zigbee support for air sensors
 
 ### Breaking Changed
 - Change command ``FileUpload`` index binary data detection from >199 to >299
@@ -27,6 +28,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Partition_Manager.tapp fixed
 - Berry fixed a rare condition when a GC causes a memory corruption
+- LED PWM ac_dimmer curve was wrongly applied instead of Gamma
 
 ### Removed
 
