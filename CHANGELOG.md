@@ -6,12 +6,15 @@ All notable changes to this project will be documented in this file.
 ## [12.5.0.3]
 ### Added
 - Command ``WifiPower 0`` to enable dynamic wifi power based on RSSI by @TD-er (#15443)
+- Command ``WifiPower 1`` to restore default wifi power
 
 ### Breaking Changed
 
 ### Changed
 
 ### Fixed
+- Shutter bootloop using more than 4 shutters (#18673)
+- AIThinker webcam issues (#18652)
 
 ### Removed
 
@@ -26,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Support for GM861 1D and 2D bar code reader (#18399)
 - Berry `re` (regex) add `match2` and optional offset
 - Support for PCA9557 8-bit I/O expander (#18632)
+- Matter support for async HTTP for bridged devices (#18656)
 - Zigbee support for air sensors (#18665)
 - Command ``I2cScan0`` to scan both busses on ESP32 with one command
 
