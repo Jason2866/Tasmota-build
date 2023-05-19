@@ -147,7 +147,7 @@ jobs:
     - name: Display files to transfer
       run: ls -R ./*
     - name: Push Firmware files to tmp_copy repo
-      uses: Jason2866/copy_file_to_another_repo_action@main
+      uses: Jason2866/copy_file_to_another_repo_action@http408_fix
       env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
       with:
