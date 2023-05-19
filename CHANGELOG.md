@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Command ``WifiPower 0`` to enable dynamic wifi power based on RSSI by @TD-er (#15443)
 - Command ``WifiPower 1`` to restore default wifi power
+- HASPmota `meta` attribute and improved `berry_run`
 
 ### Breaking Changed
 
@@ -15,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Shutter bootloop using more than 4 shutters (#18673)
 - AIThinker webcam issues (#18652)
+- Berry `tasmota.wifi()` would wrongly report wifi as up
 
 ### Removed
 
