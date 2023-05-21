@@ -5,13 +5,13 @@
       "memory_type": "opi_opi"
     },
     "core": "esp32",
-    "extra_flags": "-DBOARD_HAS_PSRAM -DESP32_4M -DESP32S3",
+    "extra_flags": "-DBOARD_HAS_PSRAM -DESP32_16M -DESP32S3",
     "f_cpu": "240000000L",
     "f_flash": "80000000L",
     "flash_mode": "dout",
     "mcu": "esp32s3",
     "variant": "esp32s3",
-    "partitions": "partitions/esp32_partition_app2880k_fs320k.csv"
+    "partitions": "esp32_partition_app2944k_fs10M.csv"
   },
   "connectivity": [
     "wifi",
@@ -25,19 +25,11 @@
     "espidf",
     "arduino"
   ],
-  "name": "Espressif Generic ESP32-S3 >= 4M OPI Flash OPI PSRAM, Tasmota 2880k Code/OTA, 320k FS",
+  "name": "Espressif Generic ESP32-S3 16M OPI Flash OPI PSRAM, Tasmota 2880k Code/OTA, 320k FS",
   "upload": {
-    "arduino": {
-      "flash_extra_images": [
-        [
-          "0x10000",
-          "variants/tasmota/tasmota32s3-safeboot.bin"
-        ]
-      ]
-    },
-    "flash_size": "4MB",
+    "flash_size": "16MB",
     "maximum_ram_size": 327680,
-    "maximum_size": 4194304,
+    "maximum_size": 16777216,
     "require_upload_port": true,
     "speed": 460800
   },
