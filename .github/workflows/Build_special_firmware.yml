@@ -78,6 +78,8 @@ jobs:
           - tasmota32s2-lvgl
           - tasmota32s3-lvgl
           - tasmota32s3cdc-qio_opi
+          - tasmota32s3-opi_opi
+          - tasmota32s3cdc-opi_opi
           - tasmota32c3-lvgl
           - tasmota32s2-display
           - tasmota32s3-display
