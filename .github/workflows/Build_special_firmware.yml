@@ -24,8 +24,8 @@ jobs:
         ref: special_builder
     - name: Use latest Tasmota development
       run: |
-        git config --local user.name "Github BUILD"
-        git config --local user.email github-actions@github.com
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config user.name "github-actions[bot]"
         git remote add -f Tasmota "https://github.com/arendst/Tasmota.git" --track development
         git switch -c work
         git merge Tasmota/development --allow-unrelated-histories &> status.txt
