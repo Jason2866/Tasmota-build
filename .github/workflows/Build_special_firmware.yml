@@ -1,6 +1,7 @@
 name: Build_special_firmware
 
 on:
+  repository_dispatch:
   workflow_dispatch:
   push:
     branches: start_build
@@ -37,7 +38,7 @@ jobs:
         branch: 'special_builder'
 
   special:
-    needs: [tasmota_pull]
+    needs: tasmota_pull
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -116,67 +117,17 @@ jobs:
         run: platformio run -e ${{ matrix.variant }}
       - uses: actions/upload-artifact@v3
         with:
-          name: firmware
+          name: special_firmware
           path: ./build_output
 
-  Upload:
-    needs: [special]
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: firmware
-        path: ./mv_firmware
-    - name: Display structure of downloaded files
-      run: |
-        ls -R
-      working-directory: ./mv_firmware
-    - name: Move firmware files in sub-folders
-      run: |
-        mkdir -p ./firmware/tasmota32/other
-        mkdir -p ./firmware/tasmota/other
-        mkdir -p ./firmware/map
-        cp -rf ./mv_firmware/map/* ./firmware/map/
-        cp -rf ./mv_firmware/firmware/tasmota-* ./firmware/tasmota/other/
-        cp -rf ./mv_firmware/firmware/tasmota32* ./firmware/tasmota32/other/
-        rm -rf ./mv_firmware
-    - name: Build commit message
-      id: step_one
-      run: |
-        tas_com_tmp1=$(curl https://raw.githubusercontent.com/arendst/Tasmota-firmware/action-development/trigger.txt)
-        tas_com_tmp="Based on https://github.com/arendst/Tasmota/commit/${tas_com_tmp1}"
-        echo "tas_com=$tas_com_tmp" >> $GITHUB_ENV
-    - name: Display files to transfer
-      run: ls -R ./*
-    - name: Push Firmware files to tmp_copy repo
-      uses: Jason2866/copy_file_to_another_repo_action@http408_fix
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-      with:
-        source_file: 'firmware'
-        destination_repo: 'Jason2866/tmp_copy'
-        destination_branch: 'firmware'
-        user_email: 'github-actions@github.com'
-        user_name: 'github-actions'
-        commit_message: '${{ env.tas_com }}'
-
   Start_final_copy:
-    needs: Upload
+    needs: special
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Creat trigger.txt
+    - name: Dispatch workflow in repo Jason2866/Tasmota-specials
       run: |
-         echo ${{ github.run_number }}  &> trigger.txt
-         echo "$(<trigger.txt)"
-    - name: Push trigger.txt to start workflow copy in tmp repo
-      uses: Jason2866/copy_file_to_another_repo_action@main
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-      with:
-        source_file: 'trigger.txt'
-        destination_repo: 'Jason2866/tmp_copy'
-        destination_branch: 'action-special'
-        user_email: 'github-actions@github.com'
-        user_name: 'github-actions'
+        curl -X POST https://api.github.com/repos/Jason2866/Tasmota-specials/actions/workflows/copy_firmware.yml/dispatches \
+        -H 'Accept: application/vnd.github.everest-preview+json' \
+        -u ${{ secrets.MASTER_ACCESS_TOKEN }} \
+        --data '{"ref": "copy_firmware"}'
