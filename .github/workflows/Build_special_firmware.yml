@@ -91,6 +91,7 @@ jobs:
           - tasmota32s3-mi32-homebridge
           - tasmota32-mi32-homebridge
           - tasmota32-matter
+          - tasmota32solo1-matter
           - tasmota32c3-matter
           - tasmota32s2-matter
           - tasmota32s3-matter
