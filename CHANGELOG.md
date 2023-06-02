@@ -3,7 +3,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [12.5.0.3]
+## [12.5.0.4]
+
+### Added
+
+### Breaking Changed
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [12.5.0.3] 20230602
 ### Added
 - Command ``WifiPower 0`` to enable dynamic wifi power based on RSSI by @TD-er (#15443)
 - Command ``WifiPower 1`` to restore default wifi power
@@ -12,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Display descriptor for ST7735 128x160 display
 - Matter support for Occupancy via Switch (experimental)
 - Berry RS256 crypto algorithm (RSASSA-MCKS1_v1-5 with SHA256) used for JWT
+- Berry add `set_lsb_justified(bool)` to `AudioOutputI2S`
 
 ### Breaking Changed
 - Matter relay number starts at 1 instead of 0 to match Tasmota numbering
@@ -29,8 +42,6 @@ All notable changes to this project will be documented in this file.
 - Inverted shutter now reflect status also in WEBGUI and several minor fixes to make "inverted" consistant (#18701)
 - Matter fix fabric provisioning from CASE session for iOS 16.5 (#18709)
 - ESP32 SPI initialization for MFRC522 (#18711)
-
-### Removed
 
 ## [12.5.0.2] 20230516
 ### Added
