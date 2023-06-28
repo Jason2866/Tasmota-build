@@ -2905,6 +2905,9 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
   #define USE_WEBCLIENT
   #define USE_WEBCLIENT_HTTPS
 
+  #define USE_SHUTTER
+  #define USE_SHUTTER_ESP32
+
   #define USE_ETHERNET
   #undef  ETH_TYPE
   #define ETH_TYPE 0 // ETH_PHY_LAN8720
