@@ -5,15 +5,16 @@ All notable changes to this project will be documented in this file.
 
 ## [13.0.0.1]
 ### Added
+- Command ``Delay -1`` to wait until next second (#18984)
 
 ### Breaking Changed
-- Berry `bool( [] )` and `bool( {} )` now evaluate as `false`
+- Berry `bool( [] )` and `bool( {} )` now evaluate as `false` (#18986)
 
 ### Changed
-- Matter support for temperature in Fahrenheit (`SetOption8 1`)
+- Matter support for temperature in Fahrenheit (`SetOption8 1`) (#18987)
 
 ### Fixed
-- Berry various fixes for Walrus Operator
+- Berry various fixes for Walrus Operator (#18982)
 
 ### Removed
 
