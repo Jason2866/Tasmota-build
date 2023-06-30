@@ -70,6 +70,7 @@ jobs:
           - tasmota32-mega
           - tasmota32-allsensors
           - tasmota32-fullrules
+          - tasmota32c3-fullrules
           - tasmota32-platinum
           - tasmota32-titanium
           - tasmota32-rangeextender
