@@ -17,7 +17,9 @@ var cbuf = bytes(-255)
 class IMPROV : Driver
     var current_func, next_func
     var pin_ready
-    var ssid, pwd, imp_state, msg_buffer
+    var ssid, pwd, imp_state, msg_buffer, current_cmd, sendEmptyAP
+    var send_buffer
+    var devInfo, AP_list, running_WiFi_scan
     static PIN = "123456" # 🤫
 
     def init()
@@ -29,19 +31,59 @@ class IMPROV : Driver
         self.pin_ready = false
         self.msg_buffer = []
         self.imp_state = 0x01 # Awaiting authorization via physical interaction.
+        self.devInfo = self.getDevInfo()
+        self.current_cmd = 0
+        self.sendEmptyAP = false
+        self.AP_list = []
+        self.running_WiFi_scan = false
+        self.startWifiScan()
     end
 
     def every_50ms()
         self.current_func()
     end
 
+    def every_100ms()
+        if self.send_buffer != nil
+            if size(self.send_buffer) == 0
+                self.send_buffer = nil
+            else
+                self.sendRPCresult()
+            end
+        else
+            if self.AP_list != nil
+                self.sendAPInfo()
+            end
+        end
+    end
+
     def wait()
+
     end
 
     def then(func)
         # save function pointers for callback, typically expecting a closure
         self.next_func = func
         self.current_func = /->self.wait()
+    end
+
+    def sendRPCresult()
+        # send_buffer holds encoded RPC command
+        if size(self.send_buffer) > 19
+            cbuf[0] = 20
+            cbuf.setbytes(1,self.send_buffer[0..19])
+            self.send_buffer = self.send_buffer[20..]
+            print("Send Buf chunk 20", cbuf[0..20])
+        else
+            cbuf[0] = size(self.send_buffer)
+            cbuf.setbytes(1,self.send_buffer)
+            self.send_buffer = nil
+            print("Send Buf final",cbuf[0..20])
+        end
+        BLE.set_svc("00467768-6228-2272-4663-277478268000")
+        BLE.set_chr("00467768-6228-2272-4663-277478268004")
+        BLE.run(211)
+        # will always be called from wait anyway
     end
 
     def chksum(buf)
@@ -53,27 +95,63 @@ class IMPROV : Driver
         return checksum
     end
 
-    def parseRPC()
-        # parses the response from the sender of the credentials
-        # no real error handling yet
-        var data = cbuf[1..(cbuf[0])]
-        if size(self.msg_buffer) > 0
-        self.msg_buffer += data
-        else
-            self.msg_buffer = data
+    def encodeRPC(cmd, strings) # int, list
+        var buf = bytes("0000")
+        buf[0] = cmd
+        for string:strings
+            var l = size(string) + 1
+            var sbuf = bytes(-(l))
+            sbuf[0] = l - 1
+            buf[1] += l # make sure to not overflow 255
+            sbuf.setbytes(1,bytes().fromstring(string))
+            buf += sbuf
         end
-        if self.msg_buffer[1]+3 != size(self.msg_buffer) # +3 <- cmnd + length of message + checksum
-            print("need more data in RPC",self.msg_buffer[1]+3,size(self.msg_buffer))
-            return
-        end
-        print("msg_buffer complete with size", size(self.msg_buffer))
-        var cmd = self.msg_buffer[0]
-        var len = self.msg_buffer[1]
+        var c = self.chksum(buf)
+        buf.add(c, 1)
+        return buf
+    end
 
-        var chksum = self.chksum(self.msg_buffer[0..len+1])
-        if chksum != self.msg_buffer[len+2]
-            print("Wrong checksum!!",chksum,self.msg_buffer[len+2]) # still not sure what range to compute
+    def getDevInfo()
+        import string
+        var r =  tasmota.cmd("status 2")
+        var v = r["StatusFWR"]["Version"]
+        v = string.split(v,"(")
+        var f = v[1][0..-2]
+        v = v[0]
+        r = tasmota.cmd("status 5")
+        var n = r["StatusNET"]["Hostname"]
+        var a = tasmota.arch()
+        return ["Tasmota "+f,v,a,n]
+    end
+
+    def startWifiScan()
+        if self.running_WiFi_scan == true return end
+        tasmota.cmd("WiFiScan 1")
+        self.running_WiFi_scan = true
+        tasmota.set_timer(4500,/->self.readWifiScan())
+    end
+
+    def readWifiScan()
+        var r = tasmota.cmd("WiFiScan")
+        var s = r["WiFiScan"]
+        if  s == "Not Started" || s == "Scanning"
+            self.startWifiScan()
+            return false
         end
+        self.running_WiFi_scan = false
+        self.AP_list = []
+        for i:range(1,size(s))
+            var e = s[f"NET{i}"]
+            var enc = "YES"
+            if e["Encryption"] == "OPEN" enc = "NO" end
+            var AP = [e["SSId"],e["Signal"],enc]
+            self.AP_list.push(AP)
+        end
+        self.sendEmptyAP = false
+        print(self.AP_list)
+    end
+
+    def useCredentials()
         var ssid_len = self.msg_buffer[2]
         self.ssid = (self.msg_buffer[3..3+ssid_len-1]).asstring()
         var pwd_len = self.msg_buffer[3+ssid_len]
@@ -81,7 +159,73 @@ class IMPROV : Driver
         self.then(/->self.provisioning())
     end
 
+    def deviceReaction()
+        print("Hello .... blink-blink")
+        # Blink an LED or something else, but this is very hardware dependant
+    end
+
+    def sendAPInfo()
+        if size(self.AP_list) == 0 && self.sendEmptyAP == false
+            return
+        end
+        var buf = bytes("040004") # is the termination command
+        if self.sendEmptyAP == false
+            var AP = self.AP_list[0]
+            self.AP_list = self.AP_list[1..]
+            buf = self.encodeRPC(4,AP)
+            if size(self.AP_list) == 0
+                self.sendEmptyAP = true
+            end   
+        end
+        if self.sendEmptyAP == true
+            self.AP_list = nil
+        end
+        self.send_buffer = buf
+    end
+
+    def sendDevInfo()
+        self.send_buffer = self.encodeRPC(3,self.devInfo)
+        print(self.send_buffer)
+    end
+
+    def parseRPC()
+        # parses the response from the sender of the credentials
+        # no real error handling yet
+        var data = cbuf[1..(cbuf[0])]
+        if size(self.msg_buffer) > 0
+            self.msg_buffer += data
+        else
+            self.msg_buffer = data
+            self.current_cmd = self.msg_buffer[0]
+        end
+        if self.msg_buffer[1]+3 != size(self.msg_buffer) # +3 <- cmnd + length of message + checksum
+            print("need more data in RPC",self.msg_buffer[1]+3,size(self.msg_buffer))
+            return
+        end
+        print("msg_buffer complete with size", size(self.msg_buffer))
+        
+        var len = self.msg_buffer[1]
+        var chksum = self.chksum(self.msg_buffer[0..len+1])
+        if chksum != self.msg_buffer[len+2]
+            print("Wrong checksum!!",chksum,self.msg_buffer[len+2]) # still not sure what range to compute
+        end
+        if self.current_cmd == 1
+            self.useCredentials()
+        elif self.current_cmd == 2
+            self.deviceReaction()
+        elif self.current_cmd == 3
+            self.sendDevInfo()
+        elif self.current_cmd == 4
+            self.readWifiScan()
+        else
+        print("Unhandled command", self.current_cmd)
+        end
+        self.current_cmd = 0
+        self.msg_buffer = []
+    end
+
     def identify()
+        if self.first_WiFi_scan_done == false return end
         #----------------------------------------------------------------------------------
         - This is the only place, where you can secure the ESP32 device from the outside
         - by forcing a pysical user interaction with the device, i.e. a button press.
@@ -189,6 +333,7 @@ class IMPROV : Driver
         end
         if op == 227
             print("MAC:",cbuf[1..cbuf[0]])
+            self.readWifiScan()
         end
         if op == 228
             print("Disconnected")
@@ -224,7 +369,7 @@ class IMPROV : Driver
         BLE.run(211)
         self.then(/->self.add_8004())
     end
-    def add_8004() # Identify
+    def add_8004() # Identify/RPC result
         BLE.set_chr("00467768-6228-2272-4663-277478268004")
         cbuf.setbytes(0,bytes("0101"))
         BLE.run(211)
