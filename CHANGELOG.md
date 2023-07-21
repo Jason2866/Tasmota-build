@@ -3,28 +3,36 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [13.0.0.2]
+## [13.0.0.3]
 ### Added
-- Partition Wizard is now able to convert to safeboot from Shelly partition layout (#19034)
-- Matter mini-profiler (#19075)
-- Berry `_class` can be used in `static var` initialization code (#19088)
-- Berry add `energy.update_total()` to call `EnergyUpdateTotal()` from energy driver
-- Berry add metrics for memory allocation/deallocation/reallocation
-- Berry `tasmota.loglevel()` and `tasmota.rtc_utc()` for faster performance
-- Berry add AES CCM decrypting in a single call to avoid any object allocation
 
 ### Breaking Changed
 
 ### Changed
-- ESP32 shutter driver support up to 16 shutters (#18295)
-- Configuration backup and restore now backup and restore ``.xdrvsetXXX`` files too (#18295)
-- Berry extend `range(lower, upper, incr)` to arbitrary increment
-- Berry updated syntax highlighting plugin for VSCode
-- Matter latency improvement for single attribute reads and single commands
+- Initial ``DisplayMode`` from 1 to 0 and ``DisplayDimmmer`` from 10% to 50% (#19138)
 
 ### Fixed
+- Initial battery level percentage (#19160)
 
 ### Removed
+
+## [13.0.0.2] 20230721
+### Added
+- Partition Wizard is now able to convert to safeboot from Shelly partition layout (#19034)
+- Matter mini-profiler (#19075)
+- Berry `_class` can be used in `static var` initialization code (#19088)
+- Berry `energy.update_total()` to call `EnergyUpdateTotal()` from energy driver (#19117)
+- Support for DeepSleep battery level percentage (#19134)
+- Berry metrics for memory allocation/deallocation/reallocation (#19150)
+- Berry `tasmota.loglevel()` and `tasmota.rtc_utc()` for faster performance (#19152)
+- Berry AES CCM decrypting in a single call to avoid any object allocation (#19153)
+
+### Changed
+- ESP32 shutter driver support up to 16 shutters (#18295)
+- Configuration backup and restore now backup and restore ``.xdrvsetXXX`` files too (#18295)
+- Berry extend `range(lower, upper, incr)` to arbitrary increment (#19120)
+- Berry updated syntax highlighting plugin for VSCode (#19123)
+- Matter latency improvement for single attribute reads and single commands (#19158)
 
 ## [13.0.0.1] 20230708
 ### Added
