@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Support for MAX17043 fuel-gauge systems Lipo batteries (#18788)
 - Support for multiple PCA9685 with extended functionality (#18805)
+- Zigbee decode Aqara 0000/FF01 attribute 03 as Temperature
 
 ### Breaking Changed
 
@@ -14,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Initial ``DisplayMode`` from 1 to 0 and ``DisplayDimmmer`` from 10% to 50% (#19138)
 - ESP32 Framework (Core) from v2.0.10 to v2.0.11
 - Berry `mqtt.publish` now distinguishes between `string` and `bytes`
+- IRremoteESP8266 library from v2.8.5 to v2.8.6
 
 ### Fixed
 - Initial battery level percentage (#19160)
