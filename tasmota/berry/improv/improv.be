@@ -17,26 +17,32 @@ var cbuf = bytes(-255)
 class IMPROV : Driver
     var current_func, next_func
     var pin_ready
-    var ssid, pwd, imp_state, msg_buffer, current_cmd, sendEmptyAP
+    var ssid, pwd, imp_state, msg_buffer, ble_server_up
     var send_buffer
     var devInfo, AP_list, running_WiFi_scan
     static PIN = "123456" # 🤫
 
+    static imp_svc    = "00467768-6228-2272-4663-277478268000"
+    static state_chr  = "00467768-6228-2272-4663-277478268001"
+    static error_chr  = "00467768-6228-2272-4663-277478268002"
+    static cmd_chr    = "00467768-6228-2272-4663-277478268003"
+    static result_chr = "00467768-6228-2272-4663-277478268004"
+    static cap_chr    = "00467768-6228-2272-4663-277478268005"
+
     def init()
-        var cbp = tasmota.gen_cb(/e,o,u,h->self.cb(e,o,u,h))
+        import cb
+        var cbp = cb.gen_cb(/e,o,u,h->self.cb(e,o,u,h))
         BLE.serv_cb(cbp,cbuf)
-        BLE.set_svc("00467768-6228-2272-4663-277478268000")
+        BLE.set_svc(self.imp_svc)
         self.current_func = /->self.add_8001()
         print("BLE: wifi-improv ready for connection")
         self.pin_ready = false
         self.msg_buffer = []
         self.imp_state = 0x01 # Awaiting authorization via physical interaction.
         self.devInfo = self.getDevInfo()
-        self.current_cmd = 0
-        self.sendEmptyAP = false
         self.AP_list = []
         self.running_WiFi_scan = false
-        self.startWifiScan()
+        self.ble_server_up = false
     end
 
     def every_50ms()
@@ -44,6 +50,7 @@ class IMPROV : Driver
     end
 
     def every_100ms()
+        if self.ble_server_up == false return end
         if self.send_buffer != nil
             if size(self.send_buffer) == 0
                 self.send_buffer = nil
@@ -80,8 +87,8 @@ class IMPROV : Driver
             self.send_buffer = nil
             print("Send Buf final",cbuf[0..20])
         end
-        BLE.set_svc("00467768-6228-2272-4663-277478268000")
-        BLE.set_chr("00467768-6228-2272-4663-277478268004")
+        BLE.set_svc(self.imp_svc)
+        BLE.set_chr(self.result_chr)
         BLE.run(211)
         # will always be called from wait anyway
     end
@@ -128,14 +135,17 @@ class IMPROV : Driver
         if self.running_WiFi_scan == true return end
         tasmota.cmd("WiFiScan 1")
         self.running_WiFi_scan = true
-        tasmota.set_timer(4500,/->self.readWifiScan())
+        tasmota.set_timer(5500,/->self.readWifiScan())
     end
 
     def readWifiScan()
         var r = tasmota.cmd("WiFiScan")
         var s = r["WiFiScan"]
-        if  s == "Not Started" || s == "Scanning"
+        if  s == "Not Started"
             self.startWifiScan()
+            self.running_WiFi_scan = true
+            return false
+        elif s == "Scanning"
             return false
         end
         self.running_WiFi_scan = false
@@ -147,7 +157,6 @@ class IMPROV : Driver
             var AP = [e["SSId"],e["Signal"],enc]
             self.AP_list.push(AP)
         end
-        self.sendEmptyAP = false
         print(self.AP_list)
     end
 
@@ -165,19 +174,12 @@ class IMPROV : Driver
     end
 
     def sendAPInfo()
-        if size(self.AP_list) == 0 && self.sendEmptyAP == false
-            return
-        end
         var buf = bytes("040004") # is the termination command
-        if self.sendEmptyAP == false
+        if size(self.AP_list) != 0
             var AP = self.AP_list[0]
             self.AP_list = self.AP_list[1..]
             buf = self.encodeRPC(4,AP)
-            if size(self.AP_list) == 0
-                self.sendEmptyAP = true
-            end   
-        end
-        if self.sendEmptyAP == true
+        else
             self.AP_list = nil
         end
         self.send_buffer = buf
@@ -196,7 +198,7 @@ class IMPROV : Driver
             self.msg_buffer += data
         else
             self.msg_buffer = data
-            self.current_cmd = self.msg_buffer[0]
+            # self.current_cmd = self.msg_buffer[0]
         end
         if self.msg_buffer[1]+3 != size(self.msg_buffer) # +3 <- cmnd + length of message + checksum
             print("need more data in RPC",self.msg_buffer[1]+3,size(self.msg_buffer))
@@ -209,23 +211,21 @@ class IMPROV : Driver
         if chksum != self.msg_buffer[len+2]
             print("Wrong checksum!!",chksum,self.msg_buffer[len+2]) # still not sure what range to compute
         end
-        if self.current_cmd == 1
+        if self.msg_buffer[0] == 1
             self.useCredentials()
-        elif self.current_cmd == 2
+        elif self.msg_buffer[0] == 2
             self.deviceReaction()
-        elif self.current_cmd == 3
+        elif self.msg_buffer[0] == 3
             self.sendDevInfo()
-        elif self.current_cmd == 4
+        elif self.msg_buffer[0] == 4
             self.readWifiScan()
         else
-        print("Unhandled command", self.current_cmd)
+        print("Unhandled command", self.msg_buffer[0])
         end
-        self.current_cmd = 0
         self.msg_buffer = []
     end
 
     def identify()
-        if self.first_WiFi_scan_done == false return end
         #----------------------------------------------------------------------------------
         - This is the only place, where you can secure the ESP32 device from the outside
         - by forcing a pysical user interaction with the device, i.e. a button press.
@@ -236,8 +236,8 @@ class IMPROV : Driver
         # if (gpio.digital_read(9) == 1) return end
         print("User authorization done!") # But we do not care for this demo
         self.imp_state = 2;
-        BLE.set_svc("00467768-6228-2272-4663-277478268000")
-        BLE.set_chr("00467768-6228-2272-4663-277478268001")
+        BLE.set_svc(self.imp_svc)
+        BLE.set_chr(self.state_chr)
         cbuf.setbytes(0,bytes("0102"))
         BLE.run(211)
         self.then(/->self.wait())
@@ -245,9 +245,9 @@ class IMPROV : Driver
 
     def provisioning(step)
         # attempt connection with given credentials
-        tasmota.cmd("Wifitest2 "+self.ssid+"+"+self.pwd)
-        BLE.set_svc("00467768-6228-2272-4663-277478268000")
-        BLE.set_chr("00467768-6228-2272-4663-277478268001")
+        tasmota.cmd("Wifitest1 "+self.ssid+"+"+self.pwd)
+        BLE.set_svc(self.imp_svc)
+        BLE.set_chr(self.state_chr)
         cbuf.setbytes(0,bytes("0103"))
         BLE.run(211)
         self.imp_state = 3;
@@ -256,7 +256,10 @@ class IMPROV : Driver
 
     def provisioned(step)
          # test if credentials are working
-        if step < 255 # some kind of timeout (255 * 50 millis), could be adapted
+        if step < 80
+            self.current_func = /->self.provisioned(step + 1)
+            return
+        elif step < 255 # some kind of timeout (255 * 50 millis), could be adapted
             var w = tasmota.wifi()
             var ip = nil
             try
@@ -268,8 +271,8 @@ class IMPROV : Driver
             end
             if ip != '0.0.0.0'
                 print("IP address",ip)
-                BLE.set_svc("00467768-6228-2272-4663-277478268000")
-                BLE.set_chr("00467768-6228-2272-4663-277478268001")
+                BLE.set_svc(self.imp_svc)
+                BLE.set_chr(self.state_chr)
                 tasmota.cmd("Backlog SSId1 "+self.ssid+"; Password1 "+self.pwd) # set and reboot
                 # print("Backlog SSID1 "+self.ssid+"; Password1 "+self.pwd)
                 cbuf.setbytes(0,bytes("0104"))
@@ -277,6 +280,8 @@ class IMPROV : Driver
                 self.imp_state = 4;
                 self.then(/->self.wait())
             end
+        else
+            print("IMP: timeout!!")
         end
     end
 
@@ -314,6 +319,7 @@ class IMPROV : Driver
         print(error,op,uuid,handle)
         if op == 201
             print("Handles:",cbuf[1..cbuf[0]])
+            self.ble_server_up = true
         end
         if op == 221
             if handle == 6 # the last handle that improv-wifi is reading on connection
@@ -350,7 +356,7 @@ class IMPROV : Driver
 
     # improv wifi section
     def add_8001() # Current State
-        BLE.set_chr("00467768-6228-2272-4663-277478268001")
+        BLE.set_chr(self.state_chr)
         var payload = bytes("0100")
         payload[1] = self.imp_state
         cbuf.setbytes(0,payload)
@@ -358,25 +364,25 @@ class IMPROV : Driver
         self.then(/->self.add_8002())
     end
     def add_8002() # Error state
-        BLE.set_chr("00467768-6228-2272-4663-277478268002")
+        BLE.set_chr(self.error_chr)
         cbuf.setbytes(0,bytes("0100"))
         BLE.run(211)
         self.then(/->self.add_8003())
     end
     def add_8003() # RPC Command
-        BLE.set_chr("00467768-6228-2272-4663-277478268003")
+        BLE.set_chr(self.cmd_chr)
         cbuf.setbytes(0,bytes("020400"))
         BLE.run(211)
         self.then(/->self.add_8004())
     end
     def add_8004() # Identify/RPC result
-        BLE.set_chr("00467768-6228-2272-4663-277478268004")
+        BLE.set_chr(self.result_chr)
         cbuf.setbytes(0,bytes("0101"))
         BLE.run(211)
         self.then(/->self.add_8005())
     end
     def add_8005() # Capabilities
-        BLE.set_chr("00467768-6228-2272-4663-277478268005")
+        BLE.set_chr(self.cap_chr)
         cbuf.setbytes(0,bytes("0101"))
         BLE.run(211)
         self.then(/->self.add_fff1())
