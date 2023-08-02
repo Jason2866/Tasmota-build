@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Support for multiple PCA9685 with extended functionality (#18805)
 - Zigbee decode Aqara 0000/FF01 attribute 03 as Temperature
 - Berry bytes `get` and `set` work for 3 bytes values
+- Matter support for fabric_filtered request (for Google compatibility)
 
 ### Breaking Changed
 
@@ -23,6 +24,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Initial battery level percentage (#19160)
 - Berry SK6812_GRBW crash (#19166)
+- Fade would fail when the difference between start and target would be too small
 
 ### Removed
 
