@@ -19,7 +19,7 @@ class IMPROV : Driver
     var pin_ready
     var ssid, pwd, imp_state, msg_buffer, ble_server_up
     var send_buffer
-    var devInfo, AP_list, running_WiFi_scan
+    var devInfo, AP_list, running_WiFi_scan, testing_wifi
     static PIN = "123456" # 🤫
 
     static imp_svc    = "00467768-6228-2272-4663-277478268000"
@@ -38,11 +38,11 @@ class IMPROV : Driver
         print("BLE: wifi-improv ready for connection")
         self.pin_ready = false
         self.msg_buffer = []
-        self.imp_state = 0x01 # Awaiting authorization via physical interaction.
+        self.imp_state = 1 # Awaiting authorization via physical interaction.
         self.devInfo = self.getDevInfo()
-        self.AP_list = []
         self.running_WiFi_scan = false
         self.ble_server_up = false
+        self.testing_wifi = false
     end
 
     def every_50ms()
@@ -60,6 +60,30 @@ class IMPROV : Driver
         else
             if self.AP_list != nil
                 self.sendAPInfo()
+            end
+        end
+    end
+
+    def every_second()
+        if self.testing_wifi == true
+            var r = tasmota.cmd("wifitest",true)["WiFiTest"]
+            if r == "Testing"
+                return
+            elif r == "Successful"
+                self.testing_wifi = false
+                BLE.set_svc(self.imp_svc)
+                BLE.set_chr(self.state_chr)
+                # print("Backlog SSID1 "+self.ssid+"; Password1 "+self.pwd)
+                cbuf.setbytes(0,bytes("0104"))
+                BLE.run(211)
+                self.imp_state = 4;
+                self.then(/->self.wait())
+                tasmota.cmd("Backlog SSId1 "+self.ssid+"; Password1 "+self.pwd + "; wifi 1",true) # set and reboot
+            else
+                self.testing_wifi = false
+                print("IMP: timeout!!")
+                self.sendErrorCode(3) # Unable to connect
+                self.then(/->self.identify())
             end
         end
     end
@@ -120,12 +144,12 @@ class IMPROV : Driver
 
     def getDevInfo()
         import string
-        var r =  tasmota.cmd("status 2")
+        var r =  tasmota.cmd("status 2",true)
         var v = r["StatusFWR"]["Version"]
         v = string.split(v,"(")
         var f = v[1][0..-2]
         v = v[0]
-        r = tasmota.cmd("status 5")
+        r = tasmota.cmd("status 5",true)
         var n = r["StatusNET"]["Hostname"]
         var a = tasmota.arch()
         return ["Tasmota "+f,v,a,n]
@@ -133,13 +157,13 @@ class IMPROV : Driver
 
     def startWifiScan()
         if self.running_WiFi_scan == true return end
-        tasmota.cmd("WiFiScan 1")
+        tasmota.cmd("WiFiScan 1",true)
         self.running_WiFi_scan = true
         tasmota.set_timer(5500,/->self.readWifiScan())
     end
 
     def readWifiScan()
-        var r = tasmota.cmd("WiFiScan")
+        var r = tasmota.cmd("WiFiScan",true)
         var s = r["WiFiScan"]
         if  s == "Not Started"
             self.startWifiScan()
@@ -188,6 +212,14 @@ class IMPROV : Driver
     def sendDevInfo()
         self.send_buffer = self.encodeRPC(3,self.devInfo)
         print(self.send_buffer)
+    end
+
+    def sendErrorCode(code)
+        BLE.set_svc(self.imp_svc)
+        BLE.set_chr(self.error_chr)
+        cbuf[0] = 1
+        cbuf[1] = code
+        BLE.run(211)
     end
 
     def parseRPC()
@@ -243,46 +275,22 @@ class IMPROV : Driver
         self.then(/->self.wait())
     end
 
-    def provisioning(step)
+    def provisioning()
         # attempt connection with given credentials
-        tasmota.cmd("Wifitest1 "+self.ssid+"+"+self.pwd)
+        tasmota.cmd("Wifitest3 "+self.ssid+"+"+self.pwd,true)
         BLE.set_svc(self.imp_svc)
         BLE.set_chr(self.state_chr)
         cbuf.setbytes(0,bytes("0103"))
         BLE.run(211)
         self.imp_state = 3;
-        self.then(/->self.provisioned(1))
+        self.then(/->self.provisioned())
     end
 
-    def provisioned(step)
+    def provisioned()
          # test if credentials are working
-        if step < 80
-            self.current_func = /->self.provisioned(step + 1)
-            return
-        elif step < 255 # some kind of timeout (255 * 50 millis), could be adapted
-            var w = tasmota.wifi()
-            var ip = nil
-            try
-                ip = w['ip']
-                print(ip)
-            except ..
-                self.current_func = /->self.provisioned(step + 1)
-                return
-            end
-            if ip != '0.0.0.0'
-                print("IP address",ip)
-                BLE.set_svc(self.imp_svc)
-                BLE.set_chr(self.state_chr)
-                tasmota.cmd("Backlog SSId1 "+self.ssid+"; Password1 "+self.pwd) # set and reboot
-                # print("Backlog SSID1 "+self.ssid+"; Password1 "+self.pwd)
-                cbuf.setbytes(0,bytes("0104"))
-                BLE.run(211)
-                self.imp_state = 4;
-                self.then(/->self.wait())
-            end
-        else
-            print("IMP: timeout!!")
-        end
+         tasmota.cmd("wifi 0",true) # prevent crash
+         self.testing_wifi = true
+         self.current_func = /->self.wait()
     end
 
     def execCmd(c)
@@ -322,9 +330,10 @@ class IMPROV : Driver
             self.ble_server_up = true
         end
         if op == 221
-            if handle == 6 # the last handle that improv-wifi is reading on connection
+            if handle == 15 # the last handle that improv-wifi is reading on connection
                 if self.imp_state == 1
-                    self.then(/->self.identify()) # now request our "identify"
+                    self.current_func = /->self.identify() # now request our "identify"
+                    return
                 end
             end
         end
