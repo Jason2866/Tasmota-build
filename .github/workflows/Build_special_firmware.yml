@@ -59,6 +59,7 @@ jobs:
           - tasmota32-teleinfo
           - tasmota32c3-teleinfo
           - tasmota32s2-teleinfo
+          - tasmota32s3-teleinfo
           - tasmota32-thermostat
           - tasmota32solo1-thermostat
           - tasmota32solo1-bluetooth
