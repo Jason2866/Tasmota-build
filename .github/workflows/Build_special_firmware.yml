@@ -113,7 +113,6 @@ jobs:
           mkdir -p ./firmware/firmware
           mv tasmota32* ./firmware/firmware
           ls -l ./firmware/firmware
-          cp ./platformio_tasmota_core3_env_sample.ini ./platformio_tasmota_core3_env.ini
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - uses: actions/upload-artifact@v3
