@@ -92,6 +92,9 @@ jobs:
           - tasmota32c3-mi32-homebridge
           - tasmota32s3-mi32-homebridge
           - tasmota32-mi32-homebridge
+          - tasmota32c2-arduino30
+          - tasmota32c6-arduino30
+          - tasmota32c6cdc-arduino30
     steps:
       - uses: actions/checkout@v3
         with:
@@ -110,6 +113,7 @@ jobs:
           mkdir -p ./firmware/firmware
           mv tasmota32* ./firmware/firmware
           ls -l ./firmware/firmware
+          cp ./platformio_tasmota_core3_env_sample.ini ./platformio_tasmota_core3_env.ini
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - uses: actions/upload-artifact@v3
