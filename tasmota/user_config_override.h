@@ -3408,8 +3408,9 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #define USE_AHT2x                              // [I2cDriver43] Enable AHT20 instead of AHT1x humidity and temperature sensor (I2C address 0x38) (+0k8 code)
 #define USE_WEMOS_MOTOR_V1                     // [I2cDriver44] Enable Wemos motor driver V1 ()
 #define USE_HDC1080                            // [I2cDriver45] Enable HDC1080 temperature/humidity sensor (I2C address 0x40) (+1k5 code)
-#define USE_IAQ                                // [I2cDriver46] Enable iAQ-core air quality sensor (I2C address 0x5a) (+0k6 code)
 #define USE_AS3935                             // [I2cDriver48] Enable AS3935 Franklin Lightning Sensor (I2C address 0x03) (+5k4 code)
+#define USE_VEML6075                           // [I2cDriver49] Enable VEML6075 UVA/UVB/UVINDEX Sensor (I2C address 0x10) (+2k1 code)
+#define USE_VEML7700                           // [I2cDriver50] Enable VEML7700 Ambient Light sensor (I2C addresses 0x10) (+4k5 code)
 #define USE_MCP9808                            // [I2cDriver51] Enable MCP9808 temperature sensor (I2C addresses 0x18 - 0x1F) (+0k9 code)
 #define USE_HP303B                             // [I2cDriver52] Enable HP303B temperature and pressure sensor (I2C address 0x76 or 0x77) (+6k2 code)
 #define USE_MLX90640                           // [I2cDriver53] Enable MLX90640 IR array temperature sensor (I2C address 0x33) (+20k code)
@@ -3427,10 +3428,37 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #define USE_EZOPMP                             // [I2cDriver55] Enable support for EZO's PMP sensor (+0k3 code) - Shared EZO code required for any EZO device (+1k2 code)
 #define USE_SEESAW_SOIL                        // [I2cDriver56] Enable Capacitice Soil Moisture & Temperature Sensor (I2C addresses 0x36 - 0x39) (+1k3 code)
 #define USE_MPU_ACCEL                          // [I2cDriver58] Enable MPU6886/MPU9250 - found in M5Stack - support both I2C buses on ESP32 (I2C address 0x68) (+2k code)
-#define USE_BM8563                             // [I2cDriver59] Enable BM8563 RTC - found in M5Stack - support both I2C buses on ESP32 (I2C address 0x51) (+2k5 code)
 #define USE_AM2320                             // [I2cDriver60] Enable AM2320 temperature and humidity Sensor (I2C address 0x5C) (+1k code)
 #define USE_T67XX                              // [I2cDriver61] Enable Telaire T67XX CO2 sensor (I2C address 0x15) (+1k3 code)
 #define USE_HM330X                             // [I2cDriver63] Enable support for SeedStudio Grove Particule sensor (I2C address 0x40) (+1k5 code)
+//  #define HM330X_DEFAULT_ADDRESS    0x40       // Option: change default I2C address for HM330X used in SeedSTudio Particucle Sensor
+//  #define HM330X_WARMUP_DELAY       30         // Option: change warmup delay during which data are not read from sensor after a power up
+//  #define HM330X_HIDE_OUT_OF_DATE   false      // Option: change to true to hide data from web GUI and SENSOR while sensor is asleep
+#define USE_HDC2010                            // [I2cDriver64] Enable HDC2010 temperature/humidity sensor (I2C address 0x40) (+1k5 code)
+#define USE_DS3502                             // [I2CDriver67] Enable DS3502 digital potentiometer (I2C address 0x28 - 0x2B) (+0k4 code)
+#define USE_HYT                                // [I2CDriver68] Enable HYTxxx temperature and humidity sensor (I2C address 0x28) (+0k5 code)
+#define USE_LUXV30B                            // [I2CDriver70] Enable RFRobot SEN0390 LuxV30b ambient light sensor (I2C address 0x4A) (+0k5 code)
+#define USE_QMC5883L                           // [I2CDriver71] Enable QMC5883L magnetic induction sensor (I2C address 0x0D) (+0k8 code)
+#define USE_HMC5883L                           // [I2CDriver73] Enable HMC5883L magnetic induction sensor (I2C address 0x1E) (+1k3 code)
+//  #define QMC5883L_TEMP_SHIFT       23         // sensor temperature are not calibrated (only relativ measurement) and need an absolute ground value in °C (see datasheet)
+#define USE_INA3221                            // [I2CDriver72] Enable INA3221 3-channel DC voltage and current sensor (I2C address 0x40-0x44) (+3.2k code)
+//  #define INA3221_ADDRESS1                     // allow to change the 1st address to search for INA3221 to 0x41..0x43
+//  #define INA3221_MAX_COUNT                    // change the number of devices to search for (default 4).
+                                              // Both settings together allow to limit searching for INA3221 to only a subset of addresses
+#define USE_PMSA003I                           // [I2cDriver78] Enable PMSA003I Air Quality Sensor (I2C address 0x12) (+1k8 code)
+#define USE_GDK101                             // [I2cDriver79] Enable GDK101 sensor (I2C addresses 0x18 - 0x1B) (+1k2 code)
+#define USE_TC74                               // [I2cDriver80] Enable TC74 sensor (I2C addresses 0x48 - 0x4F) (+1k code)
+#define USE_PCA9557                            // [I2cDriver81] Enable PCA9557 8-bit I/O Expander (I2C addresses 0x18 - 0x1F) (+2k5 code)
+#define USE_MAX17043                           // [I2cDriver83] Enable MAX17043 fuel-gauge systems Lipo batteries sensor (I2C address 0x36) (+0k9 code)
+
+#define USE_RTC_CHIPS                          // Enable RTC chip support and NTP server - Select only one
+  #define USE_DS3231                           // [I2cDriver26] Enable DS3231 RTC (I2C address 0x68) (+1k2 code)
+  #define DS3231_ENABLE_TEMP                   //   In DS3231 driver, enable the internal temperature sensor
+  #define USE_BM8563                           // [I2cDriver59] Enable BM8563 RTC - found in M5Stack - support both I2C buses on ESP32 (I2C address 0x51) (+2.5k code)
+  #define USE_PCF85363                         // [I2cDriver66] Enable PCF85363 RTC - found Shelly 3EM (I2C address 0x51) (+0k7 code)
+#define USE_LD2410                               // Add support for HLK-LD2410 24GHz smart wave motion sensor (+2k8 code)
+#define USE_LOX_O2                               // Add support for LuminOx LOX O2 Sensor (+0k8 code)
+#define USE_GM861                                // Add support for GM861 1D and 2D Bar Code Reader (+1k3 code)
 
   // #define USE_DISPLAY                            // Add I2C Display Support (+2k code)
   //   // #define USE_DISPLAY_MODES1TO5                // Enable display mode 1 to 5 in addition to mode 0
@@ -3495,7 +3523,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 //  #define USE_PROJECTOR_CTRL_OPTOMA              // Use codes for OPTOMA
 #define USE_AS608                                // Add support for AS608 optical and R503 capacitive fingerprint sensor (+3k4 code)
 #define USE_TFMINIPLUS                           // Add suppoer for TFmini Plus (TFmini, TFmini-S) LiDAR modules via UART interface
-#define USE_HRG15                                // Add support for Hydreon RG-15 Solid State Rain sensor (+1k5 code)
+// #define USE_HRG15                                // Add support for Hydreon RG-15 Solid State Rain sensor (+1k5 code)
 #define USE_VINDRIKTNING                         // Add support for IKEA VINDRIKTNING particle concentration sensor (+1k code)
 
 // Power monitoring sensors -----------------------
@@ -3541,7 +3569,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 
 // #define USE_MAX31855                              // Disable MAX31855 K-Type thermocouple sensor using softSPI
 #define USE_LMT01                                // Add support for TI LMT01 temperature sensor, count pulses on single GPIO (+0k5 code)
-#define USE_WIEGAND                              // Add support for 24/26/32/34 bit RFID Wiegand interface (D0/D1) (+1k7 code)
+// #define USE_WIEGAND                              // Add support for 24/26/32/34 bit RFID Wiegand interface (D0/D1) (+1k7 code)
 
 #define USE_MODBUS_BRIDGE                        // Add support for software Modbus Bridge (+3k code)
 #define USE_MODBUS_BRIDGE_TCP                    // Add support for software Modbus TCP Bridge (Must also enable USE_MODBUS_BRIDGE)
