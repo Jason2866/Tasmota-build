@@ -3569,7 +3569,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 
 // #define USE_MAX31855                              // Disable MAX31855 K-Type thermocouple sensor using softSPI
 #define USE_LMT01                                // Add support for TI LMT01 temperature sensor, count pulses on single GPIO (+0k5 code)
-// #define USE_WIEGAND                              // Add support for 24/26/32/34 bit RFID Wiegand interface (D0/D1) (+1k7 code)
+#define USE_WIEGAND                              // Add support for 24/26/32/34 bit RFID Wiegand interface (D0/D1) (+1k7 code)
 
 #define USE_MODBUS_BRIDGE                        // Add support for software Modbus Bridge (+3k code)
 #define USE_MODBUS_BRIDGE_TCP                    // Add support for software Modbus TCP Bridge (Must also enable USE_MODBUS_BRIDGE)
