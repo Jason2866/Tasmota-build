@@ -3,16 +3,27 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [13.1.0.2]
+## [13.1.0.3]
 ### Added
-- Support for HDMI CEC protocol (#19434)
+- Support for Shelly PlusPMMini, Plus1Mini and Plus1PMMini
 
 ### Breaking Changed
 
 ### Changed
-- Berry fast_loop is now called every 5ms whatever the Sleep value
-- Reduce IRAM consumption of HDMI CEC to 1453 bytes
-- `Sendmail` upgraded to ESP-Mail-Client v3.4.9 from v1.2.0, using BearSSL instead of MbedTLS
+
+### Fixed
+
+### Removed
+
+## [13.1.0.2] 20230914
+### Added
+- Support for HDMI CEC protocol (#19434)
+- Support different baudrates on BL0942
+
+### Changed
+- Berry fast_loop is now called every 5ms whatever the Sleep value (#19436)
+- Reduce IRAM consumption of HDMI CEC to 1453 bytes (#19452)
+- `Sendmail` upgraded to ESP-Mail-Client v3.4.9 from v1.2.0, using BearSSL instead of MbedTLS (#19460)
 - ESP32 Framework (Arduino Core) from v2.0.11 to v2.0.12
 - ESP32 LVGL library from v8.3.8 to v8.3.9 (no functional change)
 
@@ -22,8 +33,8 @@ All notable changes to this project will be documented in this file.
 - ESP32 Shutter migration (#19454)
 - ESP32 Shutter multi press button events (#19465)
 - Support for IPv6 link-local zones for esp-idf 5.1 (necessary for Matter)
+- ESP32C3 relay click on restart
 
-### Removed
 
 ## [13.1.0.1] 20230831
 ### Added
