@@ -1633,7 +1633,7 @@ oo     .d8P `88b    ooo   888  `88b.   888   888              888       888   8 
 #endif // ESP8266
 
 #ifdef ESP32
-  #define USE_ESP32MAIL
+  //#define USE_ESP32MAIL
   #define MAXVARS 75
   #define MAXSVARS 15
   #define MAXFILT 10
