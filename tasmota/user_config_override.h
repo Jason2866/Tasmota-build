@@ -4214,6 +4214,175 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 
 #endif  // CUSTOM_CONFIG_PLATINUM_SCRIPTING *******************************************************************
 
+#undef  CFG_HOLDER
+#define CFG_HOLDER        4668                   // [Reset 1] Change this value to load SECTION1 configuration parameters to flash
+
+// -- Setup your own Wifi settings  ---------------
+#undef  STA_SSID1
+#define STA_SSID1         "PrettyFly4WiFi"             // [Ssid1] Wifi SSID
+
+#undef  STA_PASS1
+#define STA_PASS1         "Fuckthat2121@!"     // [Password1] Wifi password
+
+// -- Setup your own MQTT settings  ---------------
+#undef  MQTT_HOST
+#define MQTT_HOST         "192.168.1.106" // [MqttHost]
+
+#undef  MQTT_PORT
+#define MQTT_PORT         1883                   // [MqttPort] MQTT port (10123 on CloudMQTT)
+
+#undef  MQTT_USER
+#define MQTT_USER         "MQTT"         // [MqttUser] Optional user
+
+#undef  MQTT_PASS
+#define MQTT_PASS         "Fuckoff2121@!"         // [MqttPassword] Optional password
+
+// #define MDNS_ENABLED           true             // [SetOption55] Use mDNS (false = Disable, true = Enable)
+
+// #ifndef USE_BERRY
+// #define USE_BERRY
+// #endif 
+ //***WT32 ALL WORKING EXCEPT RS485
+
+/*
+*/ //***WT32 ALL WORKING EXCEPT RS485
+
+ ////M5Stack Core 2 ALL WORKING EXCEPT RS485
+#ifndef USE_MATTER_DEVICE
+#define USE_MATTER_DEVICE
+#endif
+
+// #ifndef USE_I2S
+// #define USE_I2S
+// #endif 
+
+// #ifndef USE_I2S_AUDIO
+// #define USE_I2S_AUDIO
+// #endif 
+
+// #ifndef USE_I2S_AUDIO_BERRY
+// #define USE_I2S_AUDIO_BERRY
+// #endif 
+
+//#define USE_I2S_NO_DAC                         // Add support for transistor-based output without DAC
+#define USE_I2S_WEBRADIO                       // Add support for web radio
+#define USE_I2S_SAY_TIME                       // Add support for english speaking clock
+#define USE_I2S_RTTTL                          // Add support for Rtttl playback
+// #define USE_LSB                                // Add support for LSBJ chips, e.g. TM8211/PT8211
+// Microphone support
+// #define USE_I2S_MIC                            // Add support for I2S microphone
+
+  //#define MIC_CHANNELS 1                       // 1 = mono (I2S_CHANNEL_FMT_ONLY_RIGHT), 2 = stereo (I2S_CHANNEL_FMT_RIGHT_LEFT)
+  //#define MICSRATE 32000                       // Set sample rate
+  //#define USE_INMP441                          // Add support for INMP441 MEMS microphone
+  //#define MIC_PDM                              // Set microphone as PDM (only on ESP32)
+// #define USE_SHINE                              // Use MP3 encoding (only on ESP32 with PSRAM)
+// #define MP3_MIC_STREAM                         // Add support for streaming microphone via http (only on ESP32 with PSRAM)
+// #define MP3_STREAM_PORT 81                   // Choose MP3 stream port (default = 81)
+// #define I2S_BRIDGE                             // Add support for UDP PCM audio bridge
+// #define I2S_BRIDGE_PORT    6970              // Set bridge port (default = 6970)
+// #undef USE_M5STACK_CORE2
+// #define USE_M5STACK_CORE2
+// #ifdef USE_M5STACK_CORE2
+// leave this predefined currently
+// #undef AUDIO_PWR_ON
+// #undef AUDIO_PWR_OFF
+// #define AUDIO_PWR_ON Core2AudioPower(true);
+// #define AUDIO_PWR_OFF Core2AudioPower(false);
+// #undef DAC_IIS_BCK
+// #undef DAC_IIS_WS
+// #undef DAC_IIS_DOUT
+// #undef DAC_IIS_DIN
+// #define DAC_IIS_BCK       12
+// #define DAC_IIS_WS        0
+// #define DAC_IIS_DOUT      2
+// #define DAC_IIS_DIN       34
+// #undef MICSRATE
+// #define MICSRATE 32000
+// #undef MIC_CHANNELS
+// #define MIC_CHANNELS 1
+// #endif 
+ //**END*** M5Stack Core 2 ALL WORKING EXCEPT RS485
+
+
+
+
+// #ifndef USE_AUTOCONF
+// #define USE_AUTOCONF
+// #endif
+
+// #ifndef USE_BERRY_DEBUG
+// #define USE_BERRY_DEBUG
+// #endif
+// #ifndef USE_BERRY_PYTHON_COMPAT
+// #define USE_BERRY_PYTHON_COMPAT
+// #endif
+// #ifndef USE_BERRY_TCPSERVER
+// #define USE_BERRY_TCPSERVER
+// #endif
+// #ifndef USE_BERRY_TF_LITE
+// #define USE_BERRY_TF_LITE
+// #endif
+// #ifndef USE_BERRY_ULP
+// #define USE_BERRY_ULP
+// #endif
+// #ifndef USE_DISCOVERY
+// #define USE_DISCOVERY
+// #endif
+// #ifndef USE_DISPLAY
+// #define USE_DISPLAY
+// #endif
+// #ifndef USE_ENERGY_SENSOR
+// #define USE_ENERGY_SENSOR
+// #endif
+// #ifndef USE_ETHERNET
+// #define USE_ETHERNET
+// #endif
+// #ifndef USE_I2C
+// #define USE_I2C
+// #endif
+// #ifndef USE_IPV6
+// #define USE_IPV6
+// #endif
+// #ifndef USE_LIGHT
+// #define USE_LIGHT
+// #endif
+// #ifndef USE_LVGL
+// #define USE_LVGL
+// #endif
+// #ifndef USE_LVGL_FREETYPE
+// #define USE_LVGL_FREETYPE
+// #endif
+// #ifndef USE_LVGL_HASPMOTA
+// #define USE_LVGL_HASPMOTA
+// #endif
+// #ifndef USE_NETWORK_LIGHT_SCHEMES
+// #define USE_NETWORK_LIGHT_SCHEMES
+// #endif
+// #ifndef USE_SERIAL_BRIDGE
+// #define USE_SERIAL_BRIDGE
+// #endif
+// #ifndef USE_UFILESYS
+// #define USE_UFILESYS
+// #endif
+// #ifndef USE_UNISHOX_COMPRESSION
+// #define USE_UNISHOX_COMPRESSION
+// #endif
+// #ifndef USE_UNIVERSAL_DISPLAY
+// #define USE_UNIVERSAL_DISPLAY
+// #endif
+// #ifndef USE_WEBCLIENT
+// #define USE_WEBCLIENT
+// #endif
+// #ifndef USE_WEBSERVER
+// #define USE_WEBSERVER
+// #endif
+// #ifndef USE_WS2812
+// #define USE_WS2812
+// #endif
+// #ifndef USE_ZIGBEE
+// #define USE_ZIGBEE
+// #endif
 
 /*********************************************************************************************\
  * Debug features
