@@ -89,6 +89,9 @@ jobs:
           - tasmota32c3-display
           - tasmota32s3-bluetooth
           - tasmota32s3cdc-box
+          - tasmota32c3-mi32
+          - tasmota32s3-mi32
+          - tasmota32-mi32
           - tasmota32c2-arduino30
           - tasmota32c6-arduino30
           - tasmota32c6cdc-arduino30
