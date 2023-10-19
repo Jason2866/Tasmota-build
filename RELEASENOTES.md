@@ -36,9 +36,9 @@ While fallback or downgrading is common practice it was never supported due to S
 
 This release will be supported from ESP8266/Arduino library Core version **2.7.4.9** due to reported security and stability issues on previous Core version. This will also support gzipped binaries.
 
-This release will be supported from ESP32/Arduino library Core version **2.0.13**.
+This release will be supported from ESP32/Arduino library Core version **2.0.14**.
 
-Support of ESP8266 Core versions before 2.7.4.9 and ESP32 Core versions before 2.0.13 have been removed.
+Support of ESP8266 Core versions before 2.7.4.9 and ESP32 Core versions before 2.0.14 have been removed.
 
 ## Support of TLS
 
@@ -75,12 +75,12 @@ Latest released binaries can be downloaded from
 - http://ota.tasmota.com/tasmota/release
 
 Historical binaries can be downloaded from
-- http://ota.tasmota.com/tasmota/release-13.1.0
+- http://ota.tasmota.com/tasmota/release-13.2.0
 
 The latter links can be used for OTA upgrades too like ``OtaUrl http://ota.tasmota.com/tasmota/release/tasmota.bin.gz``
 
 ### ESP32, ESP32-C3, ESP32-S2 and ESP32-S3 based
-The following binary downloads have been compiled with ESP32/Arduino library core version **2.0.13**.
+The following binary downloads have been compiled with ESP32/Arduino library core version **2.0.14**.
 
 - **tasmota32.bin** = The Tasmota version with most drivers including additional sensors and KNX for 4M+ flash.  **RECOMMENDED RELEASE BINARY**
 - **tasmota32xy.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C3/S2/S3 and 4M+ flash.
@@ -100,7 +100,7 @@ Latest released binaries can be downloaded from
 - https://ota.tasmota.com/tasmota32/release
 
 Historical binaries can be downloaded from
-- https://ota.tasmota.com/tasmota32/release-13.1.0
+- https://ota.tasmota.com/tasmota32/release-13.2.0
 
 The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasmota.com/tasmota32/release/tasmota32.bin``
 
@@ -110,34 +110,19 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 [Complete list](BUILDS.md) of available feature and sensors.
 
-## Changelog v13.1.0.3
+## Changelog v13.2.0.1
 ### Added
-- Experimental support for ESP32-C2 and ESP32-C6 using Arduino core v3.0 
-- Commands to allow setting of timeprop parameters [#19310](https://github.com/arendst/Tasmota/issues/19310)
-- Variables ``%power<1..28>%`` and  ``%switch<1..28>%`` to rules [#19331](https://github.com/arendst/Tasmota/issues/19331)
-- Support for HDMI CEC protocol [#19434](https://github.com/arendst/Tasmota/issues/19434)
-- Support different baudrates on BL0942
-- Support for Shelly PlusPMMini, Plus1Mini and Plus1PMMini
-- Berry read and write Counters [#19558](https://github.com/arendst/Tasmota/issues/19558)
-- Matter support for Virtual Devices controllable via Rules or Berry [#19520](https://github.com/arendst/Tasmota/issues/19520)
+- Experimental support for ESP32-C2 and ESP32-C6 using Arduino core v3
+- I2C bus2 support to iAQ core sensor [#19799](https://github.com/arendst/Tasmota/issues/19799)
+- I2C bus2 support to HTU temperature and humidity sensor
+- I2C bus2 support to BH1750 ambient light sensor
 
 ### Breaking Changed
 
 ### Changed
-- ESP32 Framework (Arduino Core) from v2.0.11 to v2.0.13
-- ESP32 LVGL library from v8.3.8 to v8.3.10 (no functional change)
-- Display invert setting after tasmota start in uDisplay driver [#19337](https://github.com/arendst/Tasmota/issues/19337)
 
 ### Fixed
-- Shutter invert [#19341](https://github.com/arendst/Tasmota/issues/19341) and [#19374](https://github.com/arendst/Tasmota/issues/19374)
-- Teleinfo power [#19381](https://github.com/arendst/Tasmota/issues/19381)
-- Exception 3 in IRHVAC [#19389](https://github.com/arendst/Tasmota/issues/19389)
-- PCF8574 mode 1 with base relays exception 3/28 regression from v12.4.0.4 [#19408](https://github.com/arendst/Tasmota/issues/19408)
-- ESP32 DS18x20 driver support extended over GPIO33
-- ESP32 Support for IPv6 link-local zones for esp-idf 5.1 (necessary for Matter)
-- ESP32 Shutter migration [#19454](https://github.com/arendst/Tasmota/issues/19454)
-- ESP32 Shutter multi press button events [#19465](https://github.com/arendst/Tasmota/issues/19465)
-- ESP32C3 relay click on restart
-- Matter support for Virtual Devices controllable via Rules or Berry [#19520](https://github.com/arendst/Tasmota/issues/19520)
+- NeoPool filtration mode display [#19801](https://github.com/arendst/Tasmota/issues/19801)
+- ESP32 I2C allow bus2 support when bus1 is not enabled
 
 ### Removed

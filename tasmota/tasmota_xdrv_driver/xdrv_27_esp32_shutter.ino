@@ -469,9 +469,7 @@ int32_t ShutterCalculatePosition(uint32_t i)
 
 void ShutterDecellerateForStop(uint8_t i)
 {
-#ifdef ESP32
   bool pwm_apply = false;   // ESP32 only, do we need to apply PWM changes
-#endif
   switch (ShutterGlobal.position_mode) {
     case SHT_PWM_VALUE:
     case SHT_COUNTER:
@@ -491,13 +489,8 @@ void ShutterDecellerateForStop(uint8_t i)
         //AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("SHT: Remain %d count %d -> target %d, dir %d"), missing_steps, RtcSettings.pulse_counter[i], (uint32_t)(Shutter[i].target_position-Shutter[i].start_position)*Shutter[i].direction*ShutterGlobal.open_velocity_max/RESOLUTION/STEPS_PER_SECOND, Shutter[i].direction);
         while (RtcSettings.pulse_counter[i] < (uint32_t)(Shutter[i].target_position-Shutter[i].start_position)*Shutter[i].direction*ShutterGlobal.open_velocity_max/RESOLUTION/STEPS_PER_SECOND && missing_steps > 0) {
         }
-#ifdef ESP8266
-        analogWrite(Pin(GPIO_PWM1, i), 0); // removed with 8.3 because of reset caused by watchog
-#endif
-#ifdef ESP32
         TasmotaGlobal.pwm_value[i] = 0;
         pwm_apply = true;
-#endif  // ESP32
         Shutter[i].real_position = ShutterCalculatePosition(i);
         //AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("SHT: Remain steps %d"), missing_steps);
         AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("SHT: Real %d, Pulsecount %d, tobe %d, Start %d"), Shutter[i].real_position,RtcSettings.pulse_counter[i],  (uint32_t)(Shutter[i].target_position-Shutter[i].start_position)*Shutter[i].direction*ShutterGlobal.open_velocity_max/RESOLUTION/STEPS_PER_SECOND, Shutter[i].start_position);
@@ -506,9 +499,7 @@ void ShutterDecellerateForStop(uint8_t i)
       Shutter[i].pwm_velocity = 0;
     break;
   }
-#ifdef ESP32
   if (pwm_apply) { PwmApplyGPIO(false); }
-#endif
 }
 
 uint16_t ShutterGetCycleTime(uint8_t i, uint8_t  max_runtime) {
@@ -568,10 +559,7 @@ void ShutterInit(void)
   //Initialize to get relay that changed
   ShutterGlobal.RelayOldMask = TasmotaGlobal.power;
 
-  // if shutter 4 is unused
-  if (ShutterSettings.shutter_startrelay[MAX_SHUTTERS_ESP32 -1] == 0) {
-     ShutterGlobal.open_velocity_max = ShutterSettings.shuttercoeff[4][3] > 0 ? ShutterSettings.shuttercoeff[4][3] : ShutterGlobal.open_velocity_max;
-  }
+  ShutterGlobal.open_velocity_max = ShutterSettings.open_velocity_max;
   for (uint32_t i = 0; i < MAX_SHUTTERS_ESP32; i++) {
     // set startrelay to 1 on first init, but only to shutter 1. 90% usecase
     if (ShutterSettings.shutter_startrelay[i] && (ShutterSettings.shutter_startrelay[i] <= 32 )) {
@@ -818,9 +806,16 @@ void ShutterPowerOff(uint8_t i)
   #endif
       break;
   }
-  if (Settings->save_data) {
-    TasmotaGlobal.save_data_counter = Settings->save_data;
+
+  // restore save_data behavior if all shutters are in stopped state
+  bool shutter_all_stopped = true;
+  for (uint8_t j = 0 ; j < TasmotaGlobal.shutters_present ; j++) {
+    if (Shutter[j].direction != 0)
+      shutter_all_stopped = false;
   }
+  if (shutter_all_stopped)
+    TasmotaGlobal.save_data_counter = Settings->save_data;
+
   Shutter[i].last_stop_time = millis();
 }
 
@@ -967,10 +962,8 @@ void ShutterReportPosition(bool always, uint32_t index)
 
 void ShutterRtc50mS(void)
 {
-#ifdef ESP32
   bool pwm_apply = false;   // ESP32 only, do we need to apply PWM changes
-#endif
-    // No Logging allowed. RTC Timer
+  // No Logging allowed. RTC Timer
   for (uint8_t i = 0; i < TasmotaGlobal.shutters_present; i++) {
     if (Shutter[i].direction) {
       // update position data before increasing counter
@@ -990,24 +983,15 @@ void ShutterRtc50mS(void)
             //AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("SHT: Accelerator i=%d -> %d"),i, Shutter[i].accelerator);
             ShutterUpdateVelocity(i);
             digitalWrite(Pin(GPIO_PWM1, i), LOW);
-  #ifdef ESP8266
-            // Convert frequency into clock cycles
-            uint32_t cc = microsecondsToClockCycles(1000000UL) / Shutter[i].pwm_velocity;
-            startWaveformClockCycles(Pin(GPIO_PWM1, i), cc/2, cc/2, 0, -1, 0, false);
-  #endif  // ESP8266
-  #ifdef ESP32
             analogWriteFreq(Shutter[i].pwm_velocity,Pin(GPIO_PWM1, i));
             TasmotaGlobal.pwm_value[i] = 512;
             pwm_apply = true;
-  #endif  // ESP32
           }
         break;
       }
     } // if (Shutter[i].direction)
   }
-#ifdef ESP32
   if (pwm_apply) { PwmApplyGPIO(false); }
-#endif
 }
 
 void ShutterSetPosition(uint32_t device, uint32_t position)
@@ -1174,15 +1158,9 @@ void ShutterStartInit(uint32_t i, int32_t direction, int32_t target_pos)
     switch (ShutterGlobal.position_mode) {
 #ifdef SHUTTER_STEPPER
       case SHT_COUNTER:
-#ifdef ESP8266
-        analogWriteFreq(Shutter[i].pwm_velocity);
-        analogWrite(Pin(GPIO_PWM1, i), 0);
-#endif
-#ifdef ESP32
         analogWriteFreq(PWM_MIN,Pin(GPIO_PWM1, i));
         TasmotaGlobal.pwm_value[i] = 0;
         PwmApplyGPIO(false);
-#endif
         RtcSettings.pulse_counter[i] = 0;
       break;
 #endif
@@ -1207,11 +1185,9 @@ void ShutterStartInit(uint32_t i, int32_t direction, int32_t target_pos)
         Shutter[i].venetian_delay, Shutter[i].tilt_real_pos,direction,(Shutter[i].tilt_config[1]-Shutter[i].tilt_config[0]), Shutter[i].tilt_config[2],Shutter[i].tilt_start_pos,Shutter[i].tilt_target_pos);
     }
 
-    // avoid file system writes during move to minimize missing steps
-    if (Settings->save_data) {
-      uint32_t move_duration = (direction > 0) ? Shutter[i].open_time : Shutter[i].close_time;
-      TasmotaGlobal.save_data_counter = Settings->save_data + (move_duration / 10) +1;
-    }
+    // avoid file system writes during move to minimize missing steps. 15min diabled. Will re renabled on full stop
+    TasmotaGlobal.save_data_counter = 900;
+
   }
   //AddLog(LOG_LEVEL_DEBUG,  PSTR("SHT: Start shtr%d from %d to %d in dir: %d"), i, Shutter[i].start_position, Shutter[i].target_position, direction);
 
@@ -1708,9 +1684,7 @@ void CmndShutterFrequency(void)
 {
   if ((XdrvMailbox.payload > 0) && (XdrvMailbox.payload <= 20000)) {
     ShutterGlobal.open_velocity_max =  XdrvMailbox.payload;
-    if (TasmotaGlobal.shutters_present < 4) {
-      ShutterSettings.shuttercoeff[4][3] = ShutterGlobal.open_velocity_max;
-    }
+    ShutterSettings.open_velocity_max = ShutterGlobal.open_velocity_max;
     ShutterInit();
   }
   ResponseCmndNumber(ShutterGlobal.open_velocity_max);

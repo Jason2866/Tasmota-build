@@ -3,32 +3,87 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [13.1.0.3]
+## [13.2.0.1]
 ### Added
-- Support for Shelly PlusPMMini, Plus1Mini and Plus1PMMini
-- Matter support for Virtual Devices controllable via Rules or Berry (#19520)
-- Berry read and write Counters (#19558)
+- I2C bus2 support to iAQ core sensor (#19799)
+- I2C bus2 support to HTU temperature and humidity sensor
+- I2C bus2 support to BH1750 ambient light sensor
 
 ### Breaking Changed
 
 ### Changed
+- Prepare I2C drivers for bus2 support
+
+### Fixed
+- NeoPool filtration mode display (#19801)
+- ESP32 I2C allow bus2 support when bus1 is not enabled
+
+### Removed
+
+
+## [Released]
+
+## [13.2.0] 20231019
+- Release Quincy
+
+## [13.1.0.4] 20231019
+### Added
+- Support for HC8 CO2 sensor (#19714)
+- ESP32 commands ``Ds18Rescan`` and ``Ds18RetryRead`` (#19700)
+
+### Breaking Changed
+- Removed support for Homekit in favour of Matter (#19738)
+
+### Changed
+- ESP32 Framework (Arduino Core) from v2.0.13 to v2.0.14
+- MAX31855/MAX6675 sensors driver support up to 6 (#19329)
+- ESP32 analog from `analogRead()` to calibrated `analogReadMilliVolts()` (#19732)
+- I2S refactoring in preparation for core 3 (#19749)
+- Teleinfo use Apparent Power as Active Power approximation (#19756)
+
+### Fixed
+- ESP32 shutter frequency (#19717)
+- ModbusBridge write memory leak (#19758)
+- Zigbee timezone when device reads LocalTime attribute (#19772)
+
+### Removed
+- WiFiClientSecure in favour of WiFiClientSecureLightBearSSL (#19725)
+
+## [13.1.0.3] 20231003
+### Added
+- Support for Shelly PlusPMMini, Plus1Mini and Plus1PMMini
+- Matter support for Virtual Devices controllable via Rules or Berry (#19520)
+- Berry read and write Counters (#19558)
+- ESP32 support for influxdb access using https (#19582)
+- Support for ENS16x (air quality) and ENS210 (temp & RH) sensors (#19479)
+- Support for non-persistent ``WebButton17`` to ``WebButton32`` (#19580)
+- Command ``Mi32Name`` (#19619)
+
+### Changed
 - ESP32 Framework (Arduino Core) from v2.0.12 to v2.0.13
 - ESP32 LVGL library from v8.3.9 to v8.3.10 (no functional change)
+- Consolidate SGP40 and SGP41 into SGP4x driver (#19560)
+- ESP32 Audio preparation for Arduino Core v3 (#19637)
+- ESP32 LittleFS updated to version with grow option (#19635)
+- ESP32 Partition Wizard grow filesystem support (#19645)
 
 ### Fixed
 - ESP32 DS18x20 driver support extended over GPIO33
-
-### Removed
+- ESP32 Shutter button quad press (#19589)
+- Compile error with new email lib (#19608)
+- ESP32 Arduino Core v2 wifi client flush (#19642)
 
 ## [13.1.0.2] 20230914
 ### Added
 - Support for HDMI CEC protocol (#19434)
 - Support different baudrates on BL0942
 
+### Breaking Changed
+- `Sendmail` upgraded to ESP-Mail-Client v3.4.9 from v1.2.0, using BearSSL instead of MbedTLS (#19460)
+
 ### Changed
 - Berry fast_loop is now called every 5ms whatever the Sleep value (#19436)
 - Reduce IRAM consumption of HDMI CEC to 1453 bytes (#19452)
-- `Sendmail` upgraded to ESP-Mail-Client v3.4.9 from v1.2.0, using BearSSL instead of MbedTLS (#19460)
 - ESP32 Framework (Arduino Core) from v2.0.11 to v2.0.12
 - ESP32 LVGL library from v8.3.8 to v8.3.9 (no functional change)
 
@@ -53,8 +108,6 @@ All notable changes to this project will be documented in this file.
 - Shutter invert (#19341, #19374)
 - Teleinfo power (#19381)
 - Exception 3 in IRHVAC (#19389)
-
-## [Released] - Development
 
 ## [13.1.0] 20230815
 - Release Quentin

@@ -212,6 +212,8 @@ enum UserSelectablePins {
   GPIO_GM861_TX, GPIO_GM861_RX,         // GM861 Serial interface
   GPIO_DINGTIAN_OE,                     // New version of Dingtian relay board where PL is not shared with OE
   GPIO_HDMI_CEC,                        // Support for HDMI CEC
+  GPIO_HC8_RXD,                         // HC8 Serial interface
+  GPIO_I2S_DAC,                         // Audio DAC support for ESP32 and ESP32S2
   GPIO_SENSOR_END };
 
 // Error as warning to rethink GPIO usage with max 2045
@@ -471,12 +473,15 @@ const char kSensorNames[] PROGMEM =
   D_SENSOR_GM861_TX "|" D_SENSOR_GM861_RX "|"
   D_GPIO_DINGTIAN_OE "|"
   D_SENSOR_HDMI_CEC "|"
+  D_SENSOR_HC8_RX "|"
+  D_SENSOR_I2S_DAC "|"
   ;
 
 const char kSensorNamesFixed[] PROGMEM =
   D_SENSOR_USER;
 
 // Max number of GPIOs
+#define MAX_MAX31855S    6
 #define MAX_MAX31865S    6
 #define MAX_MCP23XXX     6
 #define MAX_FLOWRATEMETER 2
@@ -575,9 +580,10 @@ const uint16_t kGpioNiceList[] PROGMEM = {
 #if defined(USE_I2S_AUDIO) || defined (USE_I2S)
   AGPIO(GPIO_I2S_MCLK) + MAX_I2S,       // I2S master clock
   AGPIO(GPIO_I2S_BCLK) + MAX_I2S,       // I2S bit clock
+  AGPIO(GPIO_I2S_DOUT) + MAX_I2S,       // I2S Out Data
+  AGPIO(GPIO_I2S_DAC) + 2,              // I2S DAC Output
   AGPIO(GPIO_I2S_WS) + MAX_I2S,         // I2S word select
   AGPIO(GPIO_I2S_DIN) + MAX_I2S,        // I2S IN Data
-  AGPIO(GPIO_I2S_DOUT) + MAX_I2S,       // I2S Out Data
 #endif
 #ifdef USE_I2S
   AGPIO(GPIO_I2S_BCLK_IN) + MAX_I2S,    // I2S bit clock in
@@ -958,6 +964,9 @@ const uint16_t kGpioNiceList[] PROGMEM = {
   AGPIO(GPIO_MHZ_TXD),                  // MH-Z19 Serial interface
   AGPIO(GPIO_MHZ_RXD),                  // MH-Z19 Serial interface
 #endif
+#ifdef USE_HC8
+  AGPIO(GPIO_HC8_RXD),                  // HC8 Serial interface
+#endif
 #ifdef USE_SENSEAIR
   AGPIO(GPIO_SAIR_TX),                  // SenseAir Serial interface
   AGPIO(GPIO_SAIR_RX),                  // SenseAir Serial interface
@@ -1056,7 +1065,7 @@ const uint16_t kGpioNiceList[] PROGMEM = {
   AGPIO(GPIO_MGC3130_RESET),
 #endif
 #ifdef USE_MAX31855
-  AGPIO(GPIO_MAX31855CS),               // MAX31855 Serial interface
+  AGPIO(GPIO_MAX31855CS) + MAX_MAX31855S, //MAX31855 Serial interface
   AGPIO(GPIO_MAX31855CLK),              // MAX31855 Serial interface
   AGPIO(GPIO_MAX31855DO),               // MAX31855 Serial interface
 #endif
