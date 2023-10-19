@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 
 ## [13.2.0.1]
 ### Added
-- ESP32 I2C bus2 support to iAQ core driver (#19799)
+- I2C bus2 support to iAQ core sensor (#19799)
+- I2C bus2 support to HTU temperature and humidity sensor
+- I2C bus2 support to BH1750 ambient light sensor
 
 ### Breaking Changed
 
@@ -13,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Prepare I2C drivers for bus2 support
 
 ### Fixed
+- NeoPool filtration mode display (#19801)
 - ESP32 I2C allow bus2 support when bus1 is not enabled
 
 ### Removed
