@@ -77,8 +77,8 @@ class IMPROV : Driver
                 cbuf.setbytes(0,bytes("0104"))
                 BLE.run(211)
                 self.imp_state = 4;
-                self.then(/->self.wait())
-                tasmota.cmd("Backlog SSId1 "+self.ssid+"; Password1 "+self.pwd + "; wifi 1",true) # set and reboot
+                tasmota.cmd("wifi 1",true) # prevent crash
+                self.then(/->self.sendIPaddress())
             else
                 self.testing_wifi = false
                 print("IMP: timeout!!")
@@ -121,9 +121,8 @@ class IMPROV : Driver
         var checksum = 0
         for i:0..size(buf)-1
             checksum += buf[i]
-            checksum = checksum & 255
         end
-        return checksum
+        return checksum & 255
     end
 
     def encodeRPC(cmd, strings) # int, list
@@ -293,6 +292,25 @@ class IMPROV : Driver
          self.current_func = /->self.wait()
     end
 
+    def sendIPaddress()
+        var ip = tasmota.wifi()["ip"]
+        print(ip)
+        if !ip return end
+        var buf = self.encodeRPC(1,[ip])
+        BLE.set_svc(self.imp_svc)
+        BLE.set_chr(self.result_chr)
+        cbuf.setbytes(1,buf)
+        cbuf[0] = size(buf)
+        BLE.run(211)
+        print("send IPaddress:",buf)
+        self.then(/->self.setCredentials())
+    end
+
+    def setCredentials()
+        tasmota.cmd("Backlog SSId1 "+self.ssid+"; Password1 "+self.pwd + "; wifi 1;",true) # set and reboot
+        self.current_func = /->self.wait()
+    end
+
     def execCmd(c)
         var resp
         if self.pin_ready == true
@@ -328,16 +346,14 @@ class IMPROV : Driver
         if op == 201
             print("Handles:",cbuf[1..cbuf[0]])
             self.ble_server_up = true
-        end
-        if op == 221
+        elif op == 221
             if handle == 15 # the last handle that improv-wifi is reading on connection
                 if self.imp_state == 1
                     self.current_func = /->self.identify() # now request our "identify"
                     return
                 end
             end
-        end
-        if op == 222
+        elif op == 222
             if handle == 9
                 self.parseRPC()
                 print(cbuf[1..cbuf[0]])
@@ -345,20 +361,17 @@ class IMPROV : Driver
             if handle == 22
                 self.then(/->self.execCmd((cbuf[1..cbuf[0]]).asstring()))
             end
-        end
-        if op == 227
+        elif op == 227
             print("MAC:",cbuf[1..cbuf[0]])
             self.readWifiScan()
-        end
-        if op == 228
+        elif op == 228
             print("Disconnected")
             self.pin_ready = false
             self.imp_state = 1;
-        end
-        if op == 229
+        elif op == 229
             print("Status:",cbuf[1..cbuf[0]])
         end
-        if error == 0
+        if error == 0 && op != 229
             self.current_func = self.next_func
         end
     end
