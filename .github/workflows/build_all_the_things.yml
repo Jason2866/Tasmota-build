@@ -116,6 +116,7 @@ jobs:
           - tasmota32c2-safeboot
           - tasmota32c6-safeboot
           - tasmota32c6cdc-safeboot
+          - tasmota32c6cdc-arduino30-atoms3          
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python

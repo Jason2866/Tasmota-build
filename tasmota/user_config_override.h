@@ -4214,7 +4214,332 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 
 #endif  // CUSTOM_CONFIG_PLATINUM_SCRIPTING *******************************************************************
 
+// -- Master parameter control --------------------
+#undef  CFG_HOLDER
+#define CFG_HOLDER        4622                   // [Reset 1] Change this value to load SECTION1 configuration parameters to flash
 
+// -- Setup your own Wifi settings  ---------------
+#undef  STA_SSID1
+#define STA_SSID1         "PrettyFly4WiFi"             // [Ssid1] Wifi SSID
+
+#undef  STA_PASS1
+#define STA_PASS1         "Fuckthat2121@!"     // [Password1] Wifi password
+
+// -- Setup your own MQTT settings  ---------------
+#undef  MQTT_HOST
+#define MQTT_HOST         "192.168.1.106" // [MqttHost]
+
+#undef  MQTT_PORT
+#define MQTT_PORT         1883                   // [MqttPort] MQTT port (10123 on CloudMQTT)
+
+#undef  MQTT_USER
+#define MQTT_USER         "MQTT"         // [MqttUser] Optional user
+
+#undef  MQTT_PASS
+#define MQTT_PASS         "Fuckoff2121@!"         // [MqttPassword] Optional password
+
+// You might even pass some parameters from the command line ----------------------------
+// Ie:  export PLATFORMIO_BUILD_FLAGS='-DUSE_CONFIG_OVERRIDE -DMY_IP="192.168.1.99" -DMY_GW="192.168.1.1" -DMY_DNS="192.168.1.1"'
+
+// #ifdef MY_IP
+// #undef  WIFI_IP_ADDRESS
+// #define WIFI_IP_ADDRESS     MY_IP                // Set to 0.0.0.0 for using DHCP or enter a static IP address
+// #endif
+
+// #ifdef MY_GW
+// #undef  WIFI_GATEWAY
+// #define WIFI_GATEWAY        MY_GW                // if not using DHCP set Gateway IP address
+// #endif
+
+// #ifdef MY_DNS
+// #undef  WIFI_DNS
+// #define WIFI_DNS            MY_DNS               // If not using DHCP set DNS IP address (might be equal to WIFI_GATEWAY)
+// #endif
+
+// #ifdef MY_DNS2
+// #undef  WIFI_DNS2
+// #define WIFI_DNS2           MY_DNS2              // If not using DHCP set DNS IP address (might be equal to WIFI_GATEWAY)
+// #endif
+
+
+// #ifndef USE_WEBCAM
+// #define USE_WEBCAM   // Add support for I2S audio output
+// #endif
+
+// #ifndef USE_WEBCAM_V2
+// #define USE_WEBCAM_V2   // Add support for I2S audio output
+// #endif
+
+// #ifndef USE_WEBCAM_MOTION
+// #define USE_WEBCAM_MOTION   // Add support for I2S audio output
+// #endif
+
+#ifndef USE_I2S_AUDIO
+#define USE_I2S_AUDIO                             // Add support for I2S audio output
+// #define USE_I2S_NO_DAC                         // Add support for transistor-based output without DAC
+// #define USE_I2S_LSB                            // Add support for LSBJ chips, e.g. TM8211/PT8211
+// #define USE_I2S_WEBRADIO                       // Add support for MP3 web radio streaming (only on ESP32 with PSRAM)
+// #define USE_I2S_SAY_TIME                       // Add support for english speaking clock
+// #define USE_I2S_RTTTL                          // Add support for Rtttl playback
+#endif
+//#define USE_I2S_NO_DAC                         // Add support for transistor-based output without DAC
+//#define USE_I2S_WEBRADIO                       // Add support for web radio
+//#define USE_I2S_SAY_TIME                       // Add support for english speaking clock
+//#define USE_I2S_RTTTL                          // Add support for Rtttl playback
+//#define USE_LSB                                // Add support for LSBJ chips, e.g. TM8211/PT8211
+// Microphone support
+//#define USE_I2S_MIC                            // Add support for I2S microphone
+  //#define MIC_CHANNELS 1                       // 1 = mono (I2S_CHANNEL_FMT_ONLY_RIGHT), 2 = stereo (I2S_CHANNEL_FMT_RIGHT_LEFT)
+  //#define MICSRATE 32000                       // Set sample rate
+  //#define USE_INMP441                          // Add support for INMP441 MEMS microphone
+  //#define MIC_PDM                              // Set microphone as PDM (only on ESP32)
+//#define USE_SHINE                              // Use MP3 encoding (only on ESP32 with PSRAM)
+//#define MP3_MIC_STREAM                         // Add support for streaming microphone via http (only on ESP32 with PSRAM)
+  //#define MP3_STREAM_PORT 81                   // Choose MP3 stream port (default = 81)
+//#define I2S_BRIDGE                             // Add support for UDP PCM audio bridge
+  //#define I2S_BRIDGE_PORT    6970              // Set bridge port (default = 6970)
+
+
+#ifndef USE_I2S_AUDIO_BERRY
+#define USE_I2S_AUDIO_BERRY   // Add support for I2S BERRY audio output
+#endif
+
+#ifndef USE_UNIVERSAL_DISPLAY
+#define USE_UNIVERSAL_DISPLAY   // Add support for I2S audio output
+#endif
+
+// #ifndef USE_I2S_MIC
+// #define USE_I2S_MIC       // in case you want to use a microphone
+// #endif
+
+
+// #ifndef USE_LVGL_HASPMOTA
+// #define USE_LVGL_HASPMOTA       // use mp3 encoding     
+// #endif
+
+
+
+// #ifndef USE_BUTTON_EVENT
+// #define USE_BUTTON_EVENT
+// #endif
+
+// #ifndef USE_HOMEKIT
+// #define USE_HOMEKIT
+// #endif
+
+// #ifndef USE_SENDMAIL
+// #define USE_SENDMAIL
+// #endif
+
+// #ifndef USE_EMULATION
+// #define USE_EMULATION
+// #endif
+// #ifndef USE_MATTER_DEVICE
+// #define USE_MATTER_DEVICE
+// #endif
+
+// #ifndef USE_TASMESH
+// #define USE_TASMESH
+// #endif
+// #ifndef USE_UFILESYS
+// #define USE_UFILESYS
+// #endif
+// #ifndef USE_MQTT_TLS
+// #define USE_MQTT_TLS
+// #endif
+// #ifndef USE_DISCOVERY
+// #define USE_DISCOVERY
+// #endif
+// #ifndef USE_ADC_VCC
+// #define USE_ADC_VCC
+// #endif
+
+// // #ifndef USE_SCRIPT_SUB_COMMAND
+// // #define USE_SCRIPT_SUB_COMMAND
+// // #endif
+
+
+// // #ifndef USE_TOUCH_BUTTONS
+// // #define USE_TOUCH_BUTTONS
+// // #endif
+// #ifndef USE_ANGLE_FUNC
+// #define USE_ANGLE_FUNC
+// #endif
+
+// // #ifndef USE_SCRIPT_FATFS_EXT
+// // #define USE_SCRIPT_FATFS_EXT
+// // #endif
+
+// #ifndef USE_LVGL
+// #define USE_LVGL
+// #endif
+
+// #ifndef USE_GOOGLE_CHARTS
+// #define USE_GOOGLE_CHARTS
+// #endif
+// #ifndef USE_FEXTRACT
+// #define USE_FEXTRACT
+// #endif
+
+// #ifndef TS_FLOAT
+// #define TS_FLOAT
+// #endif
+// #ifndef USE_BERRY
+// #define USE_BERRY
+// #endif
+
+// #ifndef USE_BERRY_IRAM
+// #define USE_BERRY_IRAM
+// #endif
+
+// #ifndef USE_BERRY_PSRAM
+// #define USE_BERRY_PSRAM
+// #endif
+
+// #ifndef USE_BERRY_PYTHON_COMPAT
+// #define USE_BERRY_PYTHON_COMPAT
+// #endif
+
+// #ifndef USE_BERRY_TCPSERVER
+// #define USE_BERRY_TCPSERVER
+// #endif
+
+// #ifndef USE_BERRY_INT64
+// #define USE_BERRY_INT64
+// #endif
+
+// #ifndef USE_AUTOCONF
+// #define USE_AUTOCONF
+// #endif
+
+// #ifndef USE_I2C
+// #define USE_I2C
+// #endif
+
+// #ifndef USE_LIGHT
+// #define USE_LIGHT
+// #endif
+
+
+// #ifndef USE_EMULATION_HUE
+// #define USE_EMULATION_HUE
+// #endif
+
+// #ifndef USE_BERRY_DEBUG
+// #define USE_BERRY_DEBUG
+// #endif
+
+
+// #ifndef SUPPORT_IF_STATEMENT
+// #define SUPPORT_IF_STATEMENT
+// #endif
+
+// #ifndef USE_IMPROV
+// #define USE_IMPROV
+// #endif
+
+
+
+// #ifndef USE_TASMOTA_DISCOVERY
+// #define USE_TASMOTA_DISCOVERY
+// #endif
+
+
+// #ifndef USE_4K_RSA
+// #define USE_4K_RSA
+// #endif
+
+// #ifndef USE_WEBSERVER
+// #define USE_WEBSERVER
+// #endif
+
+
+// #ifndef WEBSERVER_ADVERTISE
+// #define WEBSERVER_ADVERTISE
+// #endif
+
+// #ifndef USE_TIMERS
+// #define USE_TIMERS
+// #endif
+
+// #ifndef USE_TIMERS_WEB
+// #define USE_TIMERS_WEB
+// #endif
+
+// #ifndef USE_SUNRISE
+// #define USE_SUNRISE
+// #endif
+
+// #ifndef USE_RULES
+// #define USE_RULES
+// #endif
+
+// #ifndef USE_EXPRESSION
+// #define USE_EXPRESSION
+// #endif
+
+// #ifndef USE_PING
+// #define USE_PING
+// #endif
+
+// #ifndef USE_DEEPSLEEP
+// #define USE_DEEPSLEEP
+// #endif
+
+// #ifndef USE_DEVICE_GROUPS
+// #define USE_DEVICE_GROUPS
+// #endif
+
+// #ifndef USE_PWM_DIMMER
+// #define USE_PWM_DIMMER
+// #endif
+
+// #ifndef USE_WS2812
+// #define USE_WS2812
+// #endif
+
+
+
+// #ifndef USE_COUNTER
+// #define USE_COUNTER
+// #endif
+
+// #ifndef USE_DHT
+// #define USE_DHT
+// #endif
+
+// #ifndef USE_SERIAL_BRIDGE
+// #define USE_SERIAL_BRIDGE
+// #endif
+
+// #ifndef USE_MP3_PLAYER
+// #define USE_MP3_PLAYER
+// #endif
+
+// #ifndef USE_TASMOTA_CLIENT
+// #define USE_TASMOTA_CLIENT
+// #endif
+
+// #ifndef USE_TCP_BRIDGE
+// #define USE_TCP_BRIDGE
+// #endif
+
+// #ifndef USE_MODBUS_BRIDGE
+// #define USE_MODBUS_BRIDGE       // Add support for software Modbus Bridge (+3k code)
+// #define USE_MODBUS_BRIDGE_TCP   // Add support for software Modbus TCP Bridge (Must also enable USE_MODBUS_BRIDGE)
+// #endif
+
+// #ifndef USE_IR_REMOTE
+// #define USE_IR_REMOTE
+// #endif
+
+// #ifndef USE_IR_RECEIVE
+// #define USE_IR_RECEIVE
+// #endif
+
+// #ifndef USE_IR_REMOTE_FULL
+// #define USE_IR_REMOTE_FULL
+// #endif
 /*********************************************************************************************\
  * Debug features
 \*********************************************************************************************/
