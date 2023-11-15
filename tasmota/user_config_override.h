@@ -493,12 +493,16 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_DOMOTICZ
 
 #ifdef CONFIG_IDF_TARGET_ESP32C3
+#define USE_ENHANCED_GUI_WIFI_SCAN
 #define USE_INFLUXDB                             // Enable influxdb support (+5k code)
 #define USE_SDCARD
+#define USE_BUZZER                               // Add support for a buzzer (+0k6 code)
 #define ROTARY_V1
 #define USE_LIGHT_PALETTE                        // Add support for color palette (+0k9 code)
 #define USE_LIGHT_ARTNET                         // Add support for DMX/ArtNet via UDP on port 6454 (+3.5k code)
 #define USE_MGS                                  // [I2cDriver17] Enable Xadow and Grove Mutichannel Gas sensor using library Multichannel_Gas_Sensor (+10k code)
+#define USE_SHT                                  // [I2cDriver8] Enable SHT1X sensor (+1k4 code)
+#define USE_HIH6                                 // [I2cDriver36] Enable Honeywell HIH Humidity and Temperature sensor (I2C address 0x27) (+0k6)
 #define USE_MCP23XXX_DRV                         // [I2cDriver77] Enable MCP23xxx support as virtual switch/button/relay (+3k(I2C)/+5k(SPI) code)
 #define USE_ADS1115                              // [I2cDriver13] Enable ADS1115 16 bit A/D converter (I2C address 0x48, 0x49, 0x4A or 0x4B) based on Adafruit ADS1x15 library (no library needed) (+0k7 code)
 #define USE_INA219                               // [I2cDriver14] Enable INA219 (I2C address 0x40, 0x41 0x44 or 0x45) Low voltage and current sensor (+1k code)
@@ -511,10 +515,14 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define USE_BH1750                               // [I2cDriver11] Enable BH1750 sensor (I2C address 0x23 or 0x5C) (+0k5 code)
 #define USE_VEML6070                             // [I2cDriver12] Enable VEML6070 sensor (I2C addresses 0x38 and 0x39) (+1k5 code)#define USE_SHELLY_PRO                           // Add support for Shelly Pro
 #define USE_CCS811_V2                            // [I2cDriver24] Enable CCS811 sensor (I2C addresses 0x5A and 0x5B) (+2k8 code)
+#define USE_SEN5X                                // [I2cDriver76] Enable SEN5X sensor (I2C address 0x69) (+3k code)
 #define USE_MPU_ACCEL                            // [I2cDriver58] Enable MPU6886, MPU9250 6-axis MotionTracking sensor (I2C address 0x68)
 #define USE_WEMOS_MOTOR_V1                       // [I2cDriver44] Enable Wemos motor driver V1 (I2C addresses 0x2D - 0x30) (+0k7 code)
   #define WEMOS_MOTOR_V1_ADDR  0x30              // Default I2C address 0x30
   #define WEMOS_MOTOR_V1_FREQ  1000              // Default frequency
+#define USE_DHT12                                // [I2cDriver41] Enable DHT12 humidity and temperature sensor (I2C address 0x5C) (+0k7 code)
+#define USE_DS1624                               // [I2cDriver42] Enable DS1624, DS1621 temperature sensor (I2C addresses 0x48 - 0x4F) (+1k2 code)
+#define USE_CM110x                               // Add support for CM110x CO2 sensors (+2k7 code)
 #define USE_MAX31855                             // Add support for MAX31855 K-Type thermocouple sensor using softSPI
 #define USE_PN532_HSU                            // Add support for PN532 using HSU (Serial) interface (+1k8 code, 140 bytes mem)
 #define USE_RDM6300                              // Add support for RDM6300 125kHz RFID Reader (+0k8)
@@ -534,6 +542,12 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define USE_SHIFT595                             // Add support for 74xx595 8-bit shift registers (+0k7 code)
 //  #define SHIFT595_INVERT_OUTPUTS false            // [SetOption133] Don't invert outputs of 74x595 shift register
 //  #define SHIFT595_DEVICE_COUNT  1                 // [Shift595DeviceCount] Set the number of connected 74x595 shift registers
+#define USE_ENERGY_SENSOR                        // Add energy sensors (-14k code)
+#define USE_PZEM004T                             // Add support for PZEM004T Energy monitor (+2k code)
+#define USE_PZEM_AC                              // Add support for PZEM014,016 Energy monitor (+1k1 code)
+#define USE_PZEM_DC                              // Add support for PZEM003,017 Energy monitor (+1k1 code)
+#define USE_MODBUS_ENERGY                        // Add support for generic modbus energy monitor using a user file in rule space (+5k code)
+//#define USE_BIOPDU                               // Add support for BioPDU 625x12 6-channel energy monitor
 #define USE_SDM72                                // Add support for Eastron SDM72-Modbus energy monitor (+0k3 code)
 #define USE_SDM120                               // Add support for Eastron SDM120-Modbus energy monitor (+1k1 code)
 #define USE_SDM230                               // Add support for Eastron SDM230-Modbus energy monitor (+?? code)
@@ -550,7 +564,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #endif // CONFIG_IDF_TARGET_ESP32C3
 
-#define USE_ENHANCED_GUI_WIFI_SCAN
 
 #define USE_TUYA_MCU                             // Add support for Tuya Serial MCU
 #ifndef TUYA_DIMMER_ID
@@ -559,7 +572,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_ARMTRONIX_DIMMERS                    // Disable support for Armtronix Dimmers (+1k4 code)
 //#undef USE_PS_16_DZ                             // Disable support for PS-16-DZ Dimmer (+2k code)
 #undef USE_SONOFF_IFAN                          // Disable support for Sonoff iFan02 and iFan03 (+2k code)
-#define USE_BUZZER                               // Add support for a buzzer (+0k6 code)
 //#undef USE_ARILUX_RF                            // Disable support for Arilux RF remote controller (+0k8 code, 252 iram (non 2.3.0))
 #define USE_DEEPSLEEP                            // Add support for deepsleep (+1k code)
 #undef USE_EXS_DIMMER                           // Disable support for EX-Store WiFi Dimmer
@@ -573,7 +585,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define USE_DS18x20                              // Add support for DS18x20 sensors with id sort, single scan and read retry (+1k3 code)
 
 #define USE_I2C                                  // I2C using library wire (+10k code, 0k2 mem, 124 iram)
-#define USE_SHT                                // [I2cDriver8] Enable SHT1X sensor (+1k4 code)
 #define USE_HTU                                // [I2cDriver9] Enable HTU21/SI7013/SI7020/SI7021 sensor (I2C address 0x40) (+1k5 code)
 #define USE_BMP                                // [I2cDriver10] Enable BMP085/BMP180/BMP280/BME280 sensors (I2C addresses 0x76 and 0x77) (+4k4 code)
 //  #define USE_BME68X                           // Enable support for BME680/BME688 sensor using Bosch BME68x library (+6k9 code)
@@ -585,7 +596,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 //#define USE_TSL2591                            // [I2cDriver40] Enable TSL2591 sensor (I2C address 0x29) using library Adafruit_TSL2591 (+1k6 code)
 #define USE_SGP30                              // [I2cDriver18] Enable SGP30 sensor (I2C address 0x58) (+1k1 code)
 #define USE_SGP40                              // [I2cDriver69] Enable SGP40 sensor (I2C address 0x59) (+1k4 code)
-#define USE_SEN5X                              // [I2cDriver76] Enable SEN5X sensor (I2C address 0x69) (+3k code)
 //#define USE_SI1145                             // [I2cDriver19] Enable SI1145/46/47 sensor (I2C address 0x60) (+1k code)
 //#define USE_APDS9960                           // [I2cDriver21] Enable APDS9960 Proximity Sensor (I2C address 0x39). Disables SHT and VEML6070 (+4k7 code)
 //#define USE_MCP230xx                           // [I2cDriver22] Enable MCP23008/MCP23017 - Must define I2C Address in #define USE_MCP230xx_ADDR below - range 0x20 - 0x27 (+4k7 code)
@@ -608,9 +618,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 //  #define USE_PCF8574_SENSOR                   // Enable Mode1 inputs and outputs in SENSOR message (+0k2 code)
 //  #define USE_PCF8574_DISPLAYINPUT             // Enable Mode1 inputs display in Web page (+0k2 code)
 //  #define USE_PCF8574_MQTTINPUT                // Enable Mode1 MQTT message & rule process on input change detection : stat/%topic%/PCF8574_INP = {"Time":"2021-03-07T16:19:23+01:00","PCF8574-1_INP":{"D1":1}} (+0k5 code)
-#define USE_HIH6                               // [I2cDriver36] Enable Honeywell HIH Humidity and Temperature sensor (I2C address 0x27) (+0k6)
-#define USE_DHT12                              // [I2cDriver41] Enable DHT12 humidity and temperature sensor (I2C address 0x5C) (+0k7 code)
-#define USE_DS1624                             // [I2cDriver42] Enable DS1624, DS1621 temperature sensor (I2C addresses 0x48 - 0x4F) (+1k2 code)
 //#define USE_AHT1x                              // [I2cDriver43] Enable AHT10/15 humidity and temperature sensor (I2C address 0x38, 0x39) (+0k8 code)
 //#define USE_AHT2x                              // [I2cDriver43] Enable AHT20 instead of AHT1x humidity and temperature sensor (I2C address 0x38) (+0k8 code)
 //#define USE_HDC1080                            // [I2cDriver45] Enable HDC1080 temperature/humidity sensor (I2C address 0x40) (+1k5 code)
@@ -649,7 +656,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #define USE_MHZ19                                // Add support for MH-Z19 CO2 sensor (+2k code)
 #define USE_SENSEAIR                             // Add support for SenseAir K30, K70 and S8 CO2 sensor (+2k3 code)
-#define USE_CM110x                               // Add support for CM110x CO2 sensors (+2k7 code)
 #ifndef CO2_LOW
   #define CO2_LOW              800               // Below this CO2 value show green light (needs PWM or WS2812 RG(B) led and enable with SetOption18 1)
 #endif
@@ -679,13 +685,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 //#define USE_AS608                                // Add support for AS608 optical and R503 capacitive fingerprint sensor (+3k4 code)
 //#define USE_TFMINIPLUS                           // Add support for TFmini Plus (TFmini, TFmini-S) LiDAR modules via UART interface
 //#define USE_HRG15                                // Add support for Hydreon RG-15 Solid State Rain sensor (+1k5 code)
-
-#define USE_ENERGY_SENSOR                        // Add energy sensors (-14k code)
-#define USE_PZEM004T                             // Add support for PZEM004T Energy monitor (+2k code)
-#define USE_PZEM_AC                              // Add support for PZEM014,016 Energy monitor (+1k1 code)
-#define USE_PZEM_DC                              // Add support for PZEM003,017 Energy monitor (+1k1 code)
-#define USE_MODBUS_ENERGY                        // Add support for generic modbus energy monitor using a user file in rule space (+5k code)
-//#define USE_BIOPDU                               // Add support for BioPDU 625x12 6-channel energy monitor
 
 //#define USE_TELEINFO                             // Add support for French Energy Provider metering telemetry (+5k2 code, +168 RAM + SmartMeter LinkedList Values RAM)
 
