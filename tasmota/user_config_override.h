@@ -490,7 +490,19 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32c2_2M.bin"
 #endif
 
+#ifdef CONFIG_IDF_TARGET_ESP32C2
 #undef USE_DOMOTICZ
+#undef USE_EMULATION_WEMO                       // Disable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
+#undef USE_EMULATION_HUE                      // Enable Hue Bridge emulation for Alexa (+14k code, +2k mem common)
+#undef USE_PING
+#undef USE_ENERGY_SENSOR                        // Disable energy sensors (+14k code)
+#undef USE_AC_ZERO_CROSS_DIMMER
+#undef USE_PWM_DIMMER                           // Add support for MJ-SD01/acenx/NTONPOWER PWM dimmers (+4k5 code)
+  #undef USE_PWM_DIMMER_REMOTE                  // Add support for remote switches to PWM Dimmer, also adds device groups support (+0k7 code, also includes device groups)
+#undef USE_DISPLAY_SSD1306
+#undef USE_DISPLAY_ILI9341
+#endif
+
 
 #ifdef CONFIG_IDF_TARGET_ESP32C3
 #define USE_ENHANCED_GUI_WIFI_SCAN
@@ -508,9 +520,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define USE_INA219                               // [I2cDriver14] Enable INA219 (I2C address 0x40, 0x41 0x44 or 0x45) Low voltage and current sensor (+1k code)
 #define USE_LM75AD                               // [I2cDriver20] Enable LM75AD sensor (I2C addresses 0x48 - 0x4F) (+0k5 code)
 #define USE_AS3935                               // [I2cDriver48] Enable AS3935 Franklin Lightning Sensor (I2C address 0x03) (+5k4 code)
-#define USE_ADE7880                              // [I2cDriver65] Enable ADE7880 Energy monitor as used on Shelly 3EM (I2C address 0x38) (+3k8)
-#define USE_ADE7953                              // [I2cDriver7] Enable ADE7953 Energy monitor as used on Shelly 2.5 (I2C address 0x38) (+1k5)
-#define USE_MCP39F501                            // Add support for MCP39F501 Energy monitor as used in Shelly 2 (+3k1 code)
 #define USE_VL53L0X                              // [I2cDriver31] Enable VL53L0x time of flight sensor (I2C address 0x29) (+4k code)
 #define USE_BH1750                               // [I2cDriver11] Enable BH1750 sensor (I2C address 0x23 or 0x5C) (+0k5 code)
 #define USE_VEML6070                             // [I2cDriver12] Enable VEML6070 sensor (I2C addresses 0x38 and 0x39) (+1k5 code)#define USE_SHELLY_PRO                           // Add support for Shelly Pro
@@ -571,6 +580,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #endif
 #undef USE_ARMTRONIX_DIMMERS                    // Disable support for Armtronix Dimmers (+1k4 code)
 //#undef USE_PS_16_DZ                             // Disable support for PS-16-DZ Dimmer (+2k code)
+#undef USE_SONOFF_RF                            // Add support for Sonoff Rf Bridge
+#undef USE_SONOFF_SC                            // Disable support for Sonoff Sc (+1k1 code)
 #undef USE_SONOFF_IFAN                          // Disable support for Sonoff iFan02 and iFan03 (+2k code)
 //#undef USE_ARILUX_RF                            // Disable support for Arilux RF remote controller (+0k8 code, 252 iram (non 2.3.0))
 #define USE_DEEPSLEEP                            // Add support for deepsleep (+1k code)
@@ -581,6 +592,22 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_KEELOQ                               // Disable support for Jarolift rollers by Keeloq algorithm (+4k5 code)
 #undef USE_SONOFF_D1                            // Disable support for Sonoff D1 Dimmer (+0k7 code)
 #undef USE_SHELLY_DIMMER                        // Disable support for Shelly Dimmer (+3k code)
+  #undef SHELLY_CMDS                            // Add command to send co-processor commands (+0k4 code)
+  #undef SHELLY_FW_UPGRADE                      // Add firmware upgrade option for co-processor (+30k code, +5k mem)
+  #undef SHELLY_VOLTAGE_MON                     // Add support for reading voltage and current measurment (+?? code)
+
+#undef USE_MY92X1                               // Add support for MY92X1 RGBCW led controller as used in Sonoff B1, Ailight and Lohas
+#undef USE_SM16716                              // Add support for SM16716 RGB LED controller (+0k7 code)
+#undef USE_SM2135                               // Add support for SM2135 RGBCW led control as used in Action LSC (+0k6 code)
+#undef USE_SM2335                               // Add support for SM2335 RGBCW led control as used in SwitchBot Color Bulb (+0k7 code)
+#undef USE_BP1658CJ                             // Add support for BP1658CJ RGBCW led control as used in Orein OS0100411267 Bulb
+#undef USE_BP5758D                              // Add support for BP5758D RGBCW led control as used in some Tuya lightbulbs (+0k8 code)
+#undef USE_SONOFF_L1                            // Add support for Sonoff L1 led control
+#undef USE_ELECTRIQ_MOODL                       // Add support for ElectriQ iQ-wifiMOODL RGBW LED controller
+
+#undef USE_ADE7880                              // [I2cDriver65] Enable ADE7880 Energy monitor as used on Shelly 3EM (I2C address 0x38) (+3k8)
+#undef USE_ADE7953                              // [I2cDriver7] Enable ADE7953 Energy monitor as used on Shelly 2.5 (I2C address 0x38) (+1k5)
+#undef USE_MCP39F501                            // Add support for MCP39F501 Energy monitor as used in Shelly 2 (+3k1 code)
 
 #define USE_DS18x20                              // Add support for DS18x20 sensors with id sort, single scan and read retry (+1k3 code)
 
