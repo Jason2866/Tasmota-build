@@ -486,6 +486,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32c3_2M.bin"
 
 #ifdef CONFIG_IDF_TARGET_ESP32C2
+#undef OTA_URL
 #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32c2_2M.bin"
 #endif
 
