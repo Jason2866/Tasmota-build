@@ -493,11 +493,11 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #ifdef CONFIG_IDF_TARGET_ESP32C2
 #undef USE_DOMOTICZ
 #undef USE_EMULATION_WEMO                       // Disable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
-#undef USE_EMULATION_HUE                      // Enable Hue Bridge emulation for Alexa (+14k code, +2k mem common)
+//#undef USE_EMULATION_HUE                      // Enable Hue Bridge emulation for Alexa (+14k code, +2k mem common)
 #undef USE_PING
 #undef USE_ENERGY_SENSOR                        // Disable energy sensors (+14k code)
 #undef USE_SHUTTER
-#undef USE_AC_ZERO_CROSS_DIMMER
+//#undef USE_AC_ZERO_CROSS_DIMMER
 #undef USE_PWM_DIMMER                           // Add support for MJ-SD01/acenx/NTONPOWER PWM dimmers (+4k5 code)
   #undef USE_PWM_DIMMER_REMOTE                  // Add support for remote switches to PWM Dimmer, also adds device groups support (+0k7 code, also includes device groups)
 #undef USE_DISPLAY_SSD1306
