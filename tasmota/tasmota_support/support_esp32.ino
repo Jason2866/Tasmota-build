@@ -1012,8 +1012,11 @@ void GpioForceHoldRelay(void) {
 //  for (uint32_t i = 0; i < nitems(TasmotaGlobal.gpio_pin); i++) {
 //    if ((TasmotaGlobal.gpio_pin[i] & 0xFFE0) == GPIO_REL1 << 5) {
   // Use future gpio config
+  myio template_gp;
+  TemplateGpios(&template_gp);
   for (uint32_t i = 0; i < nitems(Settings->my_gp.io); i++) {
-    if ((Settings->my_gp.io[i] & 0xFFE0) == GPIO_REL1 << 5) {
+    if (((Settings->my_gp.io[i] & 0xFFE0) == GPIO_REL1 << 5) ||
+        ((template_gp.io[i] & 0xFFE0) == GPIO_REL1 << 5)) {
       gpio_hold_en((gpio_num_t)i);     // Retain the state when the chip or system is reset, for example, when watchdog time-out or Deep-sleep
     }
   }
