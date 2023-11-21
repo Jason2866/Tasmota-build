@@ -491,6 +491,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #endif
 
 #ifdef CONFIG_IDF_TARGET_ESP32C2
+#undef USE_BERRY_PARTITION_WIZARD
 #undef USE_DOMOTICZ
 #undef USE_EMULATION_WEMO                       // Disable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
 //#undef USE_EMULATION_HUE                      // Enable Hue Bridge emulation for Alexa (+14k code, +2k mem common)
