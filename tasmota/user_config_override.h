@@ -4,6 +4,10 @@
 #undef OTA_URL
 #define OTA_URL " "
 
+#ifdef CONFIG_IDF_TARGET_ESP32C2
+#undef USE_BERRY_PARTITION_WIZARD
+#endif
+
 // THIS SECTION IS USED TO REMOVE EVERYTHING LISTED FROM DEFAULT BINARY
 /*
 ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo      ooo oooooooooooo                   .o.       ooooo        ooooo        
