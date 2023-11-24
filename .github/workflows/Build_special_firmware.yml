@@ -93,9 +93,7 @@ jobs:
           - tasmota32c3-mi32
           - tasmota32s3-mi32
           - tasmota32-mi32
-          - tasmota32c2-arduino30
           - tasmota32c2_2M
-          - tasmota32c6-arduino30
           - tasmota32c6cdc-arduino30
     steps:
       - uses: actions/checkout@v3
