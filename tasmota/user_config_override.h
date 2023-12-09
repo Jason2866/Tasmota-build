@@ -582,7 +582,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
   #define TUYA_DIMMER_ID       0                 // Default dimmer Id
 #endif
 
-#endif // CONFIG_IDF_TARGET_ESP32
+#endif // CONFIG_IDF_TARGET_ESP32C3
+
 
 #undef USE_ARMTRONIX_DIMMERS                    // Disable support for Armtronix Dimmers (+1k4 code)
 //#undef USE_PS_16_DZ                             // Disable support for PS-16-DZ Dimmer (+2k code)
