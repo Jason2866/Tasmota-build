@@ -577,13 +577,13 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define USE_KNX                                  // Enable KNX IP Protocol Support (+23k code, +3k3 mem)
 #endif
 
-#endif // CONFIG_IDF_TARGET_ESP32C3
-
-
 #define USE_TUYA_MCU                             // Add support for Tuya Serial MCU
 #ifndef TUYA_DIMMER_ID
   #define TUYA_DIMMER_ID       0                 // Default dimmer Id
 #endif
+
+#endif // CONFIG_IDF_TARGET_ESP32
+
 #undef USE_ARMTRONIX_DIMMERS                    // Disable support for Armtronix Dimmers (+1k4 code)
 //#undef USE_PS_16_DZ                             // Disable support for PS-16-DZ Dimmer (+2k code)
 #undef USE_SONOFF_RF                            // Add support for Sonoff Rf Bridge
