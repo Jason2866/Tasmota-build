@@ -14,10 +14,12 @@ All notable changes to this project will be documented in this file.
 - Berry `gpio.read_pwm` and `gpio.read_pwm_resolution` (#20414)
 - Berry GPIO viewer initial version using async webserver (#20416)
 - Berry add `string` to `bytes()` (#20420)
+- Berry button to dynamically load GPIO Viewer with Berry backend (#20424)
 
 ### Breaking Changed
 
 ### Changed
+- Renamed button "Consoles" to "Tools"
 
 ### Fixed
 
