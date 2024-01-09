@@ -16,11 +16,14 @@ All notable changes to this project will be documented in this file.
 - Berry add `string` to `bytes()` (#20420)
 - Berry button to dynamically load GPIO Viewer with Berry backend (#20424)
 - Berry `debug_panel.tapp` to display real-time heap and wifi rssi
+- Berry `webserver.header` to read browser sent headers
+- Berry provide lightweight options for `tasmota.wifi/eth/memory/rtc`
 
 ### Breaking Changed
 
 ### Changed
 - Renamed button "Consoles" to "Tools"
+- Header `Host` is now collected by Webserver
 
 ### Fixed
 
