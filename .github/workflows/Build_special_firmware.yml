@@ -52,7 +52,6 @@ jobs:
           - tasmota-teleinfo
           - tasmota-thermostat
           - tasmota-rangeextender
-          - tasmota-fullrules
           - tasmota-platinum
           - tasmota-titanium
           - tasmota-minicustom
