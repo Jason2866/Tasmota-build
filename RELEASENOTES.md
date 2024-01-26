@@ -119,20 +119,22 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ## Changelog v13.3.0.4
 ### Added
 - Command ``TimedPower<index> <milliseconds>[,ON|OFF|TOGGLE|BLINK]`` executes ``Power<index> [ON|OFF|TOGGLE|BLINK] `` and after <millisecond> executes ``Power<index> [OFF|ON|TOGGLE|OFF]``
-- Support for CST816S touch interface [#20213](https://github.com/arendst/Tasmota/issues/20213)
-- Support for Sonoff Basic R4 Magic Switch [#20247](https://github.com/arendst/Tasmota/issues/20247)
 - Display of active drivers using command ``status 4``
 - GPIO Viewer to see realtime GPIO states. Enable with define USE_GPIO_VIEWER
 - GPIO Viewer user selection of assets website now defaults to `https://ota.tasmota.com/tasmota|tasmota32/gpio_viewer/assets`
-- NeoPool hydrolysis FL1 and Redox flag [#20258](https://github.com/arendst/Tasmota/issues/20258)
+- Support for CST816S touch interface [#20213](https://github.com/arendst/Tasmota/issues/20213)
+- Support for Sonoff Basic R4 Magic Switch [#20247](https://github.com/arendst/Tasmota/issues/20247)
 - Support negative power on BL0942 using index 5..8 [#20322](https://github.com/arendst/Tasmota/issues/20322)
 - Support for pipsolar inverter [#20408](https://github.com/arendst/Tasmota/issues/20408)
 - Support for HardwareSerial invert [#15461](https://github.com/arendst/Tasmota/issues/15461)
+- NeoPool hydrolysis FL1 and Redox flag [#20258](https://github.com/arendst/Tasmota/issues/20258)
 - SML support for IM350 [#20474](https://github.com/arendst/Tasmota/issues/20474)
 - GUI sensor separators [#20495](https://github.com/arendst/Tasmota/issues/20495)
 - ESP32 used UART information
-- ESP32 experimental support GPIOViewer when ``define USE_ESP32_GPIO_VIEWER`` is enabled
+- ESP32 support GPIOViewer when ``define USE_ESP32_GPIO_VIEWER`` is enabled
 - ESP32 MI BLE support for Xiaomi LYWSD02MMC [#20381](https://github.com/arendst/Tasmota/issues/20381)
+- ESP32 support for DS18x20 on Shelly Plus Add-On [#20580](https://github.com/arendst/Tasmota/issues/20580)
+- ESP32-C3 support for GPIO11 [#18350](https://github.com/arendst/Tasmota/issues/18350)
 - Berry GPIO viewer initial version using async webserver [#20416](https://github.com/arendst/Tasmota/issues/20416)
 - Berry `introspect.set()` for class attributes [#20339](https://github.com/arendst/Tasmota/issues/20339)
 - Berry support for `tcpclientasync` in `tcpserver` [#20401](https://github.com/arendst/Tasmota/issues/20401)
@@ -171,6 +173,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support syslog updates every sleep or every second if `#define SYSLOG_UPDATE_SECOND` [#20260](https://github.com/arendst/Tasmota/issues/20260)
 - Web file upload response on upload error [#20340](https://github.com/arendst/Tasmota/issues/20340)
 - Header `Host` is now collected by Webserver [#20446](https://github.com/arendst/Tasmota/issues/20446)
+- Utouch optimizations, rgb i2c init [#20596](https://github.com/arendst/Tasmota/issues/20596)
 - Webcam tweaks [#20451](https://github.com/arendst/Tasmota/issues/20451)
 - IP stack compatible with new Core3 IPv6 implementation [#20509](https://github.com/arendst/Tasmota/issues/20509)
 - Refactored Pio filesystem download script [#20544](https://github.com/arendst/Tasmota/issues/20544)
