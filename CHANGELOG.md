@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 ### Breaking Changed
 
 ### Changed
+- Berry class `int64` made immutable
+- LVGL make lv_touch_3_buttons more responsive
 
 ### Fixed
 
