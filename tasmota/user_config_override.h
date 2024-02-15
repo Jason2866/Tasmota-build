@@ -51,6 +51,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_TIMERS                               // Disable support for up to 16 timers (+2k2 code)
 #undef USE_TIMERS_WEB                           // Disable timer webpage support (+4k5 code)
 
+#undef USE_GPIO_VIEWER
+
 #undef USE_UFILESYS
 #undef GUI_TRASH_FILE
 #undef GUI_EDIT_FILE
@@ -368,6 +370,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_BERRY
 #undef USE_WEBCLIENT
 #undef USE_WEBCLIENT_HTTPS
+#undef USE_GPIO_VIEWER
 
 // -- Optional modules ----------------------------
 #undef ROTARY_V1                                 // Disable support for MI Desk Lamp
@@ -493,6 +496,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef OTA_URL
 #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32c2_2M.bin"
 #endif
+
+#undef USE_GPIO_VIEWER
 
 #ifdef CONFIG_IDF_TARGET_ESP32C2
 #undef USE_BERRY_PARTITION_WIZARD
