@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - HASPmota `p<x>b<y>.delete` to delete an object (#20735)
 - LVGL and HASPmota typicons font (#20742)
 - HASPmota more attributes (#20744)
+- QMC5883l check for overflow and scale reading (#20643)
+- TasMesh support for LWT messages (#20392)
 
 ### Breaking Changed
 
