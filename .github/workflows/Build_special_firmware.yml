@@ -110,7 +110,8 @@ jobs:
           mv tasmota32* ./firmware/firmware
           ls -l ./firmware/firmware
           cp ./platformio_tasmota_core3_env_sample.ini ./platformio_tasmota_core3_env.ini
-          COMMIT_SHA=$(curl -s "https://api.github.com/repos/arendst/tasmota/commits/development" | jq -r '.sha' | ::7)
+          COMMIT_SHA_LONG=$(curl -s "https://api.github.com/repos/arendst/tasmota/commits/development" | jq -r '.sha')
+          COMMIT_SHA=${COMMIT_SHA_LONG::7}
           echo $COMMIT_SHA
           sed -i -e "s/PSTR(\"(%s)\")/PSTR(\"($COMMIT_SHA-%s)\")/g" tasmota.ino
       - name: Run PlatformIO
