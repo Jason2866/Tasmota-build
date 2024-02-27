@@ -113,7 +113,7 @@ jobs:
           COMMIT_SHA_LONG=$(curl -s "https://api.github.com/repos/arendst/tasmota/commits/development" | jq -r '.sha')
           COMMIT_SHA=${COMMIT_SHA_LONG::7}
           echo $COMMIT_SHA
-          sed -i -e "s/PSTR(\"(%s)\")/PSTR(\"($COMMIT_SHA-%s)\")/g" tasmota.ino
+          sed -i -e "s/PSTR(\"(%s)\")/PSTR(\"($COMMIT_SHA-%s)\")/g" ./tasmota/tasmota.ino
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - uses: jason2866/upload-artifact@v2.0.3
