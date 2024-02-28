@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Show calculated heat index if temperature and humidity is available with ``#define USE_HEAT_INDEX`` (#4771)
 - Berry add explicit error log when memory allocation fails (#20807)
 - Support for AMS5915/AMS6915 temperature and pressure sensors (#20814)
+- IR support data larger than 64 bits
 
 ### Breaking Changed
 
@@ -29,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - ESP32 PWM activity on unconfigured PWM GPIOs (#20732)
 - Shutter inverted using internal commands (#20752)
 - HASPmota PSRAM memory leak (#20818)
+- Berry Memory leak in `import re`
 
 ### Removed
 
