@@ -112,7 +112,7 @@ jobs:
           cp ./platformio_tasmota_core3_env_sample.ini ./platformio_tasmota_core3_env.ini
           COMMIT_SHA_LONG=$(curl -s "https://api.github.com/repos/arendst/tasmota/commits/development" | jq -r '.sha')
           COMMIT_SHA=${COMMIT_SHA_LONG::7}
-          sed -i -e "s/PSTR(\"(%s)\")/PSTR(\"($COMMIT_SHA-%s)\")/g" ./tasmota/tasmota.ino
+          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT $COMMIT_SHA-/g" ./tasmota/include/tasmota_version.h
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - uses: jason2866/upload-artifact@v2.0.3
