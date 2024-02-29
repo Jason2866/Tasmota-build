@@ -30,6 +30,7 @@ jobs:
           COMMIT_SHA_LONG=$(git rev-parse --short HEAD || echo "")
           COMMIT_SHA_SHORT=${COMMIT_SHA_LONG::7}
           echo "COMMIT_SHA=$COMMIT_SHA_SHORT" >> $GITHUB_ENV
+
       - name: Install clang compiler
         run: |
           sudo apt-get install -f clang
@@ -120,8 +121,9 @@ jobs:
           cp ./platformio_override_sample.ini ./platformio_override.ini
       - name: Add SHA to footer
         run: |
-          SHA=${{ env.COMMIT_SHA }}
-          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT = \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
+          COMMIT_SHA_LONG=$(git rev-parse --short HEAD || echo "")
+          SHA=${COMMIT_SHA_LONG::7}
+          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - name: Upload safeboot firmware artifacts
@@ -162,8 +164,9 @@ jobs:
           pip install -U platformio
       - name: Add SHA to footer
         run: |
-          SHA=${{ env.COMMIT_SHA }}
-          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT = \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
+          COMMIT_SHA_LONG=$(git rev-parse --short HEAD || echo "")
+          SHA=${COMMIT_SHA_LONG::7}
+          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - name: Upload firmware artifacts
@@ -218,8 +221,9 @@ jobs:
           path: ./firmware
       - name: Add SHA to footer
         run: |
-          SHA=${{ env.COMMIT_SHA }}
-          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT = \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
+          COMMIT_SHA_LONG=$(git rev-parse --short HEAD || echo "")
+          SHA=${COMMIT_SHA_LONG::7}
+          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
       - name: Upload firmware artifacts
@@ -258,8 +262,9 @@ jobs:
           path: ./firmware
       - name: Add SHA to footer
         run: |
-          SHA=${{ env.COMMIT_SHA }}
-          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT = \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
+          COMMIT_SHA_LONG=$(git rev-parse --short HEAD || echo "")
+          SHA=${COMMIT_SHA_LONG::7}
+          sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT \"$SHA-\"/g" ./tasmota/include/tasmota_version.h
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}-${{ matrix.language }}
       - name: Upload language firmware artifacts
