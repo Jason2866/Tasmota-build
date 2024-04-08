@@ -1,6 +1,10 @@
 #ifndef _USER_CONFIG_OVERRIDE_H_
 #define _USER_CONFIG_OVERRIDE_H_
 
+#ifdef ESP32
+#include "sdkconfig.h"
+#endif
+
 #undef OTA_URL
 #define OTA_URL " "
 
