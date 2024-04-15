@@ -1,0 +1,47 @@
+{
+    "build": {
+      "core": "esp32",
+      "extra_flags": "-DARDUINO_TASMOTA -DARDUINO_USB_MODE=1 -DESP32_2M -DESP32C3 -DUSE_USB_CDC_CONSOLE",
+      "f_cpu": "160000000L",
+      "f_flash": "80000000L",
+      "flash_mode": "dio",
+      "mcu": "esp32c3",
+      "variant": "esp32c3",
+      "partitions": "partitions/esp32_2M_partition_app1792k_no_ota_spiffs192k.csv"
+    },
+    "connectivity": [
+      "wifi",
+      "bluetooth"
+    ],
+    "debug": {
+      "default_tool": "esp-builtin",
+      "onboard_tools": [
+        "esp-builtin"
+      ],
+      "openocd_target": "esp32c3.cfg"
+    },
+    "frameworks": [
+      "arduino"
+    ],
+    "name": "Espressif Generic ESP32-C3 2M Flash, Tasmota 1792k Code No OTA, 192k FS",
+    "upload": {
+      "arduino": {
+        "flash_extra_images": [
+          [
+            "0x10000",
+            "tasmota32c3cdc-safeboot.bin"
+          ]
+        ]
+      },
+      "flash_size": "2MB",
+      "maximum_ram_size": 327680,
+      "maximum_size": 2097152,
+      "require_upload_port": true,
+      "speed": 2000000
+    },
+    "download": {
+      "speed": 2000000
+    },
+    "url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitm-1.html",
+    "vendor": "Espressif"
+  }
