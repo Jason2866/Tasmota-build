@@ -86,6 +86,7 @@ jobs:
           - tasmota32s3cdc-bluetooth
           - tasmota32s3cdc-box
           - tasmota32c3cdc-mi32
+          - tasmota32c6cdc-mi32
           - tasmota32s3cdc-mi32
           - tasmota32-mi32
           - tasmota32c2_2M
