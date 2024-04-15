@@ -77,6 +77,7 @@ jobs:
           - tasmota32c3cdc-bluetooth
           - tasmota32c6cdc-bluetooth
           - tasmota32c3cdc-lvgl
+          - tasmota32c6cdc-lvgl
           - tasmota32s2-lvgl
           - tasmota32s3cdc-lvgl
           - tasmota32s3cdc-qio_opi
