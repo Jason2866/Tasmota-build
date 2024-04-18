@@ -73,23 +73,23 @@ jobs:
           - tasmota32-platinum
           - tasmota32-titanium
           - tasmota32-rangeextender
-          - tasmota32c3cdc_2M
-          - tasmota32c3cdc-bluetooth
-          - tasmota32c6cdc-bluetooth
-          - tasmota32c3cdc-lvgl
-          - tasmota32c6cdc-lvgl
+          - tasmota32c3_2M
+          - tasmota32c3-bluetooth
+          - tasmota32c6-bluetooth
+          - tasmota32c3-lvgl
+          - tasmota32c6-lvgl
           - tasmota32s2-lvgl
-          - tasmota32s3cdc-lvgl
-          - tasmota32s3cdc-qio_opi
-          - tasmota32s3cdc-opi_opi
+          - tasmota32s3-lvgl
+          - tasmota32s3-qio_opi
+          - tasmota32s3-opi_opi
           #- tasmota32s2-display
           #- tasmota32s3-display
           #- tasmota32c3-display
-          - tasmota32s3cdc-bluetooth
-          - tasmota32s3cdc-box
-          - tasmota32c3cdc-mi32
-          - tasmota32c6cdc-mi32
-          - tasmota32s3cdc-mi32
+          - tasmota32s3-bluetooth
+          - tasmota32s3-box
+          - tasmota32c3-mi32
+          - tasmota32c6-mi32
+          - tasmota32s3-mi32
           - tasmota32-mi32
           - tasmota32c2_2M
     steps:
