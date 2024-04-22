@@ -2189,7 +2189,8 @@ Thermostat
     #define USE_MIBLE                            // BLE-bridge for some Mijia-BLE-sensors (+4k7 code)
   #else
     #ifndef USE_DISPLAY
-      #define USE_DISPLAY                        // Add SPI Display support for 320x240 and 480x320 TFT
+      #define USE_DISPLAY
+      #define USE_UNIVERSAL_DISPLAY
     #endif
       #define USE_DISPLAY_ILI9341                // [DisplayModel 4] Enable ILI9341 Tft 480x320 display (+19k code)
 //      #define USE_DISPLAY_EPAPER_29              // [DisplayModel 5] Enable e-paper 2.9 inch display (+19k code)
@@ -2517,7 +2518,8 @@ Teleinfo
     #define USE_MIBLE                            // BLE-bridge for some Mijia-BLE-sensors (+4k7 code)
   #else
     #ifndef USE_DISPLAY
-      #define USE_DISPLAY                        // Add SPI Display support for 320x240 and 480x320 TFT
+      #define USE_DISPLAY
+      #define USE_UNIVERSAL_DISPLAY
     #endif
       #define USE_DISPLAY_ILI9341                // [DisplayModel 4] Enable ILI9341 Tft 480x320 display (+19k code)
 //      #define USE_DISPLAY_EPAPER_29              // [DisplayModel 5] Enable e-paper 2.9 inch display (+19k code)
@@ -2819,7 +2821,8 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
     #define USE_MIBLE                            // BLE-bridge for some Mijia-BLE-sensors (+4k7 code)
   #else
     #ifndef USE_DISPLAY
-      #define USE_DISPLAY                        // Add SPI Display support for 320x240 and 480x320 TFT
+      #define USE_DISPLAY
+      #define USE_UNIVERSAL_DISPLAY
     #endif
       #define USE_DISPLAY_ILI9341                // [DisplayModel 4] Enable ILI9341 Tft 480x320 display (+19k code)
 //      #define USE_DISPLAY_EPAPER_29              // [DisplayModel 5] Enable e-paper 2.9 inch display (+19k code)
@@ -3167,7 +3170,8 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 
 // -- SPI sensors ---------------------------------
 #define USE_SPI                                  // Hardware SPI using GPIO12(MISO), GPIO13(MOSI) and GPIO14(CLK) in addition to two user selectable GPIOs(CS and DC)
-#define USE_DISPLAY                        // Add SPI Display support for 320x240 and 480x320 TFT
+#define USE_DISPLAY
+#define USE_UNIVERSAL_DISPLAY
   #define USE_DISPLAY_ILI9341                  // [DisplayModel 4] Enable ILI9341 Tft 480x320 display (+19k code)
   #define USE_DISPLAY_ILI9488                  // [DisplayModel 8]
   #define USE_DISPLAY_SSD1351                  // [DisplayModel 9]
@@ -3848,7 +3852,8 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
     // #define USE_MIBLE                            // BLE-bridge for some Mijia-BLE-sensors (+4k7 code)
   #else
     #ifndef USE_DISPLAY
-      #define USE_DISPLAY                        // Add SPI Display support for 320x240 and 480x320 TFT
+      #define USE_DISPLAY
+      #define USE_UNIVERSAL_DISPLAY
     #endif
        #define USE_DISPLAY_ILI9341                  // [DisplayModel 4] Enable ILI9341 Tft 480x320 display (+19k code)
        #define USE_DISPLAY_EPAPER_29                // [DisplayModel 5] Enable e-paper 2.9 inch display (+19k code)
