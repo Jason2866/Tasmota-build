@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - uDisplay fast drawing on RGB displays
 - HDMI CEC synchronously sends messages
+- Zigbee startup event triggered after plugins are loaded
 
 ### Fixed
 - HASPmota `align` attribute and expand PNG cache
@@ -28,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Put back wifi IPv6 workaround
 - Berry `math.inf`, `math.isinf()` and fixed json ouput for `inf` and `nan`
 - `EthType` for Core3
+- Compilation of Ethernet when SPI drivers are disabled
 
 ### Removed
 - LVGL disabled vector graphics
