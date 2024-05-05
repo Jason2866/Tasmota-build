@@ -3494,10 +3494,13 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #define USE_QMC5883L                           // [I2CDriver71] Enable QMC5883L magnetic induction sensor (I2C address 0x0D) (+0k8 code)
 #define USE_HMC5883L                           // [I2CDriver73] Enable HMC5883L magnetic induction sensor (I2C address 0x1E) (+1k3 code)
 //  #define QMC5883L_TEMP_SHIFT       23         // sensor temperature are not calibrated (only relativ measurement) and need an absolute ground value in °C (see datasheet)
-#define USE_INA3221                            // [I2CDriver72] Enable INA3221 3-channel DC voltage and current sensor (I2C address 0x40-0x44) (+3.2k code)
-//  #define INA3221_ADDRESS1                     // allow to change the 1st address to search for INA3221 to 0x41..0x43
-//  #define INA3221_MAX_COUNT                    // change the number of devices to search for (default 4).
-                                              // Both settings together allow to limit searching for INA3221 to only a subset of addresses
+define USE_INA3221                            // [I2CDriver72] Enable INA3221 3-channel DC voltage and current sensor (I2C address 0x40-0x44) (+3.2k code)
+//    #define INA3221_ADDRESS1                     // allow to change the 1st address to search for INA3221 to 0x41..0x43
+//    #define INA3221_MAX_COUNT                    // change the number of devices to search for (default 4).
+//                                                 // Both settings together allow to limit searching for INA3221 to only a subset of addresses
+//    #define  INA3221_CALC_CHARGE_AH              // calculate charge in Ah
+//    #define  INA3221_CALC_ENERGY_WH              // calculate energy in Wh
+  #define  INA3221_SUPPLY_SIDE      0x7777     // the driver adds the measured Shunt Voltage to the Bus Voltage 
 #define USE_PMSA003I                           // [I2cDriver78] Enable PMSA003I Air Quality Sensor (I2C address 0x12) (+1k8 code)
 #define USE_GDK101                             // [I2cDriver79] Enable GDK101 sensor (I2C addresses 0x18 - 0x1B) (+1k2 code)
 #define USE_TC74                               // [I2cDriver80] Enable TC74 sensor (I2C addresses 0x48 - 0x4F) (+1k code)
