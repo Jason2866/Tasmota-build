@@ -32,6 +32,8 @@ All notable changes to this project will be documented in this file.
 - Internal macro `APP_SLEEP` to `TASMOTA_SLEEP` to specify default sleep in ms (#21324)
 - ESP32 Core3 platform update from 2024.04.12 to 2024.05.10 (#21347)
 - Refactor Tensorflow (#21327)
+- Seriallog set to `SERIAL_LOG_LEVEL` at boot
+- TLS Letsencrypt replace R3 CA with long-term ISRG_Root_X1 CA, which works with R3 and R10-R14 (#21352)
 
 ### Fixed
 - HASPmota `align` attribute and expand PNG cache (#21228)
