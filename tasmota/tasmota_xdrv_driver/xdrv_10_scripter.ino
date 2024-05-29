@@ -1387,6 +1387,9 @@ int32_t udp_call(char *url, uint32_t port, char *sbuf) {
   udp.write((const uint8_t*)sbuf, strlen(sbuf));
   udp.endPacket();
   udp.flush();
+#ifdef ESP32
+  udp.clear();   // New with core3. Does what flush() did in core2;
+#endif
   udp.stop();
   return 0;
 }
@@ -1406,6 +1409,9 @@ void Script_Stop_UDP(void) {
   if (!glob_script_mem.udp_flags.udp_used) return;
   if (glob_script_mem.udp_flags.udp_connected) {
     glob_script_mem.Script_PortUdp.flush();
+#ifdef ESP32
+    glob_script_mem.Script_PortUdp.clear();  // New with core3. Does what flush() did in core2;
+#endif
     glob_script_mem.Script_PortUdp.stop();
     glob_script_mem.udp_flags.udp_connected  = 0;
   }
