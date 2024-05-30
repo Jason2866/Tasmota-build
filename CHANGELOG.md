@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [14.0.0.4]
 ### Added
+- SML FastExit for binary SML parsing (#21497)
 
 ### Breaking Changed
 
@@ -12,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - TCP bridge increased baudrate selection (#21528)
 
 ### Fixed
+- uDisplay Parallel display on Core3 (#21529)
 
 ### Removed
 
