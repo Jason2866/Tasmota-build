@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - HASPmota rounds to nearest int values passed as 'real' (#21599)
 - Berry automatic rounding of float to int when calling C mapped functions (#21601)
 - Berry add `math.round` (#21602)
+- Support for QMP6988 temperature and pressure sensor
 
 ### Breaking Changed
 
@@ -20,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Optional MQTT_TELE_RETAIN to Energy Margins message replaced by ``SensorRetain``
 - Matter filter suffix automatically added for sensors (#21589)
 - Display timing splash screen with display modes 1 to 5
+- ESP32 MI32 refactoring, bugfixes, generic device scanning (#21603)
 
 ### Fixed
 - Berry `input()` returns empty string and does not crash (#21565)
