@@ -7,12 +7,14 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Support for Sonoff WTS01 temperature sensor using SerialBridge in ``SSerialMode 3``
 - Berry `classof` extended to class methods (#21615)
+- Extend command ``SetOption147 1`` to disable publish of IRReceived MQTT messages (#21574)
 
 ### Breaking Changed
 
 ### Changed
 - SerialBridge command ``SSerialSend9`` replaced by ``SSerialMode``
-- NeoPool using temperature as only frequently changing value for NPTeleperiod
+- SML replace vars in descriptor and line (#21622)
+- NeoPool using temperature as only frequently changing value for NPTeleperiod (#21628)
 
 ### Fixed
 
