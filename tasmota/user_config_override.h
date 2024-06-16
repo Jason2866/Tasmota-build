@@ -507,7 +507,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_BERRY_PARTITION_WIZARD
 #undef USE_DOMOTICZ
 #undef USE_EMULATION_WEMO                       // Disable Belkin WeMo emulation for Alexa (+18k code, +2k mem)
-#undef USE_EMULATION_HUE                        // Disable Hue Bridge emulation for Alexa (+14k code, +2k mem common)
+//#undef USE_EMULATION_HUE                        // Disable Hue Bridge emulation for Alexa (+14k code, +2k mem common)
 #undef USE_PING
 #undef USE_ENERGY_SENSOR                        // Disable energy sensors (+14k code)
 #undef USE_SHUTTER
