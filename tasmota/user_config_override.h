@@ -186,6 +186,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_EZOCO2                               // Disable support for EZO's CO2 sensor (+0k3 code) - Shared EZO code required for any EZO device (+1k2 code)
 
 #undef USE_SPI                                  // Disable SPI using GPIO12(MISO), GPIO13(MOSI) and GPIO14(CLK) in addition to two user selectable GPIOs(CS and DC)
+#undef USE_SPI_LORA                             // Disable support for LoRaSend and LoRaCommand (+4k code)
 #undef USE_RC522                                // Disable support for MFRC522 13.56Mhz Rfid reader (+6k code)
   #undef USE_RC522_DATA_FUNCTION                // Disable support for reading data block content (+0k4 code)
   #undef USE_RC522_TYPE_INFORMATION             // Disable support for showing card type (+0k4 code)
