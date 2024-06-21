@@ -74,6 +74,7 @@ jobs:
           - tasmota32-titanium
           - tasmota32-rangeextender
           - tasmota32c3_2M
+          - tasmota32c2-bluetooth
           - tasmota32c3-bluetooth
           - tasmota32c6-bluetooth
           - tasmota32c3-lvgl
