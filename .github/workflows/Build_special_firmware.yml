@@ -87,6 +87,7 @@ jobs:
           #- tasmota32c3-display
           - tasmota32s3-bluetooth
           - tasmota32s3-box
+          - tasmota32c2-mi32
           - tasmota32c3-mi32
           - tasmota32c6-mi32
           - tasmota32s3-mi32
