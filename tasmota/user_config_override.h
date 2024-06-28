@@ -759,15 +759,10 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef OTA_URL
 #define OTA_URL ""
 
+#undef USE_WEBSERVER                             // Disable Webserver
+
 #undef USE_HOME_ASSISTANT
-
 #undef USE_BERRY                                 // Disable Berry scripting language
-
-#ifdef USE_BLE_FULL
-  #define USE_BLE_ESP32                          // Enable full BLE driver
-  #define USE_EQ3_ESP32
-#endif // USE_BLE_FULL
-#define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
 
 #undef USE_LIGHT
 #undef USE_WS2812
@@ -945,6 +940,15 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 //#define USE_RF_SENSOR                            // Add support for RF sensor receiver (434MHz or 868MHz) (+0k8 code)
 //  #define USE_THEO_V2                            // Add support for decoding Theo V2 sensors as documented on https://sidweb.nl using 434MHz RF sensor receiver (+1k4 code)
 //  #define USE_ALECTO_V2                          // Add support for decoding Alecto V2 sensors like ACH2010, WS3000 and DKW2012 using 868MHz RF sensor receiver (+1k7 code)
+
+#ifdef USE_BLE_FULL
+  #define USE_WEBSERVER
+  #define USE_BLE_ESP32                          // Enable full BLE driver
+  #define USE_EQ3_ESP32
+#endif // USE_BLE_FULL
+
+#define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
+
 
 #endif // CUSTOM_CONFIG_BLUETOOTH_C2
 
