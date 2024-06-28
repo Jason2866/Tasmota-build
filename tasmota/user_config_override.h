@@ -759,10 +759,17 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef OTA_URL
 #define OTA_URL ""
 
-//#undef USE_WEBSERVER                             // Disable Webserver
+#undef USE_WEBSERVER                             // Disable Webserver
 
 #undef USE_HOME_ASSISTANT
 #undef USE_BERRY                                 // Disable Berry scripting language
+
+#undef USE_ESP32_SENSORS
+#undef USE_UFILESYS
+#undef GUI_TRASH_FILE
+#undef GUI_EDIT_FILE
+#undef USE_AUTOCONF
+#undef USE_MATTER_DEVICE
 
 #undef USE_LIGHT
 #undef USE_WS2812
