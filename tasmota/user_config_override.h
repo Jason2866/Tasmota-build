@@ -763,10 +763,10 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #undef USE_BERRY                                 // Disable Berry scripting language
 
-#ifndef USE_MI_EXT_GUI
-  #define USE_BLE_ESP32                            // Enable full BLE driver
+#ifdef USE_BLE_FULL
+  #define USE_BLE_ESP32                          // Enable full BLE driver
   #define USE_EQ3_ESP32
-#endif // USE_MI_EXT_GUI
+#endif // USE_BLE_FULL
 #define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
 
 #undef USE_LIGHT
