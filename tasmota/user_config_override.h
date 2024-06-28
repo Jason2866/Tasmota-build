@@ -759,7 +759,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef OTA_URL
 #define OTA_URL ""
 
-#undef USE_WEBSERVER                             // Disable Webserver
+//#undef USE_WEBSERVER                             // Disable Webserver
 
 #undef USE_HOME_ASSISTANT
 #undef USE_BERRY                                 // Disable Berry scripting language
