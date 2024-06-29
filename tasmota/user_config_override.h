@@ -764,8 +764,12 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_WEBCLIENT_HTTPS
 
 #undef USE_HOME_ASSISTANT
-//#undef USE_BERRY                                 // Disable Berry scripting language
+#undef USE_BERRY                                 // Disable Berry scripting language
 #undef USE_MATTER_DEVICE
+
+#ifdef USE_MI_ESP32
+#define USE_BERRY
+#endif
 
 #undef USE_ESP32_SENSORS
 //#undef USE_UFILESYS
@@ -954,9 +958,9 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
   #define USE_WEBSERVER
   #define USE_BLE_ESP32                          // Enable full BLE driver
   #define USE_EQ3_ESP32
+  #define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
 #endif // USE_BLE_FULL
 
-#define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
 
 
 #endif // CUSTOM_CONFIG_BLUETOOTH_C2
