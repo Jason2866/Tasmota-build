@@ -764,7 +764,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_WEBCLIENT_HTTPS
 
 #undef USE_HOME_ASSISTANT
-#undef USE_BERRY                                 // Disable Berry scripting language
+//#undef USE_BERRY                                 // Disable Berry scripting language
 #undef USE_MATTER_DEVICE
 
 #undef USE_ESP32_SENSORS
