@@ -769,6 +769,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #ifdef USE_MI_ESP32
 #define USE_BERRY
+#define USE_MATTER_DEVICE
 #endif
 
 #undef USE_ESP32_SENSORS
