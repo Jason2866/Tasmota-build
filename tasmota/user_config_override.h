@@ -760,16 +760,18 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define OTA_URL ""
 
 //#undef USE_WEBSERVER                             // Disable Webserver
+#undef USE_BERRY                                 // Disable Berry scripting language
+#undef USE_MATTER_DEVICE
 #undef USE_WEBCLIENT
 #undef USE_WEBCLIENT_HTTPS
 
 #undef USE_HOME_ASSISTANT
-#undef USE_BERRY                                 // Disable Berry scripting language
-#undef USE_MATTER_DEVICE
 
 #ifdef USE_MI_ESP32
 #define USE_BERRY
-#define USE_MATTER_DEVICE
+#define USE_WEBCLIENT
+#define USE_WEBCLIENT_HTTPS
+#define USE_MI_EXT_GUI
 #endif
 
 #undef USE_ESP32_SENSORS
