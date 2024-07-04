@@ -766,6 +766,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #undef USE_HOME_ASSISTANT
 #undef USE_TASMOTA_DISCOVERY
+#undef USE_DISCOVERY
 #undef USE_IMPROV
 #undef USE_SERIAL_BRIDGE
 
@@ -792,6 +793,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_EMULATION_WEMO
 #undef USE_WS2812
 
+#undef ROTARY_V1
+#undef USE_EEPROM
 #undef USE_TIMERS
 #undef USE_COUNTER
 #undef USE_ADC
