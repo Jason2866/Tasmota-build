@@ -487,23 +487,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #endif  // FIRMWARE_MINICUSTOM *******************************************************************
 
 
-#define _IR_ENABLE_DEFAULT_ false              // disable all protocols by default
-// below are the default IR protocols
-#define DECODE_HASH true
-#ifdef USE_IR_SEND_NEC
-  #define SEND_NEC   true                      // Support IRsend NEC protocol
-  #define DECODE_NEC true                      // Support IRreceive NEC protocol
-#endif
-#ifdef USE_IR_SEND_RC5
-  #define SEND_RC5   true                      // Support IRsend Philips RC5 protocol
-  #define DECODE_RC5 true                      // Support IRreceive Philips RC5 protocol
-#endif
-#ifdef USE_IR_SEND_RC6
-  #define SEND_RC6   true                      // Support IRsend Philips RC6 protocol
-  #define DECODE_RC6 true                      // Support IRreceive Philips RC6 protocol
-#endif
-
-
 // Tasmota32 for 2M Devices
 
 #ifdef CUSTOM_CONFIG_TASMOTA32_2M  // *******************************************************************
