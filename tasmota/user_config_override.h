@@ -824,10 +824,17 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_IR_REMOTE_FULL                       // Activate all protocols from IRremoteESP8266 - activating this option will ignore all other USE_IR_REMOTE_* options and set them all to active
 #define _IR_ENABLE_DEFAULT_ false
 #undef USE_IR_REMOTE                            // Send IR remote commands using library IRremoteESP8266 and ArduinoJson (+4k3 code, 0k3 mem, 48 iram)
+#undef _IR_ENABLE_DEFAULT_
 #undef DECODE_HASH
 #undef USE_IR_SEND_NEC
+#undef DECODE_NEC
+#undef DECODE_NEC
 #undef USE_IR_SEND_RC5
+#undef SEND_RC5
+#undef DECODE_RC5
 #undef USE_IR_SEND_RC6
+#undef SEND_RC6
+#undef DECODE_RC6
 #undef USE_IR_RECEIVE                           // Support for IR receiver (+7k2 code, 264 iram)
 #undef USE_AC_ZERO_CROSS_DIMMER
 #undef USE_PWM_DIMMER                           // Add support for MJ-SD01/acenx/NTONPOWER PWM dimmers (+4k5 code)
