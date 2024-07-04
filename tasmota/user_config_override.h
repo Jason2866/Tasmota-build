@@ -759,13 +759,19 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef OTA_URL
 #define OTA_URL ""
 
-//#undef USE_WEBSERVER                             // Disable Webserver
-#undef USE_BERRY                                 // Disable Berry scripting language
+//#undef USE_WEBSERVER
+#undef USE_BERRY
 #undef USE_MATTER_DEVICE
-#undef USE_WEBCLIENT
-#undef USE_WEBCLIENT_HTTPS
 
 #undef USE_HOME_ASSISTANT
+#undef USE_TASMOTA_DISCOVERY
+#undef USE_IMPROV
+#undef USE_SERIAL_BRIDGE
+
+#undef USE_RULES
+#undef USE_EXPRESSION
+#undef SUPPORT_IF_STATEMENT
+#undef SUPPORT_MQTT_EVENT
 
 #ifdef USE_MI_ESP32
 #define USE_BERRY
@@ -775,14 +781,17 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #endif
 
 #undef USE_ESP32_SENSORS
-//#undef USE_UFILESYS
 #undef GUI_TRASH_FILE
 #undef GUI_EDIT_FILE
 #undef USE_AUTOCONF
 
 #undef USE_LIGHT
+#undef USE_EMULATION
+#undef USE_EMULATION_HUE
+#undef USE_EMULATION_WEMO
 #undef USE_WS2812
 
+#undef USE_TIMERS
 #undef USE_COUNTER
 #undef USE_ADC
 #undef USE_GPIO_VIEWER
@@ -798,7 +807,6 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define _IR_ENABLE_DEFAULT_ false
 #undef USE_IR_REMOTE                            // Send IR remote commands using library IRremoteESP8266 and ArduinoJson (+4k3 code, 0k3 mem, 48 iram)
 #undef DECODE_HASH
-#define DECODE_HASH false
 #undef USE_IR_SEND_NEC
 #undef USE_IR_SEND_RC5
 #undef USE_IR_SEND_RC6
@@ -967,9 +975,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
   #define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
 #endif // USE_BLE_FULL
 
-
-
 #endif // CUSTOM_CONFIG_BLUETOOTH_C2
+
 
 /*
  oooooooooooo ooooo   .oooooo.    oooooooooo.  oooooooooooo oooooooooooo
