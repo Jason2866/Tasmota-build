@@ -115,6 +115,9 @@ jobs:
           COMMIT_SHA_LONG=$(curl -s "https://api.github.com/repos/arendst/tasmota/commits/development" | jq -r '.sha')
           COMMIT_SHA=${COMMIT_SHA_LONG::7}
           sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT $COMMIT_SHA-/g" ./tasmota/include/tasmota_version.h
+      - name: Use different tasmota_configurations.h for C2 BLE
+        if: "matrix.variant == 'tasmota32c2-mi32' || matrix.variant == 'tasmota32c2-bluetooth'"
+        run: |
           cp -f ./tasmota/include/override_tasmota_configurations.h ./tasmota/include/tasmota_configurations.h
       - name: Run PlatformIO
         run: platformio run -e ${{ matrix.variant }}
