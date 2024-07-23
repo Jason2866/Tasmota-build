@@ -6,12 +6,14 @@ All notable changes to this project will be documented in this file.
 ## [14.1.0.4]
 ### Added
 - Support for Sonoff iFan04-H using template (#16402)
+- Matter improve internal `inspect`for superclasses
 
 ### Breaking Changed
 
 ### Changed
 
 ### Fixed
+- Berry fix `light.get` for separate RGB/CT
 
 ### Removed
 
