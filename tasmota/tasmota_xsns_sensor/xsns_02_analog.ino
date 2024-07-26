@@ -163,6 +163,7 @@ struct {
 } Adcs;
 
 struct {
+  float *mq_samples;
   float temperature = 0;
   float current = 0;
   float energy = 0;
@@ -170,12 +171,11 @@ struct {
   uint32_t param2 = 0;
   int param3 = 0;
   int param4 = 0;
+  int indexOfPointer = -1;
   uint32_t previous_millis = 0;
   uint16_t last_value = 0;
   uint8_t type = 0;
   uint8_t pin = 0;
-  float mq_samples[ANALOG_MQ_SAMPLES];
-  int indexOfPointer = -1;
 } Adc[MAX_ADCS];
 
 bool adcAttachPin(uint8_t pin) {
@@ -242,9 +242,9 @@ void AdcInitParams(uint8_t idx) {
     }
     else if (ADC_MQ == Adc[idx].type) {
       Adc[idx].param1 = ANALOG_MQ_TYPE;  // Could be MQ-002, MQ-004, MQ-131 ....
-      Adc[idx].param2 = (int)(ANALOG_MQ_A * ANALOG_MQ_DECIMAL_MULTIPLIER);                       // Exponential regression
-      Adc[idx].param3 = (int)(ANALOG_MQ_B * ANALOG_MQ_DECIMAL_MULTIPLIER);                      // Exponential regression
-      Adc[idx].param4 = (int)(ANALOG_MQ_RatioMQCleanAir * ANALOG_MQ_DECIMAL_MULTIPLIER);                      // Exponential regression
+      Adc[idx].param2 = (int)(ANALOG_MQ_A * ANALOG_MQ_DECIMAL_MULTIPLIER);                // Exponential regression
+      Adc[idx].param3 = (int)(ANALOG_MQ_B * ANALOG_MQ_DECIMAL_MULTIPLIER);                // Exponential regression
+      Adc[idx].param4 = (int)(ANALOG_MQ_RatioMQCleanAir * ANALOG_MQ_DECIMAL_MULTIPLIER);  // Exponential regression
     }
   }
   if ((Adcs.type != Adc[idx].type) || (0 == Adc[idx].param1) || (Adc[idx].param1 > ANALOG_RANGE)) {
@@ -261,8 +261,11 @@ void AdcAttach(uint32_t pin, uint8_t type) {
   if (Adcs.present == MAX_ADCS) { return; }
   Adc[Adcs.present].pin = pin;
   if (adcAttachPin(Adc[Adcs.present].pin)) {
+    if (ADC_MQ == type) {
+      Adc[Adcs.present].mq_samples = (float*)calloc(sizeof(float), ANALOG_MQ_SAMPLES);  // Need calloc to reset registers to 0
+      if (nullptr == Adc[Adcs.present].mq_samples) { return; }
+    }
     Adc[Adcs.present].type = type;
-//    analogSetPinAttenuation(Adc[Adcs.present].pin, ADC_11db);  // Default
     Adcs.present++;
   }
 }
