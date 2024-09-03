@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Command ``SetOption69 1`` to enable Serial Bridge inverted Receive (#22000)
 - Zigbee Koenkk firmware 20240710 for Sonoff Zigbee ZBPro
+- Berry Zigbee improvements to prepare Matter
 
 ### Breaking Changed
 - Berry make `energy` modules changes from #21887 backwards compatible
@@ -25,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Matter fail to report Shutter status if no shutter is configured in Tasmota
 - Matter fix Waterleak broken after Berry solidification optimisation #21885
 - Berry avoid `readbytes()` from crashing when file is too large
+- Zigbee avoid disabling console serial on ESP32 and improved log messages
 
 ### Removed
 - Berry remove reuse of methods for interface-like code reuse #21500
