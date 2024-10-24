@@ -10,16 +10,23 @@ All notable changes to this project will be documented in this file.
 - DALI command `DaliTarget` to set light control broadcast, group number or gear number
 - Mitsubishi Electric HVAC Operation time for MiElHVAC (#22334)
 - Mitsubishi Electric HVAC Outdoor Temperature for MiElHVAC (#22345)
+- Mitsubishi Electric HVAC Compressor Frequency for MiElHVAC (#22347)
+- SolaxX1 Meter mode (#22330)
+- DALI inverted signal configuration using GPIO DALI RX_i/TX_i
+- Experimental support for Shelly DALI Dimmer Gen3 (See template in file xdrv_75_dali.ino)
 
 ### Breaking Changed
 
 ### Changed
 - DALI renamed commands `DaliCommission` to `DaliScan` and `DaliWeb` to `DaliLight`
 - DALI set Tasmota light control as default
+- ESP32 Framework (Arduino Core) from v3.1.0.241015 to v3.1.0.241023 (#22351)
+- Shutter optimized behavior to publish shutter data with sensor request (#22353)
 
 ### Fixed
 
 ### Removed
+- DALI inverted signal configuration using compile time defines
 
 ## [14.3.0.1] 20241022
 ### Added
