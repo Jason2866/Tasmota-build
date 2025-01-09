@@ -120,6 +120,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for PCF85063 RTC [#22727](https://github.com/arendst/Tasmota/issues/22727)
 - Support for Senseair S88 CO2 sensor [#22733](https://github.com/arendst/Tasmota/issues/22733)
 - Support for ESP32 Two-Wire Automotive Interface (TWAI) or Controller Area Network (CAN) busses
+- I2S AAC support for web radio [#22787](https://github.com/arendst/Tasmota/issues/22787)
 - ESP32 TasmotaLED change dynamically the number of pixels [#22754](https://github.com/arendst/Tasmota/issues/22754)
 - ESP32 expand `Pixels` with reverse, height and alternate [#22755](https://github.com/arendst/Tasmota/issues/22755)
 - Berry `animate.crenel` primitive [#22673](https://github.com/arendst/Tasmota/issues/22673)
@@ -129,11 +130,12 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry driver for M5Stack 8encoder [#22724](https://github.com/arendst/Tasmota/issues/22724)
 - Berry add light_pixels values to `tasmota.settings` [#22762](https://github.com/arendst/Tasmota/issues/22762)
 - Berry add `bytes().appendhex()` [#22767](https://github.com/arendst/Tasmota/issues/22767)
+- Berry WS2812 real-time Leds panel as app [#22788](https://github.com/arendst/Tasmota/issues/22788)
 
 ### Breaking Changed
 
 ### Changed
-- GPIOViewer from v1.5.6 to v1.5.8
+- GPIOViewer from v1.5.6 to v1.5.9 (No functional change)
 - Postpone save_data during light animation when fade is Off
 - ESP32 disable PSRAM check (and on restart some relay toggles) with `#define DISABLE_PSRAMCHECK true` [#21266](https://github.com/arendst/Tasmota/issues/21266)
 - Berry bit-shift operators to `int64` [#22709](https://github.com/arendst/Tasmota/issues/22709)
