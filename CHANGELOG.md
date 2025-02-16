@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Support for Lithuanian language translations by zzdovydas (#22971)
 - `MqttTLS` field in `Status 6` to indicate if the MQTT connection is encrypted (#22995)
 - Support for WiZ Smart Remote using `#define USE_WIZMOTE` and command `SetOption164 1`
-- Berry add `bytes().appendb64()` (#22767)
+- Berry `bytes().appendb64()` (#22767)
 
 ### Breaking Changed
 
@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Berry parser error in rare case (#22997)
+- ESP32 TasMesh broker MAC address all zeros (#23005)
 
 ### Removed
 
