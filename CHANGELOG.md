@@ -8,8 +8,8 @@ All notable changes to this project will be documented in this file.
 - Berry experimental driver for AXP2101 for M5Core2v1.1 (#23039)
 - LVGL experimental mirroring of display on Web UI (#23041)
 - Allow acl in mqtt when client certificate is in use with `#define USE_MQTT_CLIENT_CERT` (#22998)
-- Berry `tasmota.when_network_up()` and simplified Matter using it
-- Berry `introspect.solidified()` to know if a Berry object is solidified or in RAM
+- Berry `tasmota.when_network_up()` and simplified Matter using it (#23057)
+- Berry `introspect.solidified()` to know if a Berry object is solidified or in RAM (#23063)
 
 ### Breaking Changed
 
@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - LVGL, prepare for HASPmota theme, change: no-grow when clicked, DPI set to 160 (#23040)
 - LVGL Mirroring add checkbox to enable/disable the feature (in the iterim for a better solution) (#23047)
 - Leds Panel add checkbox to enable/disable the feature (in the iterim for a better solution) (#23048)
+- GPIOViewer from v1.6.1 to v1.6.2 (No functional change)
 
 ### Fixed
 - Too many zeros in RCSwitch received data regression from v14.4.1.4 (#23050)
