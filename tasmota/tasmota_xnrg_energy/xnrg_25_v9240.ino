@@ -1,16 +1,20 @@
 /*
   xnrg_25_v9240.ino - v9240 energy sensor support for Tasmota
 
-*/
+  SPDX-FileCopyrightText: 2025  Ivan Chopa (@aquaforum)
 
+  SPDX-License-Identifier: GPL-3.0-only
+*/
 
 #ifdef USE_ENERGY_SENSOR
 #ifdef USE_V9240
+/*********************************************************************************************\
+ * Support the Vango Technologies V924x ULTRALOW POWER, UART, SINGLE-PHASE, POWER MEASUREMENT IC
+\*********************************************************************************************/
 
 #define XNRG_25             25
 
 #include <TasmotaSerial.h>
-#include <algorithm>
 
 #define V9240_SERIAL_BAUDRATE 19200
 
@@ -62,9 +66,6 @@ namespace Address
 
     static const uint16_t RO_START    = SysSts;
 } ;
-
-
-
 
 
 // register structures
@@ -378,13 +379,23 @@ float V9240::value(const V9240::parameter p) const
 
 void V9240::set_checksum()
 {
-    CKSUM = UINT32_MAX - std::accumulate(rw_mem,rw_mem+rw_len-1 ,0);
+//    CKSUM = UINT32_MAX - std::accumulate(rw_mem,rw_mem+rw_len-1 ,0);
+    int init = 0;
+    for (uint32_t i = 0; i < rw_len-1; i++) {
+      init += rw_mem[i];
+    }
+    CKSUM = UINT32_MAX - init;
     write(Address::CKSUM,CKSUM);
 }
 
 char V9240::calc_check(char *buff, size_t len)
 {
-    return ~std::accumulate(buff,buff+len,0)+0x33;
+//    return ~std::accumulate(buff,buff+len,0)+0x33;
+    char init = 0;
+    for (uint32_t i = 0; i < len; i++) {
+      init += buff[i];
+    }
+    return ~init + 0x33;
 }
 
 
