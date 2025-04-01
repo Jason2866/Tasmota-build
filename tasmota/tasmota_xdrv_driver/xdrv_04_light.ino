@@ -2054,7 +2054,15 @@ uint16_t fadeGamma(uint32_t channel, uint16_t v) {
 }
 uint16_t fadeGammaReverse(uint32_t channel, uint16_t vg) {
   if (isChannelGammaCorrected(channel)) {
-    return leddGammaReverseFast(vg);
+    return ledGammaReverseFast(vg);
+  } else {
+    return vg;
+  }
+}
+
+uint16_t fadeEndGammaReverse(uint32_t channel, uint16_t vg) {
+  if (isChannelGammaCorrected(channel)) {
+    return ledGammaReverse(vg);
   } else {
     return vg;
   }
@@ -2064,7 +2072,7 @@ uint8_t LightGetCurFadeBri(void) {
   uint8_t max_bri = 0;
   uint8_t bri_i = 0;
   for (uint8_t i = 0; i < LST_MAX; i++) {
-    bri_i = changeUIntScale(fadeGammaReverse(i, Light.fade_cur_10[i]), 4, 1023, 1, 100);
+    bri_i = changeUIntScale(fadeEndGammaReverse(i, Light.fade_cur_10[i]), 4, 1023, 1, 100);
     if (bri_i > max_bri) max_bri = bri_i ;
   }
   return max_bri;
