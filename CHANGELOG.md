@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Extend command `GPIO` with different display options and allowing updating of module GPIO's in one go
 - Berry `bytes.add()` now accepts 3-bytes values (#23200)
-- Berry expose `esp_http_server` for websockets
+- Berry expose `esp_http_server` for websockets (#23206)
+- AlpineJS 2.8.2 - optional for now (#23259)
 
 ### Breaking Changed
 

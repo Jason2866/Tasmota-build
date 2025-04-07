@@ -121,6 +121,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for HLK-LD2402 24GHz smart wave motion sensor [#23133](https://github.com/arendst/Tasmota/issues/23133)
 - Telnet server using command `Telnet <0|1|port>[,<IP filter>]`
 - Allow acl in mqtt when client certificate is in use with `#define USE_MQTT_CLIENT_CERT` [#22998](https://github.com/arendst/Tasmota/issues/22998)
+- AlpineJS 2.8.2 - optional for now [#23259](https://github.com/arendst/Tasmota/issues/23259)
 - Berry experimental driver for AXP2101 for M5Core2v1.1 [#23039](https://github.com/arendst/Tasmota/issues/23039)
 - Berry `tasmota.when_network_up()` and simplified Matter using it [#23057](https://github.com/arendst/Tasmota/issues/23057)
 - Berry `introspect.solidified()` to know if a Berry object is solidified or in RAM [#23063](https://github.com/arendst/Tasmota/issues/23063)
@@ -128,6 +129,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry load `.tapp` files in `/.extensions/` then in `/` [#23113](https://github.com/arendst/Tasmota/issues/23113)
 - Berry `re.dump()` [#23162](https://github.com/arendst/Tasmota/issues/23162)
 - Berry `bytes.add()` now accepts 3-bytes values [#23200](https://github.com/arendst/Tasmota/issues/23200)
+- Berry expose `esp_http_server` for websockets [#23206](https://github.com/arendst/Tasmota/issues/23206)
 - Matter prepare for ICD cluster [#23158](https://github.com/arendst/Tasmota/issues/23158)
 - LVGL experimental mirroring of display on Web UI [#23041](https://github.com/arendst/Tasmota/issues/23041)
 - HASPmota autostart when `pages.jsonl` exists [#23181](https://github.com/arendst/Tasmota/issues/23181)
