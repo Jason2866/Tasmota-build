@@ -762,6 +762,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 //#undef USE_WEBSERVER
 #undef USE_BERRY
+#undef USE_WEBCLIENT_HTTPS
 #undef USE_MATTER_DEVICE
 
 #undef USE_HOME_ASSISTANT
@@ -779,7 +780,8 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define USE_BERRY
 #undef USE_BERRY_TCPSERVER
 #define USE_WEBCLIENT
-#define USE_WEBCLIENT_HTTPS
+//#define USE_WEBCLIENT_HTTPS
+#undef USE_WEBCLIENT_HTTPS
 #define USE_MI_EXT_GUI
 #endif
 
