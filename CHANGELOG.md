@@ -5,12 +5,16 @@ All notable changes to this project will be documented in this file.
 
 ## [15.0.1.1]
 ### Added
+- I2S additions (#23543)
 
 ### Breaking Changed
 
 ### Changed
+- BLE updates for esp-nimble-cpp v2.x (#23553)
+- Library names (#23560)
 
 ### Fixed
+- LVGL restore `lv_chart.set_range` removed in LVGL 9.3.0 in favor of `lv_chart.set_axis_range`
 
 ### Removed
 
