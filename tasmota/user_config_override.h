@@ -1326,7 +1326,6 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 #ifdef ESP32
   #undef OTA_URL
   #define OTA_URL "https://github.com/tasmota/install/raw/main/firmware/unofficial/tasmota32-zigbeebridge.bin"
-  #define DISABLE_PSRAMCHECK
   #define USE_TLS
   #define USE_BERRY
   #define USE_WEBCLIENT
