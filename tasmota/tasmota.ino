@@ -644,6 +644,17 @@ void setup(void) {
 //        Settings->last_module = Settings->fallback_module;
       }
       AddLog(LOG_LEVEL_INFO, PSTR("FRC: " D_LOG_SOME_SETTINGS_RESET " (%d)"), RtcReboot.fast_reboot_count);
+#ifdef ESP32
+#ifndef FIRMWARE_MINIMAL
+      if (RtcReboot.fast_reboot_count > Settings->param[P_BOOT_LOOP_OFFSET] +8) {  // Restarted 10 times
+        if (EspPrepSwitchPartition(0)) {             // Switch to safeboot
+          RtcReboot.fast_reboot_count = 0;           // Reset for next user restart
+          RtcRebootSave();
+          EspRestart();                              // Restart in safeboot mode
+        }
+      }
+#endif  // FIRMWARE_MINIMAL
+#endif  // ESP32
     }
   }
 
