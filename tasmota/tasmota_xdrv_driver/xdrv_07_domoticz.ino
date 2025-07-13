@@ -401,7 +401,7 @@ void DomoticzSendSwitch(uint32_t type, uint32_t index, uint32_t state) {
   MqttPublish(domoticz_in_topic);
 }
 
-bool DomoticzSendKey(uint8_t key, uint8_t device, uint8_t state, uint8_t svalflg) {
+bool DomoticzSendKey(uint32_t key, uint32_t device, uint32_t state, uint32_t svalflg) {
   bool result = false;
 
   if (device <= MAX_DOMOTICZ_IDX) {
