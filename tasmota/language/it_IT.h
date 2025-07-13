@@ -453,6 +453,8 @@
 #define D_DOMOTICZ_IDX              "Idx"
 #define D_DOMOTICZ_KEY_IDX          "Idx - chiave"
 #define D_DOMOTICZ_SWITCH_IDX       "Idx - switch"
+#define D_DOMOTICZ_KEY              "Chiave"
+#define D_DOMOTICZ_SWITCH           "Switch"
 #define D_DOMOTICZ_SENSOR_IDX       "Idx - sensore"
 #define D_DOMOTICZ_TEMP             "Temp"
 #define D_DOMOTICZ_TEMP_HUM         "Temp,Umd"

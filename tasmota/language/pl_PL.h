@@ -453,6 +453,8 @@
 #define D_DOMOTICZ_IDX "Idx"
 #define D_DOMOTICZ_KEY_IDX "Klucz Idx"
 #define D_DOMOTICZ_SWITCH_IDX "Przełącznik Idx"
+#define D_DOMOTICZ_KEY "Klucz"
+#define D_DOMOTICZ_SWITCH "Przełącznik"
 #define D_DOMOTICZ_SENSOR_IDX "Sensor Idx"
   #define D_DOMOTICZ_TEMP "Temperatura"
   #define D_DOMOTICZ_TEMP_HUM "Temperatura, Wilgotność"
