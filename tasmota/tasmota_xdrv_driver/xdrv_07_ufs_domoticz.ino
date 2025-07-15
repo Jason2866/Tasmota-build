@@ -1,5 +1,5 @@
 /*
-  xdrv_07_esp32_domoticz.ino - domoticz support for Tasmota
+  xdrv_07_ufs_domoticz.ino - domoticz support for Tasmota
 
   Copyright (C) 2025  Theo Arends
 
@@ -17,8 +17,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef ESP32
 #ifdef USE_DOMOTICZ
+#ifdef USE_UFILESYS
 /*********************************************************************************************\
  * Domoticz support with all relays/buttons/switches using more RAM and Settings from filesystem
  *
@@ -40,7 +40,18 @@
 
 #define XDRV_07             7
 
-//#define USE_DOMOTICZ_DEBUG    // Enable additional debug logging
+//#define DOMOTICZ_IDX_MAX           // Support for highest Domoticz Idx number over 65535 (uses uint32_t which uses more RAM)
+
+//#define USE_DOMOTICZ_DEBUG         // Enable additional debug logging
+
+#ifdef ESP32
+#define DOMOTICZ_IDX_MAX           // Support for highest Domoticz Idx number (uses uint32_t)
+#endif
+#ifdef DOMOTICZ_IDX_MAX
+typedef uint32_t uintdz_t;         // Max Domoticz Idx = 0xFFFFFFFF = 4294967295
+#else
+typedef uint16_t uintdz_t;         // Max Domoticz Idx = 0xFFFF = 65535
+#endif
 
 #define D_PRFX_DOMOTICZ "Dz"
 #define D_CMND_IDX "Idx"
@@ -67,16 +78,19 @@ const char kDomoticzCommand[] PROGMEM = "switchlight|switchscene";
 char domoticz_in_topic[] = DOMOTICZ_IN_TOPIC;
 
 typedef struct DzSettings_t {
-  uint32_t crc32;                       // To detect file changes
-  uint32_t update_timer;
-  uint32_t* relay_idx;
-  uint32_t* key_idx;
-  uint32_t* switch_idx;
-  uint32_t sensor_idx[DZ_MAX_SENSORS];
+  uint32_t crc32;                    // To detect file changes
+  uintdz_t* relay_idx;
+  uintdz_t* key_idx;
+  uintdz_t* switch_idx;
+  uintdz_t sensor_idx[DZ_MAX_SENSORS];
+  uintdz_t update_timer;
 } DzSettings_t;
 
 typedef struct Domoticz_t {
-  DzSettings_t Settings;                // Persistent settings
+  DzSettings_t Settings;             // Persistent settings
+#ifdef USE_SONOFF_IFAN
+  uint32_t fan_debounce;             // iFan02 state debounce timer
+#endif  // USE_SONOFF_IFAN
   int update_timer;
   uint8_t keys;
   uint8_t switches;
@@ -92,7 +106,6 @@ Domoticz_t* Domoticz;
  * Driver Settings load and save
 \*********************************************************************************************/
 
-#ifdef USE_UFILESYS
 #define XDRV_07_KEY           "drvset03"
 
 bool DomoticzLoadData(void) {
@@ -175,7 +188,6 @@ void DomoticzDeleteData(void) {
   char key[] = XDRV_07_KEY;
   UfsJsonSettingsDelete(key);  // Use defaults
 }
-#endif  // USE_UFILESYS
 
 /*********************************************************************************************/
 
@@ -206,9 +218,6 @@ void DomoticzSettingsLoad(bool erase) {
   // *** End Init default values ***
 #endif  // CONFIG_IDF_TARGET_ESP32P4
 
-#ifndef USE_UFILESYS
-  AddLog(LOG_LEVEL_DEBUG, PSTR("CFG: Domoticz use defaults as file system not enabled"));
-#else
   // Try to load key
   if (erase) {
     DomoticzDeleteData();
@@ -220,19 +229,17 @@ void DomoticzSettingsLoad(bool erase) {
     // File system not ready: No flash space reserved for file system
     AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("CFG: Domoticz use defaults as file system not ready or key not found"));
   }
-#endif  // USE_UFILESYS
 }
 
 void DomoticzSettingsSave(void) {
   // Called from FUNC_SAVE_SETTINGS every SaveData second and at restart
-#ifdef USE_UFILESYS
   uint32_t crc32 = GetCfgCrc32((uint8_t*)&Domoticz->Settings +4, sizeof(DzSettings_t) -4);  // Skip crc32
-  crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.relay_idx, TasmotaGlobal.devices_present * sizeof(uint32_t));
+  crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.relay_idx, TasmotaGlobal.devices_present * sizeof(uintdz_t));
   if (Domoticz->keys) {
-    crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.key_idx, Domoticz->keys * sizeof(uint32_t));
+    crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.key_idx, Domoticz->keys * sizeof(uintdz_t));
   }
   if (Domoticz->switches) {
-    crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.switch_idx, Domoticz->switches * sizeof(uint32_t));
+    crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.switch_idx, Domoticz->switches * sizeof(uintdz_t));
   }
   if (crc32 != Domoticz->Settings.crc32) {
     Domoticz->Settings.crc32 = crc32;
@@ -243,7 +250,6 @@ void DomoticzSettingsSave(void) {
       AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("CFG: Domoticz ERROR File system not ready or unable to save file"));
     }
   }
-#endif  // USE_UFILESYS
 }
 
 /*********************************************************************************************/
@@ -286,6 +292,30 @@ void DomoticzSetRelayIdx(uint32_t relay, uint32_t idx) {
   Domoticz->Settings.relay_idx[relay] = idx;
 }
 
+#ifdef USE_SONOFF_IFAN
+void MqttPublishDomoticzFanState(void) {
+  if (Settings->flag.mqtt_enabled && DomoticzRelayIdx(1)) {  // SetOption3 - Enable MQTT
+    char svalue[8];  // Fanspeed value
+
+    int fan_speed = GetFanspeed();
+    snprintf_P(svalue, sizeof(svalue), PSTR("%d"), fan_speed * 10);
+    Response_P(DOMOTICZ_MESSAGE, (int)DomoticzRelayIdx(1), (0 == fan_speed) ? 0 : 2, svalue, DomoticzBatteryQuality(), DomoticzRssiQuality());
+    MqttPublish(domoticz_in_topic);
+
+    Domoticz->fan_debounce = millis() + 1000;  // 1 second
+  }
+}
+
+void DomoticzUpdateFanState(void) {
+  if (Domoticz) {
+    if (Domoticz->update_flag) {
+      MqttPublishDomoticzFanState();
+    }
+    Domoticz->update_flag = true;
+  }
+}
+#endif  // USE_SONOFF_IFAN
+
 /*********************************************************************************************/
 
 void MqttPublishDomoticzPowerState(uint8_t device) {
@@ -298,11 +328,19 @@ void MqttPublishDomoticzPowerState(uint8_t device) {
         // Shutter is updated by sensor update - power state should not be sent
       } else {
 #endif  // USE_SHUTTER
+#ifdef USE_SONOFF_IFAN
+      if (IsModuleIfan() && (device > 1)) {
+        // Fan handled by MqttPublishDomoticzFanState
+      } else {
+#endif  // USE_SONOFF_IFAN
         char svalue[8];  // Dimmer value
 
         snprintf_P(svalue, sizeof(svalue), PSTR("%d"), Settings->light_dimmer);
         Response_P(DOMOTICZ_MESSAGE, (int)DomoticzRelayIdx(device -1), (TasmotaGlobal.power & (1 << (device -1))) ? 1 : 0, (TasmotaGlobal.light_type) ? svalue : "", DomoticzBatteryQuality(), DomoticzRssiQuality());
         MqttPublish(domoticz_in_topic);
+#ifdef USE_SONOFF_IFAN
+      }
+#endif // USE_SONOFF_IFAN
 #ifdef USE_SHUTTER
       }
 #endif //USE_SHUTTER
@@ -333,7 +371,16 @@ void DomoticzMqttUpdate(void) {
           break;
         }
 #endif // USE_SHUTTER
-        MqttPublishDomoticzPowerState(i);
+#ifdef USE_SONOFF_IFAN
+        if (IsModuleIfan() && (i > 1)) {
+          MqttPublishDomoticzFanState();
+          break;
+        } else {
+#endif  // USE_SONOFF_IFAN
+          MqttPublishDomoticzPowerState(i);
+#ifdef USE_SONOFF_IFAN
+        }
+#endif  // USE_SONOFF_IFAN
       }
     }
   }
@@ -430,6 +477,24 @@ bool DomoticzMqttData(void) {
   bool iscolordimmer = (strcmp_P(domoticz.getStr(PSTR("dtype")), PSTR("Color Switch")) == 0);
   bool isShutter = (strcmp_P(domoticz.getStr(PSTR("dtype")), PSTR("Light/Switch")) == 0) && (strncmp_P(domoticz.getStr(PSTR("switchType")),PSTR("Blinds"), 6) == 0);
 
+#ifdef USE_SONOFF_IFAN
+  if (IsModuleIfan() && (1 == relay_index)) {  // Idx 2 is fanspeed
+    JsonParserToken svalue_tok = domoticz[PSTR("svalue1")];
+    if (!svalue_tok) {
+      return true;
+    }
+    uint32_t svalue = svalue_tok.getUInt();
+    svalue = (2 == nvalue) ? svalue / 10 : 0;
+    if (GetFanspeed() == svalue) {
+      return true;  // Stop as already set
+    }
+    if (!TimeReached(Domoticz->fan_debounce)) {
+      return true;  // Stop if device in limbo
+    }
+    snprintf_P(XdrvMailbox.topic, XdrvMailbox.index, PSTR("/" D_CMND_FANSPEED));
+    snprintf_P(XdrvMailbox.data, XdrvMailbox.data_len, PSTR("%d"), svalue);
+  } else
+#endif  // USE_SONOFF_IFAN
 #ifdef USE_SHUTTER
   if (isShutter) {
     uint32_t position = domoticz.getUInt(PSTR("svalue1"), 0);
@@ -641,17 +706,17 @@ void DomoticzInit(void) {
     Domoticz = (Domoticz_t*)calloc(1, sizeof(Domoticz_t));  // Need calloc to reset registers to 0/false
     if (nullptr == Domoticz) { return; }
 
-    Domoticz->Settings.relay_idx = (uint32_t*)calloc(TasmotaGlobal.devices_present, sizeof(uint32_t));  // Need calloc to reset registers to 0/false
+    Domoticz->Settings.relay_idx = (uintdz_t*)calloc(TasmotaGlobal.devices_present, sizeof(uintdz_t));  // Need calloc to reset registers to 0/false
     for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
       if (ButtonUsed(i)) { Domoticz->keys++; }
       if (SwitchUsed(i)) { Domoticz->switches++; }
     }
     if (Domoticz->keys) {
-      Domoticz->Settings.key_idx = (uint32_t*)calloc(Domoticz->keys, sizeof(uint32_t));  // Need calloc to reset registers to 0/false
+      Domoticz->Settings.key_idx = (uintdz_t*)calloc(Domoticz->keys, sizeof(uintdz_t));  // Need calloc to reset registers to 0/false
       if (nullptr == Domoticz->Settings.key_idx) { return; }
     }
     if (Domoticz->switches) {
-      Domoticz->Settings.switch_idx = (uint32_t*)calloc(Domoticz->switches, sizeof(uint32_t));  // Need calloc to reset registers to 0/false
+      Domoticz->Settings.switch_idx = (uintdz_t*)calloc(Domoticz->switches, sizeof(uintdz_t));  // Need calloc to reset registers to 0/false
       if (nullptr == Domoticz->Settings.switch_idx) { return; }
     }
 
@@ -806,6 +871,11 @@ void HandleDomoticzConfiguration(void) {
     WSContentSend_P(PSTR("</td><td>"));
     WSContentSend_P(HTTP_FORM_DOMOTICZ_INPUT, 'r', i, Domoticz->Settings.relay_idx[i]);
     WSContentSend_P(PSTR("</td></tr>"));
+
+#ifdef USE_SONOFF_IFAN
+    if (IsModuleIfan() && (1 == i)) { break; }
+#endif  // USE_SONOFF_IFAN
+
   }
   for (uint32_t i = 0; i < DZ_MAX_SENSORS; i++) {
     WSContentSend_P(HTTP_FORM_DOMOTICZ_SENSOR, i +1, GetTextIndexed(stemp, sizeof(stemp), i, kDomoticzSensors));
@@ -913,5 +983,5 @@ bool Xdrv07(uint32_t function) {
   return result;
 }
 
+#endif  // USE_UFILESYS
 #endif  // USE_DOMOTICZ
-#endif  // ESP32
