@@ -27,7 +27,6 @@ Import("env")
 platform = env.PioPlatform()
 board = env.BoardConfig()
 mcu = board.get("build.mcu", "esp32")
-esptoolpy = os.path.join(ProjectConfig.get_instance().get("platformio", "packages_dir"),("tool-esptoolpy") or "", "esptool.py")
 IS_WINDOWS = sys.platform.startswith("win")
 
 class FSType(Enum):
@@ -175,7 +174,7 @@ def get_partition_table():
         if not os.path.exists(build_dir):
             os.makedirs(build_dir)
     fs_file = join(env.subst("$BUILD_DIR"), "partition_table_from_flash.bin")
-    esptoolpy_flags = [
+    esptool_flags = [
             "--chip", mcu,
             "--port", upload_port,
             "--baud",  download_speed,
@@ -186,9 +185,9 @@ def get_partition_table():
             "0x1000",
             fs_file
     ]
-    esptoolpy_cmd = [env["PYTHONEXE"], esptoolpy] + esptoolpy_flags
+    esptool_cmd = [env["PYTHONEXE"], env.subst("$OBJCOPY")] + esptool_flags
     try:
-        returncode = subprocess.call(esptoolpy_cmd, shell=False)
+        returncode = subprocess.call(esptool_cmd, shell=False)
     except subprocess.CalledProcessError as exc:
         print("Downloading failed with " + str(exc))
     with open(fs_file, mode="rb") as file:
@@ -228,7 +227,7 @@ def download_fs(fs_info: FSInfo):
         env.AutodetectUploadPort()
         upload_port = join(env.get("UPLOAD_PORT", "none"))
     fs_file = join(env.subst("$BUILD_DIR"), f"downloaded_fs_{hex(fs_info.start)}_{hex(fs_info.length)}.bin")
-    esptoolpy_flags = [
+    esptool_flags = [
             "--chip", mcu,
             "--port", upload_port,
             "--baud",  download_speed,
@@ -239,10 +238,10 @@ def download_fs(fs_info: FSInfo):
             hex(fs_info.length),
             fs_file
     ]
-    esptoolpy_cmd = [env["PYTHONEXE"], esptoolpy] + esptoolpy_flags
+    esptool_cmd = [env["PYTHONEXE"], env.subst("$OBJCOPY")] + esptool_flags
     print("Download filesystem image")
     try:
-        returncode = subprocess.call(esptoolpy_cmd, shell=False)
+        returncode = subprocess.call(esptool_cmd, shell=False)
         return (True, fs_file)
     except subprocess.CalledProcessError as exc:
         print("Downloading failed with " + str(exc))
@@ -296,7 +295,7 @@ def upload_factory(*args, **kwargs):
         env.AutodetectUploadPort()
         upload_port = join(env.get("UPLOAD_PORT", "none"))
     if "tasmota" in target_firm:
-        esptoolpy_flags = [
+        esptool_flags = [
                 "--chip", mcu,
                 "--port", upload_port,
                 "--baud", env.subst("$UPLOAD_SPEED"),
@@ -304,9 +303,9 @@ def upload_factory(*args, **kwargs):
                 "0x0",
                 target_firm
         ]
-        esptoolpy_cmd = [env["PYTHONEXE"], esptoolpy] + esptoolpy_flags
+        esptool_cmd = [env["PYTHONEXE"], env.subst("$OBJCOPY")] + esptool_flags
         print("Flash firmware at address 0x0")
-        subprocess.call(esptoolpy_cmd, shell=False)
+        subprocess.call(esptool_cmd, shell=False)
 
 def esp32_use_external_crashreport(*args, **kwargs):
     try:
@@ -358,15 +357,15 @@ def reset_target(*args, **kwargs):
     if "none" in upload_port:
         env.AutodetectUploadPort()
         upload_port = join(env.get("UPLOAD_PORT", "none"))
-    esptoolpy_flags = [
+    esptool_flags = [
         "--no-stub",
         "--chip", mcu,
         "--port", upload_port,
         "flash-id"
     ]
-    esptoolpy_cmd = [env["PYTHONEXE"], esptoolpy] + esptoolpy_flags
+    esptool_cmd = [env["PYTHONEXE"], env.subst("$OBJCOPY")] + esptool_flags
     print("Try to reset device")
-    subprocess.call(esptoolpy_cmd, shell=False)
+    subprocess.call(esptool_cmd, shell=False)
 
 # Custom Target Definitions
 env.AddCustomTarget(
@@ -376,7 +375,7 @@ env.AddCustomTarget(
         reset_target
     ],
     title="Reset ESP32 target",
-    description="This command resets ESP32x target via esptoolpy",
+    description="This command resets ESP32x target via esptool",
 )
 
 env.AddCustomTarget(
