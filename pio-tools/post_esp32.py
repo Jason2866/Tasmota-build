@@ -20,26 +20,19 @@
 # - 0xe0000 | ~\Tasmota\.pio\build\<env name>/firmware.bin
 # - 0x3b0000| ~\Tasmota\.pio\build\<env name>/littlefs.bin
 
-env = DefaultEnvironment()
-platform = env.PioPlatform()
-
 from genericpath import exists
 import os
-import sys
 from os.path import join, getsize
 import csv
 import requests
 import shutil
 import subprocess
 import codecs
-from colorama import Fore, Back, Style
+from colorama import Fore
 from SCons.Script import COMMAND_LINE_TARGETS
-from platformio.project.config import ProjectConfig
 
-esptoolpy = os.path.join(ProjectConfig.get_instance().get("platformio", "packages_dir"), "tool-esptoolpy")
-sys.path.insert(0, esptoolpy)
-import esptool
-
+env = DefaultEnvironment()
+platform = env.PioPlatform()
 config = env.GetProjectConfig()
 variants_dir = env.BoardConfig().get("build.variants_dir", "")
 variant = env.BoardConfig().get("build.variant", "")
@@ -51,49 +44,30 @@ flag_board_sdkconfig = env.BoardConfig().get("espidf.custom_sdkconfig", "")
 
 # Copy safeboots firmwares in place when running in Github
 github_actions = os.getenv('GITHUB_ACTIONS')
-extra_flags = ''.join([element.replace("-D", " ") for element in env.BoardConfig().get("build.extra_flags", "")])
-build_flags = ''.join([element.replace("-D", " ") for element in env.GetProjectOption("build_flags")])
 
-if ("CORE32SOLO1" in extra_flags or "FRAMEWORK_ARDUINO_SOLO1" in build_flags) and flag_custom_sdkconfig == False and flag_board_sdkconfig == "":
-    FRAMEWORK_DIR = platform.get_package_dir("framework-arduino-solo1")
-    if github_actions and os.path.exists("./firmware/firmware"):
-        shutil.copytree("./firmware/firmware", "/home/runner/.platformio/packages/framework-arduino-solo1/variants/tasmota", dirs_exist_ok=True)
-        if variants_dir:
-            shutil.copytree("./firmware/firmware", variants_dir, dirs_exist_ok=True)
-elif ("CORE32ITEAD" in extra_flags or "FRAMEWORK_ARDUINO_ITEAD" in build_flags) and flag_custom_sdkconfig == False and flag_board_sdkconfig == "":
-    FRAMEWORK_DIR = platform.get_package_dir("framework-arduino-ITEAD")
-    if github_actions and os.path.exists("./firmware/firmware"):
-        shutil.copytree("./firmware/firmware", "/home/runner/.platformio/packages/framework-arduino-ITEAD/variants/tasmota", dirs_exist_ok=True)
-        if variants_dir:
-            shutil.copytree("./firmware/firmware", variants_dir, dirs_exist_ok=True)
-else:
-    FRAMEWORK_DIR = platform.get_package_dir("framework-arduinoespressif32")
-    if github_actions and os.path.exists("./firmware/firmware"):
-        shutil.copytree("./firmware/firmware", "/home/runner/.platformio/packages/framework-arduinoespressif32/variants/tasmota", dirs_exist_ok=True)
-        if variants_dir:
-            shutil.copytree("./firmware/firmware", variants_dir, dirs_exist_ok=True)
+FRAMEWORK_DIR = platform.get_package_dir("framework-arduinoespressif32")
+if github_actions and os.path.exists(os.path.normpath(os.path.join(".", "firmware", "firmware"))):
+    dest_dir = os.path.normpath(os.path.join(os.sep, "home", "runner", ".platformio", "packages", "framework-arduinoespressif32", "variants", "tasmota"))
+    shutil.copytree(os.path.normpath(os.path.join(".", "firmware", "firmware")), dest_dir, dirs_exist_ok=True)
+    if variants_dir:
+        shutil.copytree(os.path.normpath(os.path.join(".", "firmware", "firmware")), os.path.normpath(variants_dir), dirs_exist_ok=True)
 
 # Copy pins_arduino.h to variants folder
 if variants_dir:
-    mcu_build_variant_path = join(FRAMEWORK_DIR, "variants", mcu_build_variant, "pins_arduino.h")
-    custom_variant_build = join(env.subst("$PROJECT_DIR"), variants_dir , mcu_build_variant, "pins_arduino.h")
-    os.makedirs(join(env.subst("$PROJECT_DIR"), variants_dir , mcu_build_variant), exist_ok=True)
+    mcu_build_variant_path = os.path.normpath(join(FRAMEWORK_DIR, "variants", mcu_build_variant, "pins_arduino.h"))
+    custom_variant_build = os.path.normpath(join(env.subst("$PROJECT_DIR"), variants_dir , mcu_build_variant, "pins_arduino.h"))
+    os.makedirs(os.path.normpath(join(env.subst("$PROJECT_DIR"), variants_dir , mcu_build_variant)), exist_ok=True)
     shutil.copy(mcu_build_variant_path, custom_variant_build)
 
 if not variants_dir:
-    variants_dir = join(FRAMEWORK_DIR, "variants", "tasmota")
+    variants_dir = os.path.normpath(join(FRAMEWORK_DIR, "variants", "tasmota"))
     env.BoardConfig().update("build.variants_dir", variants_dir)
 
-def esptool_call(cmd):
-    try:
-        esptool.main(cmd)
-    except SystemExit as e:
-        # Fetch sys.exit() without leaving the script
-        if e.code == 0:
-            return True
-        else:
-            print(f"❌ esptool failed with exit code: {e.code}")
-            return False
+def normalize_paths(cmd):
+    for i, arg in enumerate(cmd):
+        if isinstance(arg, str) and '/' in arg:
+            cmd[i] = os.path.normpath(arg)
+    return cmd
 
 def esp32_detect_flashsize():
     uploader = env.subst("$UPLOADER")
@@ -103,7 +77,7 @@ def esp32_detect_flashsize():
         return "4MB",False
     else:
         esptool_flags = ["flash-id"]
-        esptool_cmd = [env["PYTHONEXE"], env.subst("$OBJCOPY")] + esptool_flags
+        esptool_cmd = [env.subst("$OBJCOPY")] + esptool_flags
         try:
             output = subprocess.run(esptool_cmd, capture_output=True).stdout.splitlines()
             for l in output:
@@ -124,7 +98,7 @@ def esp32_detect_flashsize():
 flash_size_from_esp, flash_size_was_overridden = esp32_detect_flashsize()
 
 def patch_partitions_bin(size_string):
-    partition_bin_path = join(env.subst("$BUILD_DIR"),"partitions.bin")
+    partition_bin_path = os.path.normpath(join(env.subst("$BUILD_DIR"), "partitions.bin"))
     with open(partition_bin_path, 'r+b') as file:
         binary_data = file.read(0xb0)
         import hashlib
@@ -144,12 +118,6 @@ def patch_partitions_bin(size_string):
 def esp32_create_chip_string(chip):
     tasmota_platform_org = env.subst("$BUILD_DIR").split(os.path.sep)[-1]
     tasmota_platform = tasmota_platform_org.split('-')[0]
-    if ("CORE32SOLO1" in extra_flags or "FRAMEWORK_ARDUINO_SOLO1" in build_flags) and "tasmota32-safeboot" not in tasmota_platform_org and "tasmota32solo1" not in tasmota_platform_org and flag_custom_sdkconfig == False:
-        print(Fore.YELLOW + "Unexpected naming convention in this build environment:" + Fore.RED, tasmota_platform_org)
-        print(Fore.YELLOW + "Expected build environment name like " + Fore.GREEN + "'tasmota32solo1-whatever-you-want'")
-        print(Fore.YELLOW + "Please correct your actual build environment, to avoid undefined behavior in build process!!")
-        tasmota_platform = "tasmota32solo1"
-        return tasmota_platform
     if "tasmota" + chip[3:] not in tasmota_platform: # check + fix for a valid name like 'tasmota' + '32c3'
         tasmota_platform = "tasmota" + chip[3:]
         if "-DUSE_USB_CDC_CONSOLE" not in env.BoardConfig().get("build.extra_flags"):
@@ -161,7 +129,7 @@ def esp32_create_chip_string(chip):
 def esp32_build_filesystem(fs_size):
     files = env.GetProjectOption("custom_files_upload").splitlines()
     num_entries = len([f for f in files if f.strip()])
-    filesystem_dir = join(env.subst("$BUILD_DIR"),"littlefs_data")
+    filesystem_dir = os.path.normpath(join(env.subst("$BUILD_DIR"), "littlefs_data"))
     if not os.path.exists(filesystem_dir):
         os.makedirs(filesystem_dir)
     if num_entries > 1:
@@ -174,9 +142,9 @@ def esp32_build_filesystem(fs_size):
         if "http" and "://" in file:
             response = requests.get(file.split(" ")[0])
             if response.ok:
-                target = join(filesystem_dir,file.split(os.path.sep)[-1])
+                target = os.path.normpath(join(filesystem_dir, file.split(os.path.sep)[-1]))
                 if len(file.split(" ")) > 1:
-                    target = join(filesystem_dir,file.split(" ")[1])
+                    target = os.path.normpath(join(filesystem_dir, file.split(" ")[1]))
                     print("Renaming",(file.split(os.path.sep)[-1]).split(" ")[0],"to",file.split(" ")[1])
                 open(target, "wb").write(response.content)
             else:
@@ -197,7 +165,7 @@ def esp32_build_filesystem(fs_size):
 
 def esp32_fetch_safeboot_bin(tasmota_platform):
     safeboot_fw_url = "http://ota.tasmota.com/tasmota32/release/" + tasmota_platform + "-safeboot.bin"
-    safeboot_fw_name = join(variants_dir, tasmota_platform + "-safeboot.bin")
+    safeboot_fw_name = os.path.normpath(join(variants_dir, tasmota_platform + "-safeboot.bin"))
     if(exists(safeboot_fw_name)):
         print(Fore.GREEN + "Safeboot binary already in place")
         return True
@@ -207,7 +175,8 @@ def esp32_fetch_safeboot_bin(tasmota_platform):
     try:
         response = requests.get(safeboot_fw_url)
         open(safeboot_fw_name, "wb").write(response.content)
-        print(Fore.GREEN + "safeboot binary written to variants dir")
+        print(Fore.GREEN + "Safeboot binary written to variants path:")
+        print(Fore.BLUE + safeboot_fw_name)
         return True
     except:
         print(Fore.RED + "Download of safeboot binary failed. Please check your Internet connection.")
@@ -217,7 +186,7 @@ def esp32_fetch_safeboot_bin(tasmota_platform):
 
 def esp32_copy_new_safeboot_bin(tasmota_platform,new_local_safeboot_fw):
     print("Copy new local safeboot firmware to variants dir -> using it for further flashing operations")
-    safeboot_fw_name = join(variants_dir, tasmota_platform + "-safeboot.bin")
+    safeboot_fw_name = os.path.normpath(join(variants_dir, tasmota_platform + "-safeboot.bin"))
     if os.path.exists(variants_dir):
         try:
             shutil.copy(new_local_safeboot_fw, safeboot_fw_name)
@@ -262,8 +231,8 @@ def esp32_create_combined_bin(source, target, env):
                         fs_offset = int(row[3],base=16)
 
     print()
-    new_file_name = env.subst("$BUILD_DIR/${PROGNAME}.factory.bin")
-    firmware_name = env.subst("$BUILD_DIR/${PROGNAME}.bin")
+    new_file_name = os.path.normpath(env.subst("$BUILD_DIR/${PROGNAME}.factory.bin"))
+    firmware_name = os.path.normpath(env.subst("$BUILD_DIR/${PROGNAME}.bin"))
     tasmota_platform = esp32_create_chip_string(chip)
 
     if not os.path.exists(variants_dir):
@@ -317,7 +286,7 @@ def esp32_create_combined_bin(source, target, env):
 
         upload_protocol = env.subst("$UPLOAD_PROTOCOL")
         if(upload_protocol == "esptool") and (fs_offset != -1):
-            fs_bin = join(env.subst("$BUILD_DIR"),"littlefs.bin")
+            fs_bin = os.path.normpath(join(env.subst("$BUILD_DIR"), "littlefs.bin"))
             if exists(fs_bin):
                 before_reset = env.BoardConfig().get("upload.before_reset", "default-reset")
                 after_reset = env.BoardConfig().get("upload.after_reset", "hard-reset")
@@ -336,23 +305,17 @@ def esp32_create_combined_bin(source, target, env):
                 "--flash-freq", "${__get_board_f_flash(__env__)}",
                 "--flash-size", flash_size
                 ],
-                UPLOADCMD='"$UPLOADER" $UPLOADERFLAGS ' + " ".join(cmd[7:])
+                UPLOADCMD='"$OBJCOPY" $UPLOADERFLAGS ' + " ".join(normalize_paths(cmd[7:]))
                 )
                 print(Fore.GREEN + "Will use custom upload command for flashing operation to add file system defined for this build target.")
                 print()
 
         if("safeboot" not in firmware_name):
-            #print('Using esptool.py arguments: %s' % ' '.join(cmd))
-            with open(os.devnull, 'w') as devnull:
-                old_stdout = sys.stdout
-                old_stderr = sys.stderr
-                sys.stdout = devnull
-                sys.stderr = devnull
-                try:
-                    esptool_call(cmd)
-                finally:
-                    sys.stdout = old_stdout
-                    sys.stderr = old_stderr
+            cmdline = [env.subst("$OBJCOPY")] + normalize_paths(cmd)
+            # print('Command Line: %s' % cmdline)
+            result = subprocess.run(cmdline, text=True, check=False, stdout=subprocess.DEVNULL)
+            if result.returncode != 0:
+                print(Fore.RED + f"esptool create firmware failed with exit code: {result.returncode}")
 
 silent_action = env.Action(esp32_create_combined_bin)
 silent_action.strfunction = lambda target, source, env: '' # hack to silence scons command output
