@@ -25,21 +25,32 @@
 #include "esp_hosted_api_types.h"
 #include "esp_hosted_ota.h"
 
-String GetHostedMCUFwVersion()
-{
-  if(!esp_hosted_is_config_valid()) {
+String GetHostedMCUFwVersion(void) {
+  static int major1 = -1;
+  static int minor1;
+  static int patch1;
+
+  if (!esp_hosted_is_config_valid()) {
     return String("");
   }
-  esp_hosted_coprocessor_fwver_t ver_info;
-  esp_err_t err = esp_hosted_get_coprocessor_fwversion(&ver_info);
-  if (err == ESP_OK) {
-    char data[40];
-    snprintf_P(data, sizeof(data), PSTR("%d.%d.%d"), ver_info.major1,ver_info.minor1,ver_info.patch1);
-    // AddLog(LOG_LEVEL_DEBUG, PSTR("Fw: %d.%d.%d"), ver_info.major1, ver_info.minor1, ver_info.patch1);
-    return String(data);
+  if (-1 == major1) {
+    major1 = 0;
+    minor1 = 0;
+    patch1 = 6;
+    esp_hosted_coprocessor_fwver_t ver_info;
+    esp_err_t err = esp_hosted_get_coprocessor_fwversion(&ver_info);  // This takes almost 4 seconds
+    if (err == ESP_OK) {
+      major1 = ver_info.major1;
+      minor1 = ver_info.minor1;
+      patch1 = ver_info.patch1;
+    } else {
+      // We can not know exactly, as API was added after 0.0.6
+      AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: Error %d, hosted version 0.0.6 or older"), err);
+    }  
   }
-  AddLog(LOG_LEVEL_DEBUG, PSTR("Err: %d, version 0.0..6 or older"), err);
-  return String(PSTR("0.0.6")); // we can not know exactly, but API was added after 0.0.6
+  char data[40];
+  snprintf_P(data, sizeof(data), PSTR("%d.%d.%d"), major1, minor1, patch1);
+  return String(data);
 }
 
 void OTAHostedMCU(const char* image_url) {
