@@ -497,19 +497,6 @@ end
 5. **Performance**: Use fast_loop sparingly, prefer regular driver events
 6. **Debugging**: Enable `#define USE_BERRY_DEBUG` for development
 
-### Tasmota Extensions to Standard Modules
-
-#### `bytes` class extensions
-```berry
-b = bytes("1122AA")               # From hex string
-b = bytes(-8)                     # Fixed size buffer
-b.tohex()                         # To hex string  
-b.tob64()                         # To base64
-b.fromhex("AABBCC")              # Load from hex
-b.fromb64("SGVsbG8=")            # Load from base64
-b.asstring()                      # To raw string
-```
-
 ## Common Tasmota Berry Patterns
 
 ### Simple Sensor Driver
