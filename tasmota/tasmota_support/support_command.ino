@@ -22,6 +22,9 @@ const char kTasmotaCommands[] PROGMEM = "|"  // No prefix
   D_SO_WIFINOSLEEP "|"
   // Other commands
   D_CMND_UPGRADE "|" D_CMND_UPLOAD "|" D_CMND_OTAURL "|" D_CMND_SERIALLOG "|" D_CMND_RESTART "|"
+#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
+  D_CMND_HOSTEDOTA "|"
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 #ifndef FIRMWARE_MINIMAL
   D_CMND_BACKLOG "|" D_CMND_DELAY "|" D_CMND_POWER "|" D_CMND_POWERLOCK "|" D_CMND_TIMEDPOWER "|" D_CMND_STATUS "|" D_CMND_STATE "|" D_CMND_SLEEP "|"
   D_CMND_POWERONSTATE "|" D_CMND_PULSETIME "|" D_CMND_BLINKTIME "|" D_CMND_BLINKCOUNT "|" D_CMND_STATETEXT "|" D_CMND_SAVEDATA "|"
@@ -62,9 +65,6 @@ const char kTasmotaCommands[] PROGMEM = "|"  // No prefix
 #endif  // ESP32
 
   D_CMND_SETSENSOR "|" D_CMND_SENSOR "|" D_CMND_DRIVER "|" D_CMND_JSON "|" D_CMND_JSON_PP
-#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-"|" D_CMND_HOSTEDOTA
-#endif //CONFIG_ESP_WIFI_REMOTE_ENABLED
 #endif  //FIRMWARE_MINIMAL
   ;
 
@@ -74,6 +74,9 @@ SO_SYNONYMS(kTasmotaSynonyms,
 
 void (* const TasmotaCommand[])(void) PROGMEM = {
   &CmndUpgrade, &CmndUpgrade, &CmndOtaUrl, &CmndSeriallog, &CmndRestart,
+#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
+  &CmdHostedOta,
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 #ifndef FIRMWARE_MINIMAL
   &CmndBacklog, &CmndDelay, &CmndPower, &CmndPowerLock, &CmndTimedPower, &CmndStatus, &CmndState, &CmndSleep,
   &CmndPowerOnState, &CmndPulsetime, &CmndBlinktime, &CmndBlinkcount, &CmndStateText, &CmndSavedata,
@@ -114,9 +117,6 @@ void (* const TasmotaCommand[])(void) PROGMEM = {
 #endif  // ESP32
 
   &CmndSetSensor, &CmndSensor, &CmndDriver, &CmndJson, &CmndJsonPP
-#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-  , &CmdHostedOta
-#endif //CONFIG_ESP_WIFI_REMOTE_ENABLED
 #endif   //FIRMWARE_MINIMAL
   };
 
@@ -988,7 +988,7 @@ void CmndStatus(void)
                           "\"CpuFrequency\":%d,\"Hardware\":\"%s\""
 #ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
                           ",\"HostedMCU\":{\"Hardware\":\"" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET"\",\"Version\":\"%s\"}"
-#endif
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
                           "%s}}"),
                           TasmotaGlobal.version, TasmotaGlobal.image_name, GetCodeCores().c_str(), GetBuildDateAndTime().c_str()
 #ifdef ESP8266
@@ -998,7 +998,7 @@ void CmndStatus(void)
                           ESP.getCpuFreqMHz(), GetDeviceHardwareRevision().c_str(),
 #ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
                           GetHostedMCUFwVersion().c_str(),
-#endif
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
                           GetStatistics().c_str());
     CmndStatusResponse(2);
   }
@@ -1340,6 +1340,36 @@ void CmndOtaUrl(void)
   }
   ResponseCmndChar(SettingsText(SET_OTAURL));
 }
+
+#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
+void CmdHostedOta() {
+  // If OtaUrl = "https://ota.tasmota.com/tasmota32/tasmota32p4.bin"
+  // Then use "https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ".bin"
+  // As an option allow user to enter URL like:
+  // HostedOta https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_esp32c6.bin
+  // HostedOta https://ota.tasmota.com/tasmota32/coprocessor/v2.0.14/network_adapter_esp32c6.bin
+  char full_ota_url[200];
+  char *hosted_ota = XdrvMailbox.data;
+  if (!XdrvMailbox.data_len) {
+    // Replace https://ota.tasmota.com/tasmota32/tasmota32p4.bin  with https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_esp32c6.bin
+    char ota_url[TOPSZ];
+    strlcpy(full_ota_url, GetOtaUrl(ota_url, sizeof(ota_url)), sizeof(full_ota_url));
+    char *bch = strrchr(full_ota_url, '/');         // Only consider filename after last backslash
+    if (bch == nullptr) { bch = full_ota_url; }     // No path found so use filename only
+    *bch = '\0';                                    // full_ota_url = https://ota.tasmota.com/tasmota32
+    snprintf_P(full_ota_url, sizeof(full_ota_url), PSTR("%s/coprocessor/network_adapter_" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ".bin"), full_ota_url);
+    hosted_ota = full_ota_url;
+  }
+  int ret = OTAHostedMCU(hosted_ota);
+  if (ret == ESP_OK) {
+    // next lines are questionable, because currently the system will reboot immediately on succesful upgrade
+    ResponseCmndDone();
+  } else {
+    snprintf_P(full_ota_url, sizeof(full_ota_url), PSTR("Upgrade failed with error %d"), ret);
+    ResponseCmndChar(full_ota_url);
+  }
+}
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 
 void CmndSeriallog(void)
 {
@@ -3108,12 +3138,4 @@ void CmndTouchThres(void) {
   ResponseCmndNumber(Settings->touch_threshold);
 }
 #endif  // ESP32 SOC_TOUCH_VERSION_1 or SOC_TOUCH_VERSION_2
-
-void CmdHostedOta() {
-  if (XdrvMailbox.data_len > 0) {
-    OTAHostedMCU(XdrvMailbox.data);
-  }
-  ResponseCmndDone();
-}
-
 #endif  // ESP32

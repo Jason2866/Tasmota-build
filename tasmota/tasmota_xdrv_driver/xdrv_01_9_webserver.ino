@@ -2985,7 +2985,7 @@ void HandleInformation(void) {
   WSContentSend_P(PSTR("}1 Hosted MCU }2 " CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ""));
   WSContentSend_P(PSTR("}1 Hosted Remote Fw }2%s"), GetHostedMCUFwVersion().c_str());
   WSContentSeparatorIFat();
-#endif //CONFIG_ESP_WIFI_REMOTE_ENABLED
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
   bool show_hr = false;
   if ((WiFi.getMode() >= WIFI_AP) && (static_cast<uint32_t>(WiFi.softAPIP()) != 0)) {
     WSContentSend_P(PSTR("}1" D_MAC_ADDRESS "}2%s"), WiFi.softAPmacAddress().c_str());
