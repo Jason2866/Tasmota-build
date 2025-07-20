@@ -1348,26 +1348,22 @@ void CmdHostedOta() {
   // As an option allow user to enter URL like:
   // HostedOta https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_esp32c6.bin
   // HostedOta https://ota.tasmota.com/tasmota32/coprocessor/v2.0.14/network_adapter_esp32c6.bin
-  char full_ota_url[200];
-  char *hosted_ota = XdrvMailbox.data;
-  if (!XdrvMailbox.data_len) {
+  TasmotaGlobal.hosted_ota_url = (char*)calloc(200, sizeof(char));
+  if (!TasmotaGlobal.hosted_ota_url) { return; }                 // Unable to allocate memory
+  if (XdrvMailbox.data_len) {
+    strlcpy(TasmotaGlobal.hosted_ota_url, XdrvMailbox.data, 200);
+  } else {
     // Replace https://ota.tasmota.com/tasmota32/tasmota32p4.bin  with https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_esp32c6.bin
     char ota_url[TOPSZ];
-    strlcpy(full_ota_url, GetOtaUrl(ota_url, sizeof(ota_url)), sizeof(full_ota_url));
-    char *bch = strrchr(full_ota_url, '/');         // Only consider filename after last backslash
-    if (bch == nullptr) { bch = full_ota_url; }     // No path found so use filename only
-    *bch = '\0';                                    // full_ota_url = https://ota.tasmota.com/tasmota32
-    snprintf_P(full_ota_url, sizeof(full_ota_url), PSTR("%s/coprocessor/network_adapter_" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ".bin"), full_ota_url);
-    hosted_ota = full_ota_url;
+    strlcpy(TasmotaGlobal.hosted_ota_url, GetOtaUrl(ota_url, sizeof(ota_url)), 200);
+    char *bch = strrchr(TasmotaGlobal.hosted_ota_url, '/');      // Only consider filename after last backslash
+    if (bch == nullptr) { bch = TasmotaGlobal.hosted_ota_url; }  // No path found so use filename only
+    *bch = '\0';                                                 // full_ota_url = https://ota.tasmota.com/tasmota32
+    snprintf_P(TasmotaGlobal.hosted_ota_url, 200, PSTR("%s/coprocessor/network_adapter_" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ".bin"), TasmotaGlobal.hosted_ota_url);
   }
-  int ret = OTAHostedMCU(hosted_ota);
-  if (ret == ESP_OK) {
-    // next lines are questionable, because currently the system will reboot immediately on succesful upgrade
-    ResponseCmndDone();
-  } else {
-    snprintf_P(full_ota_url, sizeof(full_ota_url), PSTR("Upgrade failed with error %d"), ret);
-    ResponseCmndChar(full_ota_url);
-  }
+  TasmotaGlobal.hosted_ota_state_flag = 1;
+  Response_P(PSTR("{\"%s\":\"" D_JSON_VERSION " %s " D_JSON_FROM " %s\"}"), 
+    XdrvMailbox.command, GetHostedMCUFwVersion().c_str(), TasmotaGlobal.hosted_ota_url);
 }
 #endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 
