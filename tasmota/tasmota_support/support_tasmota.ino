@@ -410,9 +410,11 @@ void SetAllPower(uint32_t state, uint32_t source) {
       break;
     }
 #ifdef USE_SONOFF_IFAN
-    // Do not touch Fan relays
-    TasmotaGlobal.power &= 0x0001;
-    TasmotaGlobal.power |= (current_power & 0xFFFE);
+    if (IsModuleIfan()) {
+      // Do not touch Fan relays
+      TasmotaGlobal.power &= 0x0001;
+      TasmotaGlobal.power |= (current_power & 0xFFFE);
+    }
 #endif  // USE_SONOFF_IFAN
     SetDevicePower(TasmotaGlobal.power, source);
   }

@@ -1,7 +1,7 @@
 # Decoder files are modeled on the *.js files found here:
 #  https://github.com/TheThingsNetwork/lorawan-devices/tree/master/vendor
 
-var LwRegions = ["EU868", "US915", "IN865","AU915","KZ865","RU864","AS923", "AS923-1","AS923-2","AS923-3"]
+var LwRegions = ["EU868","US915","IN865","AU915","KZ865","RU864","AS923","AS923-1","AS923-2","AS923-3"]
 var LwDeco
 
 import mqtt 
@@ -141,7 +141,7 @@ lwdecode = lwdecode_cls()
 import webserver
 class webPageLoRaWAN : Driver
   def sendNodeButton(node)
-     webserver.content_send("<td><button onclick='selNode("+str(node)+")' id='n"+str(node)+"' class='button inactive' style='width:30px'>"+str(node)+"</button>")
+     webserver.content_send(f"<td><button onclick='selNode({node})' id='n{node}' class='button inactive' style='width:41px'>{node}</button></td>")
   end
 
   def web_add_config_button()
@@ -168,23 +168,24 @@ class webPageLoRaWAN : Driver
     webserver.content_start("LoRaWAN")           #- title of the web page -#
     webserver.content_send_style()               #- send standard Tasmota styles -#
     webserver.content_send(
-     "<style>.inactive{background:#10537c;}.active{background:#1fa3ec;}</style>"
-     "<h2>LoRaWAN End Devices</h2>"
+#     "<style>.inactive{background:#10537c;}.active{background:#1fa3ec;}</style>"
+     "<style>.inactive{background:var(--c_btnoff);}.active{background:var(--c_btn);}</style>"
+#     "<h2>LoRaWAN End Devices</h2>"
      "<script>"
      "function selNode(n){"
-     " var i;var d=4;"
-     " var e=document.getElementById('n'+n);"
-     " var o=document.getElementsByClassName('button active');"
-     " if(o.length){"
-     "  for(i=0;i<o.length;i++){"
-     "  o[i].classList.add('inactive');"
-     "  o[i].classList.remove('active');"
-     "  }"
-     " }"
-     " e.classList.add('active');"
-     " for(i=1;i<=16;i++){"
-     "  document.getElementById('nd'+i).style.display=(i==n)?'block':'none';"
-     " }"
+      "var i;var d=4;"
+      "var e=document.getElementById('n'+n);"
+      "var o=document.getElementsByClassName('button active');"
+      "if(o.length){"
+       "for(i=0;i<o.length;i++){"
+       "o[i].classList.add('inactive');"
+       "o[i].classList.remove('active');"
+       "}"
+      "}"
+      "e.classList.add('active');"
+      "for(i=1;i<=16;i++){"
+       "document.getElementById('nd'+i).style.display=(i==n)?'block':'none';"
+      "}"
      "}"
      "window.onload = function(){selNode("+str(inode)+");};"
      "</script>")
@@ -197,11 +198,11 @@ class webPageLoRaWAN : Driver
     for node:1..8
         self.sendNodeButton(node)
     end
-    webserver.content_send("<tr>")
+    webserver.content_send("</tr><tr>")
     for node:9..16
         self.sendNodeButton(node)
     end
-    webserver.content_send("</table>")
+    webserver.content_send("</tr></table>")
     for node:1..16
      arg='LoRaWanAppKey' + str(node)
      appKey=tasmota.cmd(arg,true).find(arg)
@@ -210,24 +211,24 @@ class webPageLoRaWAN : Driver
      arg='LoRaWanDecoder' + str(node)
      decoder=tasmota.cmd(arg,true).find(arg)
      webserver.content_send(
-      "<div id='nd"+str(node)+"' style='display:none'>"
+     f"<div id='nd{node}' style='display:none'>"
       "<fieldset>"
-      "<legend><b>&nbsp;End Device "+str(node)+"&nbsp;</b></legend>"
+      "<legend><b>&nbsp;LoRaWan End Device {node}&nbsp;</b></legend>"
       "<form action='' method='post'>"
-      "<p>Application Key"
-      "<input title='"+hintAK+"' pattern='[A-Fa-f0-9]{32}' id='ak' minlength='32' maxlength='32' required='' placeholder='"+hintAK+"' value='"+appKey+ "' name='ak' style='font-size:smaller'>"
+      "<p><b>Application Key</b>"
+      "<input title='{hintAK}' pattern='[A-Fa-f0-9]{{32}}' id='ak' minlength='32' maxlength='32' required='' placeholder='{hintAK}' value='{appKey}' name='ak' style='font-size:smaller'>"
       "</p>"
       "<p></p>"
-      "<p>Device Name"
-      "<input id='an' placeholder='"+hintAN+"' value='"+name+ "' name='an'>"
+      "<p><b>Device Name</b>"
+      "<input id='an' placeholder='{hintAN}' value='{name}' name='an'>"
       "</p>"
       "<p></p>"
-      "<p>Decoder File"
-      "<input title='"+hintDecoder+"' id='dc'  placeholder='"+hintDecoder+"' value='"+decoder+"' name='dc'>"
+      "<p><b>Decoder File</b>"
+      "<input title='{hintDecoder}' id='dc'  placeholder='{hintDecoder}' value='{decoder}' name='dc'>"
       "</p>"
-      "<p></p>"
+      "<br>"
       "<button name='save' class='button bgrn'>Save</button>"
-      "<input type='hidden' name='node' value='"+str(node)+"'>"
+      "<input type='hidden' name='node' value='{node}'>"
       "</form>"
       "</fieldset>"
       "</div>")
