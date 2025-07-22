@@ -140,10 +140,6 @@ lwdecode = lwdecode_cls()
 
 import webserver
 class webPageLoRaWAN : Driver
-  def sendNodeButton(node)
-     webserver.content_send(f"<td><button onclick='selNode({node})' id='n{node}' class='button inactive' style='width:41px'>{node}</button></td>")
-  end
-
   def web_add_config_button()
     webserver.content_send("<p><form id=ac action='lrw' style='display: block;' method='get'><button>LoRaWAN</button></form></p>")
   end
@@ -168,18 +164,21 @@ class webPageLoRaWAN : Driver
     webserver.content_start("LoRaWAN")           #- title of the web page -#
     webserver.content_send_style()               #- send standard Tasmota styles -#
     webserver.content_send(
-#     "<style>.inactive{background:#10537c;}.active{background:#1fa3ec;}</style>"
-     "<style>.inactive{background:var(--c_btnoff);}.active{background:var(--c_btn);}</style>"
-#     "<h2>LoRaWAN End Devices</h2>"
+     "<style>"
+     ".tl{float:left;border-radius:0;border:1px solid var(--c_frm);padding:1px;width:12.5%;}"
+     ".tl:hover{background:var(--c_frm);}"
+     ".inactive{background:var(--c_tab);color:var(--c_tabtxt);font-weight:normal;}"
+     ".active{background:var(--c_frm);color:var(--c_txt);font-weight:bold;}"
+     "</style>"
      "<script>"
      "function selNode(n){"
-      "var i;var d=4;"
+      "var i;"
       "var e=document.getElementById('n'+n);"
-      "var o=document.getElementsByClassName('button active');"
+      "var o=document.getElementsByClassName('tl active');"
       "if(o.length){"
        "for(i=0;i<o.length;i++){"
-       "o[i].classList.add('inactive');"
-       "o[i].classList.remove('active');"
+        "o[i].classList.add('inactive');"
+        "o[i].classList.remove('active');"
        "}"
       "}"
       "e.classList.add('active');"
@@ -194,15 +193,16 @@ class webPageLoRaWAN : Driver
     var hintAK='32 character Application Key'
     var hintDecoder='Decoder file, ending in .be'
     var hintAN='Device name for MQTT messages'
-    webserver.content_send("<table><tr>")
-    for node:1..8
-        self.sendNodeButton(node)
+
+    webserver.content_send(
+    f"<fieldset>"
+     "<legend><b>&nbsp;LoRaWan End Device&nbsp;</b></legend>"
+     "<br><div>")                                #- Add space and indent to align form tabs -#
+    for node:1..16
+     webserver.content_send(f"<button type='button' onclick='selNode({node})' id='n{node}' class='tl inactive'>{node}</button>")
     end
-    webserver.content_send("</tr><tr>")
-    for node:9..16
-        self.sendNodeButton(node)
-    end
-    webserver.content_send("</tr></table>")
+    webserver.content_send(
+    f"</div><br><br><br><br>")                   #- Terminate indent and add space -#
     for node:1..16
      arg='LoRaWanAppKey' + str(node)
      appKey=tasmota.cmd(arg,true).find(arg)
@@ -212,27 +212,26 @@ class webPageLoRaWAN : Driver
      decoder=tasmota.cmd(arg,true).find(arg)
      webserver.content_send(
      f"<div id='nd{node}' style='display:none'>"
-      "<fieldset>"
-      "<legend><b>&nbsp;LoRaWan End Device {node}&nbsp;</b></legend>"
       "<form action='' method='post'>"
-      "<p><b>Application Key</b>"
-      "<input title='{hintAK}' pattern='[A-Fa-f0-9]{{32}}' id='ak' minlength='32' maxlength='32' required='' placeholder='{hintAK}' value='{appKey}' name='ak' style='font-size:smaller'>"
-      "</p>"
-      "<p></p>"
-      "<p><b>Device Name</b>"
-      "<input id='an' placeholder='{hintAN}' value='{name}' name='an'>"
-      "</p>"
-      "<p></p>"
-      "<p><b>Decoder File</b>"
-      "<input title='{hintDecoder}' id='dc'  placeholder='{hintDecoder}' value='{decoder}' name='dc'>"
-      "</p>"
-      "<br>"
-      "<button name='save' class='button bgrn'>Save</button>"
-      "<input type='hidden' name='node' value='{node}'>"
+       "<p><b>Application Key</b>"
+        "<input title='{hintAK}' pattern='[A-Fa-f0-9]{{32}}' id='ak' minlength='32' maxlength='32' required='' placeholder='{hintAK}' value='{appKey}' name='ak' style='font-size:smaller'>"
+       "</p>"
+       "<p></p>"
+       "<p><b>Device Name</b>"
+        "<input id='an' placeholder='{hintAN}' value='{name}' name='an'>"
+       "</p>"
+       "<p></p>"
+       "<p><b>Decoder File</b>"
+        "<input title='{hintDecoder}' id='dc' placeholder='{hintDecoder}' value='{decoder}' name='dc'>"
+       "</p>"
+       "<br>"
+       "<button name='save' class='button bgrn'>Save</button>"
+       "<input type='hidden' name='node' value='{node}'>"
       "</form>"
-      "</fieldset>"
       "</div>")
     end
+    webserver.content_send(
+    f"</fieldset>")
 
     webserver.content_button(webserver.BUTTON_CONFIGURATION) #- button back to conf page -#
     webserver.content_stop()                        #- end of web page -#

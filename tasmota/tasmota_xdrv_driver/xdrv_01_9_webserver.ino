@@ -995,24 +995,26 @@ void WSContentSendStyle_P(const char* formatP, ...) {
 
   // Output style root colors by names
   WSContentSend_P(HTTP_HEAD_STYLE_ROOT_COLOR,
-                  WebColor(COL_BACKGROUND),         // --c_bg
-                  WebColor(COL_FORM),               // --c_frm
-                  WebColor(COL_TITLE),              // --c_ttl
-                  WebColor(COL_TEXT),               // --c_txt
-                  WebColor(COL_TEXT_WARNING),       // --c_txtwrn
-                  WebColor(COL_TEXT_SUCCESS),       // --c_txtscc
-                  WebColor(COL_BUTTON),             // --c_btn
-                  WebColor(COL_BUTTON_OFF),         // --c_btnoff
-                  WebColor(COL_BUTTON_TEXT),        // --c_btntxt
-                  WebColor(COL_BUTTON_HOVER),       // --c_btnhvr
-                  WebColor(COL_BUTTON_RESET),       // --c_btnrst
-                  WebColor(COL_BUTTON_RESET_HOVER), // --c_btnrsthvr
-                  WebColor(COL_BUTTON_SAVE),        // --c_btnsv
-                  WebColor(COL_BUTTON_SAVE_HOVER),  // --c_btnsvhvr
-                  WebColor(COL_INPUT),              // --c_in
-                  WebColor(COL_INPUT_TEXT),         // --c_intxt
-                  WebColor(COL_CONSOLE),            // --c_csl
-                  WebColor(COL_CONSOLE_TEXT)        // --c_csltxt
+                  WebColor(COL_BACKGROUND),           // --c_bg
+                  WebColor(COL_FORM),                 // --c_frm
+                  WebColor(COL_TITLE),                // --c_ttl
+                  WebColor(COL_TEXT),                 // --c_txt
+                  WebColor(COL_TEXT_WARNING),         // --c_txtwrn
+                  WebColor(COL_TEXT_SUCCESS),         // --c_txtscc
+                  WebColor(COL_BUTTON),               // --c_btn
+                  WebColor(COL_BUTTON_OFF),           // --c_btnoff
+                  WebColor(COL_BUTTON_TEXT),          // --c_btntxt
+                  WebColor(COL_BUTTON_HOVER),         // --c_btnhvr
+                  WebColor(COL_BUTTON_RESET),         // --c_btnrst
+                  WebColor(COL_BUTTON_RESET_HOVER),   // --c_btnrsthvr
+                  WebColor(COL_BUTTON_SAVE),          // --c_btnsv
+                  WebColor(COL_BUTTON_SAVE_HOVER),    // --c_btnsvhvr
+                  WebColor(COL_INPUT),                // --c_in
+                  WebColor(COL_INPUT_TEXT),           // --c_intxt
+                  WebColor(COL_CONSOLE),              // --c_csl
+                  WebColor(COL_CONSOLE_TEXT),         // --c_csltxt
+                  WebColor(COL_TIMER_TAB_BACKGROUND), // --c_tab
+                  WebColor(COL_TIMER_TAB_TEXT)        // --c_tabtxt
   );
 
   WSContentSendRaw_P(HTTP_HEAD_STYLE1);
