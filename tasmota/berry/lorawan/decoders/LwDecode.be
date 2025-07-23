@@ -5,14 +5,19 @@ var LwRegions = ["EU868","US915","IN865","AU915","KZ865","RU864","AS923","AS923-
 var LwDeco
 
 import mqtt 
+import string
 
 class lwdecode_cls
-  var thisDevice
   var LwDecoders
+  var topic
 
   def init()
-    self.thisDevice = tasmota.cmd('Status',true)['Status']['Topic']
     self.LwDecoders = {}
+    self.topic = string.replace(string.replace(
+                   tasmota.cmd('_FullTopic',true)['FullTopic'],
+                   '%topic%', tasmota.cmd('_Topic',true)['Topic']),
+                   '%prefix%', tasmota.cmd('_Prefix',true)['Prefix3'])  # tele
+                 + 'SENSOR'
 
     if global.lwdecode_driver
       global.lwdecode_driver.stop() # Let previous instance bail out cleanly
@@ -23,7 +28,6 @@ class lwdecode_cls
 
   def LwDecode(data)
     import json
-    import string
 
     var deviceData = data['LwReceived']
     var deviceName = deviceData.keys()()
@@ -45,14 +49,9 @@ class lwdecode_cls
     end 
 
     if Payload.size() && self.LwDecoders.find(decoder)
-      var topic = string.replace(string.replace(
-                    tasmota.cmd('FullTopic',true)['FullTopic'],
-                    '%topic%', tasmota.cmd('Topic',true)['Topic']),
-                    '%prefix%', tasmota.cmd('Prefix',true)['Prefix3'])  # tele
-                  + 'SENSOR'
       var decoded = self.LwDecoders[decoder].decodeUplink(Node, RSSI, FPort, Payload)	
       var mqttData = {"LwDecoded":{deviceName:decoded}}
-      mqtt.publish(topic, json.dump(mqttData))
+      mqtt.publish(self.topic, json.dump(mqttData))
       tasmota.global.restart_flag = 0 # Signal LwDecoded successful (default state)
     end 
 
