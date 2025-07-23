@@ -153,11 +153,13 @@ bool DomoticzSaveData(void) {
                    "\"Update\":%u"),
                    Domoticz->Settings.crc32,
                    Domoticz->Settings.update_timer);
-  ResponseAppend_P(PSTR(",\"Relay\":"));
-  for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
-    ResponseAppend_P(PSTR("%c%d"), (0==i)?'[':',', Domoticz->Settings.relay_idx[i]);
+  if (TasmotaGlobal.devices_present) {
+    ResponseAppend_P(PSTR(",\"Relay\":"));
+    for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+      ResponseAppend_P(PSTR("%c%d"), (0==i)?'[':',', Domoticz->Settings.relay_idx[i]);
+    }
+    ResponseAppend_P(PSTR("]"));
   }
-  ResponseAppend_P(PSTR("]"));
   if (Domoticz->keys) {
     ResponseAppend_P(PSTR(",\"Key\":"));
     for (uint32_t i = 0; i < Domoticz->keys; i++) {
@@ -248,7 +250,9 @@ void DomoticzSettingsLoad(bool erase) {
 void DomoticzSettingsSave(void) {
   // Called from FUNC_SAVE_SETTINGS every SaveData second and at restart
   uint32_t crc32 = GetCfgCrc32((uint8_t*)&Domoticz->Settings +4, sizeof(DzSettings_t) -4);  // Skip crc32
-  crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.relay_idx, TasmotaGlobal.devices_present * sizeof(uintdz_t));
+  if (TasmotaGlobal.devices_present) {
+    crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.relay_idx, TasmotaGlobal.devices_present * sizeof(uintdz_t));
+  }
   if (Domoticz->keys) {
     crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.key_idx, Domoticz->keys * sizeof(uintdz_t));
   }
@@ -725,26 +729,29 @@ void DomoticzSensorP1SmartMeter(char *usage1, char *usage2, char *return1, char 
 /*********************************************************************************************/
 
 void DomoticzInit(void) {
-  if (Settings->flag.mqtt_enabled && TasmotaGlobal.devices_present) {  // SetOption3 - Enable MQTT
+  if (Settings->flag.mqtt_enabled) {  // SetOption3 - Enable MQTT
     Domoticz = (Domoticz_t*)calloc(1, sizeof(Domoticz_t));  // Need calloc to reset registers to 0/false
     if (nullptr == Domoticz) { return; }
 
-    Domoticz->Settings.relay_idx = (uintdz_t*)calloc(TasmotaGlobal.devices_present, sizeof(uintdz_t));
-    for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
-      if (ButtonUsed(i)) { Domoticz->keys++; }
-      if (SwitchUsed(i)) { Domoticz->switches++; }
-    }
-    if (Domoticz->keys) {
-      Domoticz->Settings.key_idx = (uintdz_t*)calloc(Domoticz->keys, sizeof(uintdz_t));
-      if (nullptr == Domoticz->Settings.key_idx) { return; }
-    }
-    if (Domoticz->switches) {
-      Domoticz->Settings.switch_idx = (uintdz_t*)calloc(Domoticz->switches, sizeof(uintdz_t));
-      if (nullptr == Domoticz->Settings.switch_idx) { return; }
+    if (TasmotaGlobal.devices_present) {
+      Domoticz->Settings.relay_idx = (uintdz_t*)calloc(TasmotaGlobal.devices_present, sizeof(uintdz_t));
+      if (nullptr == Domoticz->Settings.relay_idx) { return; }
+      for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+        if (ButtonUsed(i)) { Domoticz->keys++; }
+        if (SwitchUsed(i)) { Domoticz->switches++; }
+      }
+      if (Domoticz->keys) {
+        Domoticz->Settings.key_idx = (uintdz_t*)calloc(Domoticz->keys, sizeof(uintdz_t));
+        if (nullptr == Domoticz->Settings.key_idx) { return; }
+      }
+      if (Domoticz->switches) {
+        Domoticz->Settings.switch_idx = (uintdz_t*)calloc(Domoticz->switches, sizeof(uintdz_t));
+        if (nullptr == Domoticz->Settings.switch_idx) { return; }
+      }
     }
 
-    AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_DOMOTICZ "Support %d Device(s), %d Button(s) and %d Switch(es)"),
-      TasmotaGlobal.devices_present, Domoticz->keys, Domoticz->switches);
+    AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_DOMOTICZ "Support %d Device(s), %d Button(s), %d Switch(es) and %d Sensors"),
+      TasmotaGlobal.devices_present, Domoticz->keys, Domoticz->switches, DZ_MAX_SENSORS);
 
     DomoticzSettingsLoad(0);
     Domoticz->update_flag = true;

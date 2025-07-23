@@ -23,6 +23,7 @@ class lwdecode_cls
 
   def LwDecode(data)
     import json
+    import string
 
     var deviceData = data['LwReceived']
     var deviceName = deviceData.keys()()
@@ -44,7 +45,11 @@ class lwdecode_cls
     end 
 
     if Payload.size() && self.LwDecoders.find(decoder)
-      var topic = "tele/" + self.thisDevice + "/SENSOR"
+      var topic = string.replace(string.replace(
+                    tasmota.cmd('FullTopic',true)['FullTopic'],
+                    '%topic%', tasmota.cmd('Topic',true)['Topic']),
+                    '%prefix%', tasmota.cmd('Prefix',true)['Prefix3'])  # tele
+                  + 'SENSOR'
       var decoded = self.LwDecoders[decoder].decodeUplink(Node, RSSI, FPort, Payload)	
       var mqttData = {"LwDecoded":{deviceName:decoded}}
       mqtt.publish(topic, json.dump(mqttData))

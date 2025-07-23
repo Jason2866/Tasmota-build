@@ -12,6 +12,7 @@ class LwDecoLDS02
   static def decodeUplink(Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino LDS02"}
     data.insert("Node", Node)
+    data.insert("RSSI", RSSI)
 
     var valid_values = false
     var last_seen = 1451602800

@@ -12,6 +12,7 @@ class LwDecoLHT52
   static def decodeUplink(Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino LHT52"}
     data.insert("Node", Node)
+    data.insert("RSSI", RSSI)
 
     var valid_values = false
     var last_seen = 1451602800

@@ -12,6 +12,7 @@ class LwDecoLHT65
   static def decodeUplink(Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino LHT65"}
     data.insert("Node", Node)
+    data.insert("RSSI", RSSI)
     data.insert("poll_message_status",(Bytes[6] & 0x40) >> 6)
 
     var valid_values = false
