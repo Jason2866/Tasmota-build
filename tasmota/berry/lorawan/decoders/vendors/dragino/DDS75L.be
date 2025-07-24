@@ -10,10 +10,7 @@ global.dds75lbNodes = {}
 
 class LwDecoDDS75LB
   static def decodeUplink(Node, RSSI, FPort, Bytes)
-    var data = {"Device":"Dragino DDS75-LB/LS"}
-    data.insert("Node", Node)
-    data.insert("RSSI", RSSI)
-
+    var data = {}
     var valid_values = false
     var last_seen = 1451602800
     var battery_last_seen = 1451602800

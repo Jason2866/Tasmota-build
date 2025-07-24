@@ -31,6 +31,7 @@ class lwdecode_cls
 
     var deviceData = data['LwReceived']
     var deviceName = deviceData.keys()()
+    var Device = deviceData[deviceName]['Name']
     var Node = deviceData[deviceName]['Node']
     var RSSI = deviceData[deviceName]['RSSI']
     var Payload = deviceData[deviceName]['Payload']
@@ -50,7 +51,14 @@ class lwdecode_cls
 
     if Payload.size() && self.LwDecoders.find(decoder)
       var decoded = self.LwDecoders[decoder].decodeUplink(Node, RSSI, FPort, Payload)	
-      var mqttData = {"LwDecoded":{deviceName:decoded}}
+      decoded.insert("Device", Device)
+      decoded.insert("Node", Node)
+      decoded.insert("RSSI", RSSI)
+      var mqttData = {deviceName:decoded}
+      # Abuse SetOption83 - (Zigbee) Use FriendlyNames (1) instead of ShortAddresses (0) when possible
+      if tasmota.get_option(83) == 0  # SetOption83 - Remove LwDecoded form JSON message (1)
+        mqttData = {"LwDecoded":{deviceName:decoded}}
+      end
       mqtt.publish(self.topic, json.dump(mqttData))
       tasmota.global.restart_flag = 0 # Signal LwDecoded successful (default state)
     end 
