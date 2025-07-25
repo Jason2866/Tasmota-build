@@ -21,13 +21,13 @@ class LwDecoLHT52
     var humidity
     var temp_ext = 1000
     if global.lht52Nodes.find(Node)
-      last_seen = global.lht52Nodes.item(Node)[1]
-      battery_last_seen = global.lht52Nodes.item(Node)[2]
-      battery = global.lht52Nodes.item(Node)[3]
-      rssi = global.lht52Nodes.item(Node)[4]
-      temp_int = global.lht52Nodes.item(Node)[5]
-      humidity = global.lht52Nodes.item(Node)[6]
-      temp_ext = global.lht52Nodes.item(Node)[7]
+      last_seen         = global.lht52Nodes.item(Node)[2]
+      battery_last_seen = global.lht52Nodes.item(Node)[3]
+      battery           = global.lht52Nodes.item(Node)[4]
+      rssi              = global.lht52Nodes.item(Node)[5]
+      temp_int          = global.lht52Nodes.item(Node)[6]
+      humidity          = global.lht52Nodes.item(Node)[7]
+      temp_ext          = global.lht52Nodes.item(Node)[8]
     end
     ## SENSOR DATA ##
     if 2 == FPort && Bytes.size() == 11

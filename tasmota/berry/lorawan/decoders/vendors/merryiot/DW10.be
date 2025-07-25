@@ -23,8 +23,8 @@ class LwDecoDW10
     var temperature
     var humidity
     if global.dw10Nodes.find(Node)
-      door_open = global.dw10Nodes.item(Node)[5]
-      door_open_last_seen = global.dw10Nodes.item(Node)[6]
+      door_open           = global.dw10Nodes.item(Node)[6]
+      door_open_last_seen = global.dw10Nodes.item(Node)[7]
     end
     ## SENSOR DATA ##
     if 120 == FPort && Bytes.size() == 9

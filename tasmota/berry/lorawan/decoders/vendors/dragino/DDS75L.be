@@ -20,11 +20,11 @@ class LwDecoDDS75LB
     var distance = 0
 
     if global.dds75lbNodes.find(Node)
-      last_seen = global.dds75lbNodes.item(Node)[1]
-      battery_last_seen = global.dds75lbNodes.item(Node)[2]
-      battery = global.dds75lbNodes.item(Node)[3]
-      rssi = global.dds75lbNodes.item(Node)[4]
-      distance = global.dds75lbNodes.item(Node)[5]
+      last_seen         = global.dds75lbNodes.item(Node)[2]
+      battery_last_seen = global.dds75lbNodes.item(Node)[3]
+      battery           = global.dds75lbNodes.item(Node)[4]
+      rssi              = global.dds75lbNodes.item(Node)[5]
+      distance          = global.dds75lbNodes.item(Node)[6]
     end
 
     ## SENSOR DATA ##

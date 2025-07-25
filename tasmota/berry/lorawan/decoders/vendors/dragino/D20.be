@@ -22,13 +22,13 @@ class LwDecoDrgD20
 	var tempC3 = 1000
 	
     if global.DrgD20Nodes.find(Node)
-      last_seen = global.DrgD20Nodes.item(Node)[1]
-      battery_last_seen = global.DrgD20Nodes.item(Node)[2]
-      battery = global.DrgD20Nodes.item(Node)[3]
-      rssi = global.DrgD20Nodes.item(Node)[4]
-      tempC1 = global.DrgD20Nodes.item(Node)[5]
-	    tempC2 = global.DrgD20Nodes.item(Node)[6]										
-      tempC3 = global.DrgD20Nodes.item(Node)[7]
+      last_seen         = global.DrgD20Nodes.item(Node)[2]
+      battery_last_seen = global.DrgD20Nodes.item(Node)[3]
+      battery           = global.DrgD20Nodes.item(Node)[4]
+      rssi              = global.DrgD20Nodes.item(Node)[5]
+      tempC1            = global.DrgD20Nodes.item(Node)[6]
+	    tempC2            = global.DrgD20Nodes.item(Node)[7]										
+      tempC3            = global.DrgD20Nodes.item(Node)[8]
     end
 
     ## SENSOR DATA ##

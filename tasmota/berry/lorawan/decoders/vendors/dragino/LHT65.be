@@ -23,15 +23,15 @@ class LwDecoLHT65
     var door_open = 1000
     var door_open_last_seen = 1451602800
     if global.lht65Nodes.find(Node)
-      last_seen = global.lht65Nodes.item(Node)[1]
-      battery_last_seen = global.lht65Nodes.item(Node)[2]
-      battery = global.lht65Nodes.item(Node)[3]
-      RSSI = global.lht65Nodes.item(Node)[4]
-      temp_int = global.lht65Nodes.item(Node)[5]
-      humidity = global.lht65Nodes.item(Node)[6]
-      temp_ext = global.lht65Nodes.item(Node)[7]
-      door_open = global.lht65Nodes.item(Node)[8]
-      door_open_last_seen = global.lht65Nodes.item(Node)[9]
+      last_seen           = global.lht65Nodes.item(Node)[2]
+      battery_last_seen   = global.lht65Nodes.item(Node)[3]
+      battery             = global.lht65Nodes.item(Node)[4]
+      RSSI                = global.lht65Nodes.item(Node)[5]
+      temp_int            = global.lht65Nodes.item(Node)[6]
+      humidity            = global.lht65Nodes.item(Node)[7]
+      temp_ext            = global.lht65Nodes.item(Node)[8]
+      door_open           = global.lht65Nodes.item(Node)[9]
+      door_open_last_seen = global.lht65Nodes.item(Node)[10]
     end
 
     var Ext = Bytes[6] & 0x0F  #External sensor type

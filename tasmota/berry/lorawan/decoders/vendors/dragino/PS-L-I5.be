@@ -25,11 +25,11 @@ class LwDecoPSLI5
     var modelRangeCm = 500      # 4mA=0cm, 20mA=500cm
 
     if global.psli5Nodes.find(Node)
-      last_seen         = global.psli5Nodes.item(Node)[1]
-      battery_last_seen = global.psli5Nodes.item(Node)[2]
-      battery           = global.psli5Nodes.item(Node)[3]
-      rssi              = global.psli5Nodes.item(Node)[4]
-      Water_deep_cm     = global.psli5Nodes.item(Node)[5]
+      last_seen         = global.psli5Nodes.item(Node)[2]
+      battery_last_seen = global.psli5Nodes.item(Node)[3]
+      battery           = global.psli5Nodes.item(Node)[4]
+      rssi              = global.psli5Nodes.item(Node)[5]
+      Water_deep_cm     = global.psli5Nodes.item(Node)[6]
 	  
     end
 

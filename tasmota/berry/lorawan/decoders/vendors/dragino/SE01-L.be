@@ -29,15 +29,14 @@ class LwDecoSE01L
     var s_flag # 0: No sensor was identified, 1: The sensor has been identified	
 	
     if global.se01LNodes.find(Node)
-      last_seen = global.se01LNodes.item(Node)[1]
-      battery_last_seen = global.se01LNodes.item(Node)[2]
-      battery = global.se01LNodes.item(Node)[3]
-      rssi = global.se01LNodes.item(Node)[4]
-	  
-      temp = global.se01LNodes.item(Node)[5]
-      conductivity = global.se01LNodes.item(Node)[6]
-      moisture = global.se01LNodes.item(Node)[7]
-      dielectric = global.se01LNodes.item(Node)[8]	  
+      last_seen         = global.se01LNodes.item(Node)[2]
+      battery_last_seen = global.se01LNodes.item(Node)[3]
+      battery           = global.se01LNodes.item(Node)[4]
+      rssi              = global.se01LNodes.item(Node)[5]
+	    temp              = global.se01LNodes.item(Node)[6]
+      conductivity      = global.se01LNodes.item(Node)[7]
+      moisture          = global.se01LNodes.item(Node)[8]
+      dielectric        = global.se01LNodes.item(Node)[9]	  
     end
 	
     ## SENSOR DATA ##
