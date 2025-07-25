@@ -31,7 +31,7 @@ class lwdecode_cls
 
     var deviceData = data['LwReceived']
     var deviceName = deviceData.keys()()
-    var Device = deviceData[deviceName]['Name']
+    var Name = deviceData[deviceName]['Name']
     var Node = deviceData[deviceName]['Node']
     var RSSI = deviceData[deviceName]['RSSI']
     var Payload = deviceData[deviceName]['Payload']
@@ -50,7 +50,7 @@ class lwdecode_cls
     end 
 
     if Payload.size() && self.LwDecoders.find(decoder)
-      var decoded = self.LwDecoders[decoder].decodeUplink(Node, RSSI, FPort, Payload)	
+      var decoded = self.LwDecoders[decoder].decodeUplink(Name, Node, RSSI, FPort, Payload)	
       decoded.insert("Node", Node)
       decoded.insert("RSSI", RSSI)
       var mqttData = {deviceName:decoded}

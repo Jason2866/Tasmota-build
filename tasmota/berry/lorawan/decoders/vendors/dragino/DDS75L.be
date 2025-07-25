@@ -9,7 +9,7 @@ import string
 global.dds75lbNodes = {}
 
 class LwDecoDDS75LB
-  static def decodeUplink(Node, RSSI, FPort, Bytes)
+  static def decodeUplink(Name, Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino DDS75-LB/LS"}
     
     var valid_values = false
@@ -57,8 +57,8 @@ class LwDecoDDS75LB
       if global.dds75lbNodes.find(Node)
         global.dds75lbNodes.remove(Node)
       end
-      #                                 sensor[0]   [1]        [2]                [3]      [4]   [5]           
-      global.dds75lbNodes.insert(Node, [Node,       last_seen, battery_last_seen, battery, RSSI, distance])
+      #                           sensor[0]   [1]   [2]        [3]                [4]      [5]   [6]
+      global.dds75lbNodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, RSSI, distance])
     end
 
     return data
@@ -67,16 +67,19 @@ class LwDecoDDS75LB
   static def add_web_sensor()
     var msg = ""
     for sensor: global.dds75lbNodes
-      var name = string.format("DDS75-L-%i", sensor[0])
+      var name = sensor[0]
+      if string.find(name, "DDS75-L") > -1                               # If LoRaWanName contains DDS75-L use DDS75-L-<node>
+        name = string.format("DDS75-L-%i", sensor[1])
+      end
       var name_tooltip = "Dragino DDS75-L"
-      var last_seen = sensor[1]
-      var battery_last_seen = sensor[2]
-      var battery = sensor[3]
-      var rssi = sensor[4]
+      var last_seen = sensor[2]
+      var battery_last_seen = sensor[3]
+      var battery = sensor[4]
+      var rssi = sensor[5]
       msg += lwdecode.header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
 
       # Sensors
-      var distance = sensor[5]
+      var distance = sensor[6]
       msg += "<tr class='htr'><td colspan='4'>&#9478;"                   # |
       msg += string.format(" &#11123;&#xFE0F; %.0fmm", distance)         # ⭳          
       msg += "{e}"                                                       # = </td></tr>

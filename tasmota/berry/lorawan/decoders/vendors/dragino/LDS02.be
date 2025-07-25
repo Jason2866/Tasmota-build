@@ -9,9 +9,9 @@ import string
 global.lds02Nodes = {}
 
 class LwDecoLDS02
-  static def decodeUplink(Node, RSSI, FPort, Bytes)
+  static def decodeUplink(Name, Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino LDS02"}
-    
+
     var valid_values = false
     var last_seen = 1451602800
     var battery_last_seen = 1451602800
@@ -49,8 +49,8 @@ class LwDecoLDS02
       if global.lds02Nodes.find(Node)
         global.lds02Nodes.remove(Node)
       end
-      #                         sensor[0]   [1]        [2]                [3]      [4]   [5]        [6]
-      global.lds02Nodes.insert(Node, [Node, last_seen, battery_last_seen, battery, RSSI, door_open, door_open_last_seen])
+      #                         sensor[0]   [1]   [2]        [3]                [4]      [5]   [6]        [7]
+      global.lds02Nodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, RSSI, door_open, door_open_last_seen])
     end
 
     return data
@@ -59,17 +59,20 @@ class LwDecoLDS02
   static def add_web_sensor()
     var msg = ""
     for sensor: global.lds02Nodes
-      var name = string.format("LDS02-%i", sensor[0])
+      var name = sensor[0]
+      if string.find(name, "LDS02") > -1                                    # If LoRaWanName contains LDS02 use LDS02-<node>
+        name = string.format("LDS02-%i", sensor[1])
+      end
       var name_tooltip = "Dragino LDS02"
-      var battery = sensor[3]
-      var battery_last_seen = sensor[2]
-      var rssi = sensor[4]
-      var last_seen = sensor[1]
+      var last_seen = sensor[2]
+      var battery_last_seen = sensor[3]
+      var battery = sensor[4]
+      var rssi = sensor[5]
       msg += lwdecode.header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
 
       # Sensors
-      var door_open = sensor[5]
-      var door_open_last_seen = sensor[6]
+      var door_open = sensor[6]
+      var door_open_last_seen = sensor[7]
       msg += "<tr class='htr'><td colspan='4'>&#9478;"                      # |
       msg += string.format(" %s %s", (door_open) ? "&#x1F513" : "&#x1F512", # Open or Closed lock - Door
                                      lwdecode.dhm(door_open_last_seen))

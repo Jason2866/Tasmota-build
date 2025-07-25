@@ -9,7 +9,7 @@ import string
 global.dw10Nodes = {}
 
 class LwDecoDW10
-  static def decodeUplink(Node, RSSI, FPort, Bytes)
+  static def decodeUplink(Name, Node, RSSI, FPort, Bytes)
     var data = {"Device":"MerryIoT DW10"}
     
     var valid_values = false
@@ -59,8 +59,8 @@ class LwDecoDW10
       if global.dw10Nodes.find(Node)
         global.dw10Nodes.remove(Node)
       end
-      #                        sensor[0]   [1]        [2]                [3]      [4]   [5]        [6]                  [7]             [8]          [9]
-      global.dw10Nodes.insert(Node, [Node, last_seen, battery_last_seen, battery, RSSI, door_open, door_open_last_seen, button_pressed, temperature, humidity])
+      #                        sensor[0]   [1]   [2]        [3]                [4]      [5]   [6]        [7]                  [8]             [9]          [10]
+      global.dw10Nodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, RSSI, door_open, door_open_last_seen, button_pressed, temperature, humidity])
     end
 
     return data
@@ -69,20 +69,23 @@ class LwDecoDW10
   static def add_web_sensor()
     var msg = ""
     for sensor: global.dw10Nodes
-      var name = string.format("DW10-%i", sensor[0])
+      var name = sensor[0]
+      if string.find(name, "DW10") > -1                                     # If LoRaWaName contains DW10 use DW10-<node>
+        name = string.format("DW10-%i", sensor[1])
+      end
       var name_tooltip = "MerryIoT DW10"
-      var battery = sensor[3]
-      var battery_last_seen = sensor[2]
-      var rssi = sensor[4]
-      var last_seen = sensor[1]
+      var last_seen = sensor[2]
+      var battery_last_seen = sensor[3]
+      var battery = sensor[4]
+      var rssi = sensor[5]
       msg += lwdecode.header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
 
       # Sensors
-      var door_open = sensor[5]
-      var door_open_last_seen = sensor[6]
-      var button_pressed = sensor[7]
-      var temperature = sensor[8]
-      var humidity = sensor[9]
+      var door_open = sensor[6]
+      var door_open_last_seen = sensor[7]
+      var button_pressed = sensor[8]
+      var temperature = sensor[9]
+      var humidity = sensor[10]
       msg += "<tr class='htr'><td colspan='4'>&#9478;"                      # |
       msg += string.format(" &#x2600;&#xFE0F; %.1f°C", temperature)         # Sunshine - Temperature
       msg += string.format(" &#x1F4A7; %.1f%%", humidity)                   # Raindrop - Humidity

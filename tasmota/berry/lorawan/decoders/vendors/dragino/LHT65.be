@@ -9,9 +9,9 @@ var LHT65_BatteryStatus = ["Very low <= 2.5V","Low <=2.55V","OK","Good >= 2.65V"
 global.lht65Nodes = {}
 
 class LwDecoLHT65
-  static def decodeUplink(Node, RSSI, FPort, Bytes)
+  static def decodeUplink(Name, Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino LHT65"}
-    
+
     var valid_values = false
     var last_seen = 1451602800
     var battery_last_seen = 1451602800
@@ -150,8 +150,8 @@ class LwDecoLHT65
       if global.lht65Nodes.find(Node)
         global.lht65Nodes.remove(Node)
       end
-      #                         sensor[0]   [1]        [2]                [3]      [4]   [5]       [6]       [7]       [8]        [9]
-      global.lht65Nodes.insert(Node, [Node, last_seen, battery_last_seen, battery, rssi, temp_int, humidity, temp_ext, door_open, door_open_last_seen])
+      #                         sensor[0]   [1]   [2]        [3]                [4]      [5]   [6]       [7]       [8]       [9]        [10]
+      global.lht65Nodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, rssi, temp_int, humidity, temp_ext, door_open, door_open_last_seen])
     end
 
     return data
@@ -160,20 +160,23 @@ class LwDecoLHT65
   static def add_web_sensor()
     var msg = ""
     for sensor: global.lht65Nodes
-      var name = string.format("LHT65-%i", sensor[0])
+      var name = sensor[0]
+      if string.find(name, "LHT65") > -1                                 # If LoRaWanName contains LHT65 use LHT65-<node>
+        name = string.format("LHT65-%i", sensor[1])
+      end
       var name_tooltip = "Dragino LHT65"
-      var battery = sensor[3]
-      var battery_last_seen = sensor[2]
-      var rssi = sensor[4]
-      var last_seen = sensor[1]
+      var last_seen = sensor[2]
+      var battery_last_seen = sensor[3]
+      var battery = sensor[4]
+      var rssi = sensor[5]
       msg += lwdecode.header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
 
       # Sensors
-      var temp_int = sensor[5]
-      var humidity = sensor[6]
-      var temp_ext = sensor[7]
-      var door_open = sensor[8]
-      var door_open_last_seen = sensor[9]
+      var temp_int = sensor[6]
+      var humidity = sensor[7]
+      var temp_ext = sensor[8]
+      var door_open = sensor[9]
+      var door_open_last_seen = sensor[10]
       msg += "<tr class=\"htr\"><td colspan=\"4\">&#9478;"               # |
       if temp_int < 1000
         msg += string.format(" &#x2600;&#xFE0F; %.1f°C", temp_int)       # Sunshine - Temperature

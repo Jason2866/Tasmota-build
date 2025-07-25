@@ -10,7 +10,7 @@ import string
 global.psli5Nodes = {}
 
 class LwDecoPSLI5
-  static def decodeUplink(Node, RSSI, FPort, Bytes)
+  static def decodeUplink(Name, Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino PS-LB/LS-I5"}
     
     var valid_values = false
@@ -20,9 +20,9 @@ class LwDecoPSLI5
     var rssi = RSSI
     var Water_deep_cm = 0
 	
-	var Probe_mod
-	var IDC_input_mA
-	var modelRangeCm = 500      # 4mA=0cm, 20mA=500cm
+    var Probe_mod
+    var IDC_input_mA
+    var modelRangeCm = 500      # 4mA=0cm, 20mA=500cm
 
     if global.psli5Nodes.find(Node)
       last_seen         = global.psli5Nodes.item(Node)[1]
@@ -77,8 +77,8 @@ class LwDecoPSLI5
       if global.psli5Nodes.find(Node)
         global.psli5Nodes.remove(Node)
       end
-      #                               sensor[0]   [1]        [2]                [3]      [4]   [5]                 
-      global.psli5Nodes.insert(Node, [Node,       last_seen, battery_last_seen, battery, RSSI, Water_deep_cm])
+      #                         sensor[0]   [1]   [2]        [3]                [4]      [5]   [6]
+      global.psli5Nodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, RSSI, Water_deep_cm])
     end
 
     return data
@@ -87,16 +87,19 @@ class LwDecoPSLI5
   static def add_web_sensor()
     var msg = ""
     for sensor: global.psli5Nodes
-      var name = string.format("PS-L-I5-%i", sensor[0])
+      var name = sensor[0]
+      if string.find(name, "PS-L-I5") > -1                               # If LoRaWanName contains PS-L-I5 use PS-L-I5-<node>
+        name = string.format("PS-L-I5-%i", sensor[1])
+      end
       var name_tooltip = "Dragino PS-L-I5"
-      var last_seen = sensor[1]
-      var battery_last_seen = sensor[2]
-      var battery = sensor[3]
-      var rssi = sensor[4]
+      var last_seen = sensor[2]
+      var battery_last_seen = sensor[3]
+      var battery = sensor[4]
+      var rssi = sensor[5]
       msg += lwdecode.header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
 
       # Sensors
-      var Water_deep_cm = sensor[5]
+      var Water_deep_cm = sensor[6]
       msg += "<tr class='htr'><td colspan='4'>&#9478;"                   # |
       msg += string.format(" &#11123;&#xFE0F; %.1fcm", Water_deep_cm)    # тн│          
       msg += "{e}"                                                       # = </td></tr>

@@ -9,7 +9,7 @@ import string
 global.DrgD20Nodes = {}
 
 class LwDecoDrgD20
-  static def decodeUplink(Node, RSSI, FPort, Bytes)
+  static def decodeUplink(Name, Node, RSSI, FPort, Bytes)
     var data = {"Device":"Dragino D20"}
     
     var valid_values = false
@@ -78,8 +78,8 @@ class LwDecoDrgD20
       if global.DrgD20Nodes.find(Node)
         global.DrgD20Nodes.remove(Node)
       end
-      #                         sensor[0]    [1]        [2]                [3]      [4]   [5]     [6]     [7]
-      global.DrgD20Nodes.insert(Node, [Node, last_seen, battery_last_seen, battery, RSSI, tempC1, tempC2, tempC3])   
+      #                         sensor[0]    [1]   [2]        [3]                [4]      [5]   [6]     [7]     [8]
+      global.DrgD20Nodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, RSSI, tempC1, tempC2, tempC3])   
     end
 
     return data
@@ -88,27 +88,30 @@ class LwDecoDrgD20
   static def add_web_sensor()
     var msg = ""
     for sensor: global.DrgD20Nodes
-      var name = string.format("D20-%i", sensor[0])
+      var name = sensor[0]
+      if string.find(name, "D20") > -1                                   # If LoRaWanName contains D20 use D20-<node>
+        name = string.format("D20-%i", sensor[1])
+      end
       var name_tooltip = "Dragino D20"
-      var battery = sensor[3]
-      var battery_last_seen = sensor[2]
-      var rssi = sensor[4]
-      var last_seen = sensor[1]
+      var last_seen = sensor[2]
+      var battery_last_seen = sensor[3]
+      var battery = sensor[4]
+      var rssi = sensor[5]
       msg += lwdecode.header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
 
       # Sensors
-      var tempC1 = sensor[5]
+      var tempC1 = sensor[6]
       msg += "<tr class='htr'><td colspan='4'>&#9478;"                   # |
       if tempC1 < 1000
         msg += string.format(" &#x2600;&#xFE0F; %.1f°C", tempC1)         # Sunshine - Temperature 
       end
 
-      var tempC2 = sensor[6]
+      var tempC2 = sensor[7]
       if tempC2 < 1000
         msg += string.format(" &#x2600;&#xFE0F; %.1f°C", tempC2)         
       end
 
-      var tempC3 = sensor[7]
+      var tempC3 = sensor[8]
       if tempC3 < 1000
         msg += string.format(" &#x2600;&#xFE0F; %.1f°C", tempC3)         
       end
