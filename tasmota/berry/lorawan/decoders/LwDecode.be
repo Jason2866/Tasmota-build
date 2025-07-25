@@ -51,7 +51,6 @@ class lwdecode_cls
 
     if Payload.size() && self.LwDecoders.find(decoder)
       var decoded = self.LwDecoders[decoder].decodeUplink(Node, RSSI, FPort, Payload)	
-      decoded.insert("Device", Device)
       decoded.insert("Node", Node)
       decoded.insert("RSSI", RSSI)
       var mqttData = {deviceName:decoded}

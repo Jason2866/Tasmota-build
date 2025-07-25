@@ -10,7 +10,8 @@ global.DrgD20Nodes = {}
 
 class LwDecoDrgD20
   static def decodeUplink(Node, RSSI, FPort, Bytes)
-    var data = {}
+    var data = {"Device":"Dragino D20"}
+    
     var valid_values = false
     var last_seen = 1451602800
     var battery_last_seen = 1451602800
