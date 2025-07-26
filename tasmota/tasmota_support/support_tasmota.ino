@@ -1120,7 +1120,7 @@ void PerformEverySecond(void)
 
     Settings->last_module = Settings->module;
 
-#ifndef SOC_WIFI_SUPPORTED
+#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
     // Needs to be delayed after Tasmota restart because of HostedMCU reset by Core
     AddLog(LOG_LEVEL_INFO, PSTR("HDW: %s Hosted MCU v%s"), GetHostedMCU().c_str(), GetHostedMCUFwVersion().c_str());
 #endif
