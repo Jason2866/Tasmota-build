@@ -15,7 +15,7 @@ class lwdecode_cls
     self.LwDecoders = {}
     self.topic = string.replace(string.replace(
                    tasmota.cmd('_FullTopic',true)['FullTopic'],
-                   '%topic%', tasmota.cmd('_Topic',true)['Topic']),
+                   '%topic%', tasmota.cmd('_Status',true)['Status']['Topic']),
                    '%prefix%', tasmota.cmd('_Prefix',true)['Prefix3'])  # tele
                  + 'SENSOR'
 
@@ -58,7 +58,11 @@ class lwdecode_cls
       if tasmota.get_option(83) == 0  # SetOption83 - Remove LwDecoded form JSON message (1)
         mqttData = {"LwDecoded":{deviceName:decoded}}
       end
-      mqtt.publish(self.topic, json.dump(mqttData))
+      var topic = self.topic
+      if tasmota.get_option(89) == 1  # SetOption89 - Distinct MQTT topics per device (1)
+        topic = self.topic + "/" + deviceData[deviceName]['DevEUIh'] + deviceData[deviceName]['DevEUIl']
+      end
+      mqtt.publish(topic, json.dump(mqttData))
       tasmota.global.restart_flag = 0 # Signal LwDecoded successful (default state)
     end 
 
