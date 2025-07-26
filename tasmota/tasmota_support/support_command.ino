@@ -987,7 +987,7 @@ void CmndStatus(void)
                           ",\"" D_JSON_COREVERSION "\":\"" ARDUINO_CORE_RELEASE "\",\"" D_JSON_SDKVERSION "\":\"%s\","
                           "\"CpuFrequency\":%d,\"Hardware\":\"%s\""
 #ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-                          ",\"HostedMCU\":{\"Hardware\":\"" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET"\",\"Version\":\"%s\"}"
+                          ",\"HostedMCU\":{\"Hardware\":\"%s\",\"Version\":\"%s\"}"
 #endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
                           "%s}}"),
                           TasmotaGlobal.version, TasmotaGlobal.image_name, GetCodeCores().c_str(), GetBuildDateAndTime().c_str()
@@ -997,7 +997,7 @@ void CmndStatus(void)
                           , ESP.getSdkVersion(),
                           ESP.getCpuFreqMHz(), GetDeviceHardwareRevision().c_str(),
 #ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-                          GetHostedMCUFwVersion().c_str(),
+                          GetHostedMCU().c_str(), GetHostedMCUFwVersion().c_str(),
 #endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
                           GetStatistics().c_str());
     CmndStatusResponse(2);

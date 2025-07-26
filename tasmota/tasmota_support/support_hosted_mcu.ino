@@ -24,6 +24,14 @@
 #include "esp_hosted_api_types.h"
 #include "esp_hosted_ota.h"
 
+String GetHostedMCU(void) {
+  // Function is not yet implemented in Arduino Core so emulate it here
+  if (0 == strcasecmp_P(CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET, PSTR("esp32c6"))) {
+    return String("ESP32-C6");
+  }
+  return String("Unknown");
+}
+
 int GetFwVersionNumber(void) {
   // Function is not yet implemented in Arduino Core so emulate it here
   return 0x0200000E;   // v2.0.14

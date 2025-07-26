@@ -2984,7 +2984,7 @@ void HandleInformation(void) {
   }
   WSContentSeparatorIFat();
 #ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-  WSContentSend_P(PSTR("}1 Hosted MCU }2 " CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ""));
+  WSContentSend_P(PSTR("}1 Hosted MCU }2%s"), GetHostedMCU().c_str());
   WSContentSend_P(PSTR("}1 Hosted Remote Fw }2%s"), GetHostedMCUFwVersion().c_str());
   WSContentSeparatorIFat();
 #endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED

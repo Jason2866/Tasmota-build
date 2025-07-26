@@ -1120,6 +1120,11 @@ void PerformEverySecond(void)
 
     Settings->last_module = Settings->module;
 
+#ifndef SOC_WIFI_SUPPORTED
+    // Needs to be delayed after Tasmota restart because of HostedMCU reset by Core
+    AddLog(LOG_LEVEL_INFO, PSTR("HDW: %s Hosted MCU v%s"), GetHostedMCU().c_str(), GetHostedMCUFwVersion().c_str());
+#endif
+
 #ifdef USE_DEEPSLEEP
     if (!(DeepSleepEnabled() && !Settings->flag3.bootcount_update)) {  // SetOption76  - (Deepsleep) Enable incrementing bootcount (1) when deepsleep is enabled
 #endif
