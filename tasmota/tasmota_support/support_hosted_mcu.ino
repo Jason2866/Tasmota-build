@@ -64,7 +64,10 @@ String GetHostedMCUFwVersion(void) {
 }
 
 int OTAHostedMCU(const char* image_url) {
-  return esp_hosted_slave_ota(image_url);
+  AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: About to OTA update with %s"), image_url);
+  int result = esp_hosted_slave_ota(image_url);
+  AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: Done with result %d"), result);
+  return result;
 }
 
 #endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
