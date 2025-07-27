@@ -28,7 +28,7 @@
  * Use online command StateText to translate ON, OFF, HOLD and TOGGLE.
  * Use online command Prefix to translate cmnd, stat and tele.
  *
- * Updated until v9.4.0.1 - Last update 15.07.2025
+ * Updated until v9.4.0.1 - Last update 27.07.2025
 \*********************************************************************/
 
 #define LANGUAGE_MODULE_NAME         // Enable to display "Module Generic" (ie Spanish), Disable to display "Generic Module" (ie English)
@@ -373,6 +373,7 @@
 #define D_PROGRAM_VERSION       "Versione programma"
 #define D_BUILD_DATE_AND_TIME   "Data/ora compilazione"
 #define D_CORE_AND_SDK_VERSION  "Versione core/SDK"
+#define D_HOSTED_MCU            "Hosted MCU"
 #define D_FLASH_WRITE_COUNT     "Numero scritture flash"
 #define D_MAC_ADDRESS           "Indirizzo MAC"
 #define D_MQTT_HOST             "Host MQTT"
@@ -754,6 +755,13 @@
 #define D_SENSOR_SDIO_D1                "SDIO - D1"
 #define D_SENSOR_SDIO_D2                "SDIO - D2"
 #define D_SENSOR_SDIO_D3                "SDIO - D3"
+#define D_SENSOR_HSDIO_CMD              "HSDIO - CMD"
+#define D_SENSOR_HSDIO_CLK              "HSDIO - CLK"
+#define D_SENSOR_HSDIO_RST              "HSDIO - RST"
+#define D_SENSOR_HSDIO_D0               "HSDIO - D0"
+#define D_SENSOR_HSDIO_D1               "HSDIO - D1"
+#define D_SENSOR_HSDIO_D2               "HSDIO - D2"
+#define D_SENSOR_HSDIO_D3               "HSDIO - D3"
 #define D_SENSOR_BACKLIGHT              "Retroilluminazione"
 #define D_SENSOR_PMS5003_TX             "PMS5003 - TX"
 #define D_SENSOR_PMS5003_RX             "PMS5003 - RX"

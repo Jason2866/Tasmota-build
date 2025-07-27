@@ -78,4 +78,27 @@ int OTAHostedMCU(const char* image_url) {
   return result;
 }
 
+void HostedMCUStatus(void) {
+  // Execute after HostedMCU is init by WiFi.mode()
+  static bool once_shown = false;
+
+  if (once_shown) { return; }
+  if (esp_hosted_is_config_valid()) {
+    once_shown = true;
+    char config[128] = { 0 };
+    struct esp_hosted_transport_config *pconfig;
+    if (ESP_TRANSPORT_OK == esp_hosted_transport_get_config(&pconfig)) {
+      if (pconfig->transport_in_use == H_TRANSPORT_SDIO) {
+        struct esp_hosted_sdio_config *psdio_config;
+        if (ESP_TRANSPORT_OK == esp_hosted_sdio_get_config(&psdio_config)) {
+          snprintf_P(config, sizeof(config), PSTR(" using GPIO%02d(CLK), GPIO%02d(CMD), GPIO%02d(D0), GPIO%02d(D1), GPIO%02d(D2), GPIO%02d(D3) and GPIO%02d(RST)"), 
+            psdio_config->pin_clk.pin, psdio_config->pin_cmd.pin, psdio_config->pin_d0.pin, psdio_config->pin_d1.pin, psdio_config->pin_d2.pin, psdio_config->pin_d3.pin, psdio_config->pin_reset.pin);
+        }
+      }
+    }
+    AddLog(LOG_LEVEL_INFO, PSTR("HST: Hosted MCU %s v%s%s"),
+      GetHostedMCU().c_str(), GetHostedMCUFwVersion().c_str(), config);
+  }
+}
+
 #endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED

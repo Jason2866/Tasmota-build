@@ -232,6 +232,9 @@ enum UserSelectablePins {
   GPIO_C8_CO2_5K_TX, GPIO_C8_CO2_5K_RX, // C8-CO2-5K CO2 Sensor
   GPIO_V9240_TX, GPIO_V9240_RX,         //  V9240 serial interface
   GPIO_LD2402_TX, GPIO_LD2402_RX,       // HLK-LD2402
+#ifdef ESP32
+  GPIO_HSDIO_CMD, GPIO_HSDIO_CLK, GPIO_HSDIO_RST, GPIO_HSDIO_D0, GPIO_HSDIO_D1, GPIO_HSDIO_D2, GPIO_HSDIO_D3, // Hosted MCU SDIO interface, including 1-bit and 4-bit modes
+#endif
   GPIO_SENSOR_END };
 
 // Error as warning to rethink GPIO usage with max 2045
@@ -460,12 +463,7 @@ const char kSensorNames[] PROGMEM =
   D_SENSOR_ADE7880_IRQ "|"
   D_SENSOR_RESET "|"
   D_SENSOR_MS01 "|"
-  D_SENSOR_SDIO_CMD "|"
-  D_SENSOR_SDIO_CLK "|"
-  D_SENSOR_SDIO_D0 "|"
-  D_SENSOR_SDIO_D1 "|"
-  D_SENSOR_SDIO_D2 "|"
-  D_SENSOR_SDIO_D3 "|"
+  D_SENSOR_SDIO_CMD "|" D_SENSOR_SDIO_CLK "|" D_SENSOR_SDIO_D0 "|" D_SENSOR_SDIO_D1 "|" D_SENSOR_SDIO_D2 "|" D_SENSOR_SDIO_D3 "|"
   D_SENSOR_FLOWRATEMETER "|"
   D_SENSOR_BP5758D_CLK "|" D_SENSOR_BP5758D_DAT "|"
   D_SENSOR_SM2335_CLK "|" D_SENSOR_SM2335_DAT "|"
@@ -510,7 +508,10 @@ const char kSensorNames[] PROGMEM =
   D_SENSOR_TWAI_TX "|" D_SENSOR_TWAI_RX "|" D_SENSOR_TWAI_BO "|" D_SENSOR_TWAI_CLK "|"
   D_SENSOR_C8_CO2_5K_TX "|" D_SENSOR_C8_CO2_5K_RX "|"
   D_SENSOR_V9240_TX "|" D_SENSOR_V9240_RX "|"
-  D_SENSOR_LD2402_TX "|" D_SENSOR_LD2402_RX
+  D_SENSOR_LD2402_TX "|" D_SENSOR_LD2402_RX "|"
+#ifdef ESP32
+  D_SENSOR_HSDIO_CMD "|" D_SENSOR_HSDIO_CLK "|" D_SENSOR_HSDIO_RST "|" D_SENSOR_HSDIO_D0 "|" D_SENSOR_HSDIO_D1 "|" D_SENSOR_HSDIO_D2 "|" D_SENSOR_HSDIO_D3 "|"
+#endif
   ;
 
 const char kSensorNamesFixed[] PROGMEM =
@@ -1300,6 +1301,15 @@ const uint16_t kGpioNiceList[] PROGMEM = {
   AGPIO(GPIO_BIOPDU_PZEM016_RX),
   AGPIO(GPIO_BIOPDU_BIT) + AGMAX(3),
 #endif
+#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
+  AGPIO(GPIO_HSDIO_CMD),                         // Hosted MCU SDIO interface, including 1-bit and 4-bit modes
+  AGPIO(GPIO_HSDIO_CLK),
+  AGPIO(GPIO_HSDIO_RST),
+  AGPIO(GPIO_HSDIO_D0),
+  AGPIO(GPIO_HSDIO_D1),
+  AGPIO(GPIO_HSDIO_D2),
+  AGPIO(GPIO_HSDIO_D3),
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 
 /*-------------------------------------------------------------------------------------------*\
  * ESP32 multiple Analog / Digital converter inputs

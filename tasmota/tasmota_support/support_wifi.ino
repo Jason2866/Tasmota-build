@@ -377,6 +377,10 @@ void WifiBegin(uint8_t flag, uint8_t channel) {
   if (Settings->flag5.wait_for_wifi_result) {  // SetOption142 - (Wifi) Wait 1 second for wifi connection solving some FRITZ!Box modem issues (1)
     WiFi.waitForConnectResult(1000);  // https://github.com/arendst/Tasmota/issues/14985
   }
+
+#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
+  HostedMCUStatus();
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 }
 
 /**
@@ -1468,6 +1472,18 @@ void WifiConnect(void)
   if (!wifi_event_registered) {
     WiFi.onEvent(WifiEvents);   // register event listener only once
     wifi_event_registered = true;
+#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
+    // Hosted MCU SDIO pins must be set before WiFi is initialized
+    if (WiFi.setPins(Pin(GPIO_HSDIO_CLK),
+                     Pin(GPIO_HSDIO_CMD),
+                     Pin(GPIO_HSDIO_D0),
+                     Pin(GPIO_HSDIO_D1),
+                     Pin(GPIO_HSDIO_D2),
+                     Pin(GPIO_HSDIO_D3),
+                     Pin(GPIO_HSDIO_RST))) {
+//      AddLog(LOG_LEVEL_DEBUG, PSTR("HMC: Hosted MCU SDIO pins set"));
+    }
+#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
   }
 #endif // ESP32
   WifiSetState(0);
