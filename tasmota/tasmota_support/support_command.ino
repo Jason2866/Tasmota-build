@@ -22,9 +22,6 @@ const char kTasmotaCommands[] PROGMEM = "|"  // No prefix
   D_SO_WIFINOSLEEP "|"
   // Other commands
   D_CMND_UPGRADE "|" D_CMND_UPLOAD "|" D_CMND_OTAURL "|" D_CMND_SERIALLOG "|" D_CMND_RESTART "|"
-#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-  D_CMND_HOSTEDOTA "|"
-#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 #ifndef FIRMWARE_MINIMAL
   D_CMND_BACKLOG "|" D_CMND_DELAY "|" D_CMND_POWER "|" D_CMND_POWERLOCK "|" D_CMND_TIMEDPOWER "|" D_CMND_STATUS "|" D_CMND_STATE "|" D_CMND_SLEEP "|"
   D_CMND_POWERONSTATE "|" D_CMND_PULSETIME "|" D_CMND_BLINKTIME "|" D_CMND_BLINKCOUNT "|" D_CMND_STATETEXT "|" D_CMND_SAVEDATA "|"
@@ -74,9 +71,6 @@ SO_SYNONYMS(kTasmotaSynonyms,
 
 void (* const TasmotaCommand[])(void) PROGMEM = {
   &CmndUpgrade, &CmndUpgrade, &CmndOtaUrl, &CmndSeriallog, &CmndRestart,
-#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-  &CmdHostedOta,
-#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 #ifndef FIRMWARE_MINIMAL
   &CmndBacklog, &CmndDelay, &CmndPower, &CmndPowerLock, &CmndTimedPower, &CmndStatus, &CmndState, &CmndSleep,
   &CmndPowerOnState, &CmndPulsetime, &CmndBlinktime, &CmndBlinkcount, &CmndStateText, &CmndSavedata,
@@ -1340,41 +1334,6 @@ void CmndOtaUrl(void)
   }
   ResponseCmndChar(SettingsText(SET_OTAURL));
 }
-
-#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-void CmdHostedOta() {
-  /*
-  If OtaUrl = "https://ota.tasmota.com/tasmota32/tasmota32p4.bin"
-   Then use "https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ".bin"
-  As an option allow user to enter URL like:
-   HostedOta https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_esp32c6.bin
-   HostedOta https://ota.tasmota.com/tasmota32/coprocessor/v2.0.14/network_adapter_esp32c6.bin
-  Or allow user to enter required version like:
-   HostedOta v2.0.17
-  */
-  TasmotaGlobal.hosted_ota_url = (char*)calloc(200, sizeof(char));
-  if (!TasmotaGlobal.hosted_ota_url) { return; }                 // Unable to allocate memory
-  if (XdrvMailbox.data_len > 15) {
-    strlcpy(TasmotaGlobal.hosted_ota_url, XdrvMailbox.data, 200);
-  } else {
-    // Replace https://ota.tasmota.com/tasmota32/tasmota32p4.bin  with https://ota.tasmota.com/tasmota32/coprocessor/network_adapter_esp32c6.bin
-    char ota_url[TOPSZ];
-    strlcpy(TasmotaGlobal.hosted_ota_url, GetOtaUrl(ota_url, sizeof(ota_url)), 200);
-    char *bch = strrchr(TasmotaGlobal.hosted_ota_url, '/');      // Only consider filename after last backslash
-    if (bch == nullptr) { bch = TasmotaGlobal.hosted_ota_url; }  // No path found so use filename only
-    *bch = '\0';                                                 // full_ota_url = https://ota.tasmota.com/tasmota32
-    char version[16] = { 0 };
-    if (XdrvMailbox.data_len) {
-      snprintf_P(version, sizeof(version), PSTR("/%s"), XdrvMailbox.data);
-    }
-    snprintf_P(TasmotaGlobal.hosted_ota_url, 200, PSTR("%s/coprocessor%s/network_adapter_" CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET ".bin"), 
-      TasmotaGlobal.hosted_ota_url, version);
-  }
-  TasmotaGlobal.hosted_ota_state_flag = 1;
-  Response_P(PSTR("{\"%s\":\"" D_JSON_VERSION " %s " D_JSON_FROM " %s\"}"), 
-    XdrvMailbox.command, GetHostedMCUFwVersion().c_str(), TasmotaGlobal.hosted_ota_url);
-}
-#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
 
 void CmndSeriallog(void)
 {

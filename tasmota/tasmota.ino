@@ -269,11 +269,6 @@ struct TasmotaGlobal_t {
   GpioOptionABits gpio_optiona;             // GPIO Option_A flags
   void *log_buffer_mutex;                   // Control access to log buffer
 
-#ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-  char *hosted_ota_url;                     // ESP32-P4 hosted OTA URL
-  int hosted_ota_state_flag;                // ESP32-P4 hosted OTA initiated flag
-#endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
-
   power_t power;                            // Current copy of Settings->power
   power_t power_latching;                   // Current state of single pin latching power
   power_t rel_inverted;                     // Relay inverted flag (1 = (0 = On, 1 = Off))
