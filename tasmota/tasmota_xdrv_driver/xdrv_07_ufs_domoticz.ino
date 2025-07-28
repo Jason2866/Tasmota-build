@@ -92,6 +92,7 @@ typedef struct Domoticz_t {
   uint32_t fan_debounce;             // iFan02 state debounce timer
 #endif  // USE_SONOFF_IFAN
   int update_timer;
+  uint8_t devices;
   uint8_t keys;
   uint8_t switches;
   bool subscribe;
@@ -122,7 +123,7 @@ bool DomoticzLoadData(void) {
   Domoticz->Settings.update_timer = root.getUInt(PSTR("Update"), Domoticz->Settings.update_timer);
   JsonParserArray arr = root[PSTR("Relay")];
   if (arr) {
-    for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+    for (uint32_t i = 0; i < Domoticz->devices; i++) {
       if (arr[i]) { Domoticz->Settings.relay_idx[i] = arr[i].getUInt(); }
     }
   }
@@ -153,9 +154,9 @@ bool DomoticzSaveData(void) {
                    "\"Update\":%u"),
                    Domoticz->Settings.crc32,
                    Domoticz->Settings.update_timer);
-  if (TasmotaGlobal.devices_present) {
+  if (Domoticz->devices) {
     ResponseAppend_P(PSTR(",\"Relay\":"));
-    for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+    for (uint32_t i = 0; i < Domoticz->devices; i++) {
       ResponseAppend_P(PSTR("%c%d"), (0==i)?'[':',', Domoticz->Settings.relay_idx[i]);
     }
     ResponseAppend_P(PSTR("]"));
@@ -199,7 +200,7 @@ void DomoticzSettingsLoad(bool erase) {
 
 //  memset(&Domoticz->Settings, 0x00, sizeof(DzSettings_t));  // Won't work as we need to keep our pointers
   Domoticz->Settings.update_timer = 0;
-  for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+  for (uint32_t i = 0; i < Domoticz->devices; i++) {
     Domoticz->Settings.relay_idx[i] = 0;
     if (i < Domoticz->keys) {
       Domoticz->Settings.key_idx[i] = 0;
@@ -216,7 +217,7 @@ void DomoticzSettingsLoad(bool erase) {
   // Init any other parameter in struct DzSettings
   Domoticz->Settings.update_timer = Settings->domoticz_update_timer;
   for (uint32_t i = 0; i < MAX_DOMOTICZ_IDX; i++) {
-    if (i < TasmotaGlobal.devices_present) {
+    if (i < Domoticz->devices) {
       Domoticz->Settings.relay_idx[i] = Settings->domoticz_relay_idx[i];
     }
     if (i < Domoticz->keys) {
@@ -250,8 +251,8 @@ void DomoticzSettingsLoad(bool erase) {
 void DomoticzSettingsSave(void) {
   // Called from FUNC_SAVE_SETTINGS every SaveData second and at restart
   uint32_t crc32 = GetCfgCrc32((uint8_t*)&Domoticz->Settings +4, sizeof(DzSettings_t) -4);  // Skip crc32
-  if (TasmotaGlobal.devices_present) {
-    crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.relay_idx, TasmotaGlobal.devices_present * sizeof(uintdz_t));
+  if (Domoticz->devices) {
+    crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.relay_idx, Domoticz->devices * sizeof(uintdz_t));
   }
   if (Domoticz->keys) {
     crc32 += GetCfgCrc32((uint8_t*)Domoticz->Settings.key_idx, Domoticz->keys * sizeof(uintdz_t));
@@ -301,12 +302,12 @@ int DomoticzRssiQuality(void) {
 }
 
 uint32_t DomoticzRelayIdx(uint32_t relay) {
-  if (relay >= TasmotaGlobal.devices_present) { return 0; }
+  if (relay >= Domoticz->devices) { return 0; }
   return Domoticz->Settings.relay_idx[relay];
 }
 
 void DomoticzSetRelayIdx(uint32_t relay, uint32_t idx) {
-  if (relay >= TasmotaGlobal.devices_present) { return; }
+  if (relay >= Domoticz->devices) { return; }
   Domoticz->Settings.relay_idx[relay] = idx;
 }
 
@@ -342,7 +343,7 @@ void DomoticzUpdateFanState(void) {
 void MqttPublishDomoticzPowerState(uint8_t device) {
   if (Settings->flag.mqtt_enabled) {  // SetOption3 - Enable MQTT
     if (device < 1) { device = 1; }
-    if (device > TasmotaGlobal.devices_present) { return; }
+    if (device > Domoticz->devices) { return; }
     if (DomoticzRelayIdx(device -1)) {
 #ifdef USE_SHUTTER
       if (Domoticz->is_shutter) {
@@ -388,7 +389,7 @@ void DomoticzMqttUpdate(void) {
     Domoticz->update_timer--;
     if (Domoticz->update_timer <= 0) {
       Domoticz->update_timer = Domoticz->Settings.update_timer;
-      for (uint32_t i = 1; i <= TasmotaGlobal.devices_present; i++) {
+      for (uint32_t i = 1; i <= Domoticz->devices; i++) {
 #ifdef USE_SHUTTER
         if (Domoticz->is_shutter) {
           // no power state updates for shutters
@@ -412,7 +413,7 @@ void DomoticzMqttUpdate(void) {
 
 void DomoticzMqttSubscribe(void) {
   bool any_relay = false;
-  for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+  for (uint32_t i = 0; i < Domoticz->devices; i++) {
     if (DomoticzRelayIdx(i)) {
       any_relay = true;
       break;
@@ -433,7 +434,7 @@ void DomoticzMqttSubscribe(void) {
 
 int DomoticzIdx2Relay(uint32_t idx) {
   if (idx > 0) {
-    for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+    for (uint32_t i = 0; i < Domoticz->devices; i++) {
       if (idx == DomoticzRelayIdx(i)) {
         return i;
       }
@@ -571,7 +572,7 @@ bool DomoticzMqttData(void) {
       return true;  // Stop loop
     }
     char stemp1[10];
-    snprintf_P(XdrvMailbox.topic, XdrvMailbox.index, PSTR("/" D_CMND_POWER "%s"), (TasmotaGlobal.devices_present > 1) ? itoa(relay_index +1, stemp1, 10) : "");
+    snprintf_P(XdrvMailbox.topic, XdrvMailbox.index, PSTR("/" D_CMND_POWER "%s"), (Domoticz->devices > 1) ? itoa(relay_index +1, stemp1, 10) : "");
     snprintf_P(XdrvMailbox.data, XdrvMailbox.data_len, PSTR("%d"), nvalue);
   } else {
     return true;    // No command received
@@ -649,22 +650,24 @@ void DomoticzSendData(uint32_t sensor_idx, uint32_t idx, char *data) {
 }
 
 void DomoticzSensor(uint8_t idx, char *data) {
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
   if (Domoticz->Settings.sensor_idx[idx]) {
     DomoticzSendData(idx, Domoticz->Settings.sensor_idx[idx], data);
   }
 }
 
-uint8_t DomoticzHumidityState(float h) {
-  return (!h) ? 0 : (h < 40) ? 2 : (h > 70) ? 3 : 1;
-}
-
 void DomoticzSensor(uint8_t idx, int value) {
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
   char data[16];
   snprintf_P(data, sizeof(data), PSTR("%d"), value);
   DomoticzSensor(idx, data);
 }
 
 void DomoticzFloatSensor(uint8_t idx, float value) {
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+  
   uint32_t resolution = 1;
 /*
   switch (idx) {
@@ -683,8 +686,14 @@ void DomoticzFloatSensor(uint8_t idx, float value) {
   DomoticzSensor(idx, data);
 }
 
+uint8_t DomoticzHumidityState(float h) {
+  return (!h) ? 0 : (h < 40) ? 2 : (h > 70) ? 3 : 1;
+}
+
 //void DomoticzTempHumPressureSensor(float temp, float hum, float baro = -1);
 void DomoticzTempHumPressureSensor(float temp, float hum, float baro) {
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
   char temperature[FLOATSZ];
   dtostrfd(temp, Settings->flag2.temperature_resolution, temperature);
   char humidity[FLOATSZ];
@@ -704,6 +713,8 @@ void DomoticzTempHumPressureSensor(float temp, float hum, float baro) {
 }
 
 void DomoticzSensorPowerEnergy(int power, char *energy) {
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
   char data[16];
   snprintf_P(data, sizeof(data), PSTR("%d;%s"), power, energy);
   DomoticzSensor(DZ_POWER_ENERGY, data);
@@ -715,6 +726,8 @@ void DomoticzSensorP1SmartMeter(char *usage1, char *usage2, char *return1, char 
   //return1  = energy return meter tariff 1, This is an incrementing counter
   //return2  = energy return meter tariff 2, This is an incrementing counter
   //power    = if >= 0 actual usage power. if < 0 actual return power (Watt)
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
   int consumed = power;
   int produced = 0;
   if (power < 0) {
@@ -733,10 +746,11 @@ void DomoticzInit(void) {
     Domoticz = (Domoticz_t*)calloc(1, sizeof(Domoticz_t));  // Need calloc to reset registers to 0/false
     if (nullptr == Domoticz) { return; }
 
-    if (TasmotaGlobal.devices_present) {
-      Domoticz->Settings.relay_idx = (uintdz_t*)calloc(TasmotaGlobal.devices_present, sizeof(uintdz_t));
+    Domoticz->devices = TasmotaGlobal.devices_present;
+    if (Domoticz->devices) {
+      Domoticz->Settings.relay_idx = (uintdz_t*)calloc(Domoticz->devices, sizeof(uintdz_t));
       if (nullptr == Domoticz->Settings.relay_idx) { return; }
-      for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+      for (uint32_t i = 0; i < Domoticz->devices; i++) {
         if (ButtonUsed(i)) { Domoticz->keys++; }
         if (SwitchUsed(i)) { Domoticz->switches++; }
       }
@@ -751,7 +765,7 @@ void DomoticzInit(void) {
     }
 
     AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_DOMOTICZ "Support %d Device(s), %d Button(s), %d Switch(es) and %d Sensors"),
-      TasmotaGlobal.devices_present, Domoticz->keys, Domoticz->switches, DZ_MAX_SENSORS);
+      Domoticz->devices, Domoticz->keys, Domoticz->switches, DZ_MAX_SENSORS);
 
     DomoticzSettingsLoad(0);
     Domoticz->update_flag = true;
@@ -766,10 +780,10 @@ void CmndDomoticzIdx(void) {
   // DzIdx0 0    - Reset all disabling subscription too
   // DzIdx1 403  - Relate relay1 (=Power1) to Domoticz Idx 403 persistent
   // DzIdx5 403  - Relate relay5 (=Power5) to Domoticz Idx 403 non-persistent (need a rule at boot to become persistent)
-  if ((XdrvMailbox.index >= 0) && (XdrvMailbox.index <= TasmotaGlobal.devices_present)) {
+  if ((XdrvMailbox.index >= 0) && (XdrvMailbox.index <= Domoticz->devices)) {
     if (XdrvMailbox.payload >= 0) {
       if (0 == XdrvMailbox.index) {
-        for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+        for (uint32_t i = 0; i < Domoticz->devices; i++) {
           DomoticzSetRelayIdx(i, 0);
         }
       } else {
@@ -888,7 +902,7 @@ void HandleDomoticzConfiguration(void) {
   WSContentStart_P(PSTR(D_CONFIGURE_DOMOTICZ));
   WSContentSendStyle();
   WSContentSend_P(HTTP_FORM_DOMOTICZ, (Domoticz->switches)? D_DOMOTICZ_SWITCH :"", (Domoticz->keys)? D_DOMOTICZ_KEY :"");
-  for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+  for (uint32_t i = 0; i < Domoticz->devices; i++) {
     WSContentSend_P(HTTP_FORM_DOMOTICZ_INDEX, i +1);
     if (i < Domoticz->switches) {
       WSContentSend_P(HTTP_FORM_DOMOTICZ_INPUT, 's', i, Domoticz->Settings.switch_idx[i]);
@@ -930,7 +944,7 @@ void DomoticzSaveSettings(void) {
   cmnd += AddWebCommand(PSTR(D_PRFX_DOMOTICZ D_CMND_UPDATETIMER), PSTR("ut"), STR(DOMOTICZ_UPDATE_TIMER));
   char arg_idx[5];
   char cmnd2[24];
-  for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
+  for (uint32_t i = 0; i < Domoticz->devices; i++) {
     snprintf_P(cmnd2, sizeof(cmnd2), PSTR(D_PRFX_DOMOTICZ D_CMND_IDX "%d"), i +1);
     snprintf_P(arg_idx, sizeof(arg_idx), PSTR("r%d"), i);
     cmnd += DomoticzAddWebCommand(cmnd2, arg_idx, Domoticz->Settings.relay_idx[i]);
