@@ -329,12 +329,12 @@ void MqttPublishDomoticzFanState(void) {
 }
 
 void DomoticzUpdateFanState(void) {
-  if (Domoticz) {
-    if (Domoticz->update_flag) {
-      MqttPublishDomoticzFanState();
-    }
-    Domoticz->update_flag = true;
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
+  if (Domoticz->update_flag) {
+    MqttPublishDomoticzFanState();
   }
+  Domoticz->update_flag = true;
 }
 #endif  // USE_SONOFF_IFAN
 
@@ -374,12 +374,12 @@ void MqttPublishDomoticzPowerState(uint8_t device) {
 }
 
 void DomoticzUpdatePowerState(uint8_t device) {
-  if (Domoticz) {
-    if (Domoticz->update_flag) {
-      MqttPublishDomoticzPowerState(device);
-    }
-    Domoticz->update_flag = true;
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
+  if (Domoticz->update_flag) {
+    MqttPublishDomoticzPowerState(device);
   }
+  Domoticz->update_flag = true;
 }
 
 /*********************************************************************************************/
@@ -597,6 +597,8 @@ void DomoticzSendSwitch(uint32_t type, uint32_t index, uint32_t state) {
 
 bool DomoticzSendKey(uint32_t key, uint32_t device, uint32_t state, uint32_t svalflg) {
   // If ButtonTopic or SwitchTopic is set perform DomoticzSendSwitch
+  if (!Domoticz) { return false; }  // No MQTT enabled or unable to allocate memory
+
   if (svalflg) { 
     if (key) {  // Switch
       if ((device <= Domoticz->switches) && Domoticz->Settings.switch_idx[device -1]) {
@@ -975,7 +977,7 @@ void DomoticzSaveSettings(void) {
 bool Xdrv07(uint32_t function) {
   bool result = false;
 
-  if (FUNC_PRE_INIT == function) {
+  if (FUNC_INIT == function) {
     DomoticzInit();
   }
   else if (Domoticz) {
