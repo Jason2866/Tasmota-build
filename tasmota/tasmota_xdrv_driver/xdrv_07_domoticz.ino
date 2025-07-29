@@ -141,12 +141,12 @@ void MqttPublishDomoticzFanState(void) {
 }
 
 void DomoticzUpdateFanState(void) {
-  if (Domoticz) {
-    if (Domoticz->update_flag) {
-      MqttPublishDomoticzFanState();
-    }
-    Domoticz->update_flag = true;
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
+  if (Domoticz->update_flag) {
+    MqttPublishDomoticzFanState();
   }
+  Domoticz->update_flag = true;
 }
 #endif  // USE_SONOFF_IFAN
 
@@ -181,12 +181,12 @@ void MqttPublishDomoticzPowerState(uint8_t device) {
 }
 
 void DomoticzUpdatePowerState(uint8_t device) {
-  if (Domoticz) {
-    if (Domoticz->update_flag) {
-      MqttPublishDomoticzPowerState(device);
-    }
-    Domoticz->update_flag = true;
+  if (!Domoticz) { return; }  // No MQTT enabled or unable to allocate memory
+
+  if (Domoticz->update_flag) {
+    MqttPublishDomoticzPowerState(device);
   }
+  Domoticz->update_flag = true;
 }
 
 /*********************************************************************************************/
@@ -402,15 +402,15 @@ void DomoticzSendSwitch(uint32_t type, uint32_t index, uint32_t state) {
 }
 
 bool DomoticzSendKey(uint32_t key, uint32_t device, uint32_t state, uint32_t svalflg) {
-  bool result = false;
+  if (!Domoticz) { return false; }  // No MQTT enabled or unable to allocate memory
 
   if (device <= MAX_DOMOTICZ_IDX) {
     if ((Settings->domoticz_key_idx[device -1] || Settings->domoticz_switch_idx[device -1]) && (svalflg)) {
       DomoticzSendSwitch(0, (key) ? Settings->domoticz_switch_idx[device -1] : Settings->domoticz_key_idx[device -1], state);
-      result = true;
+      return true;
     }
   }
-  return result;
+  return false;
 }
 
 /*********************************************************************************************\
@@ -455,10 +455,6 @@ void DomoticzSensor(uint8_t idx, char *data) {
   }
 }
 
-uint8_t DomoticzHumidityState(float h) {
-  return (!h) ? 0 : (h < 40) ? 2 : (h > 70) ? 3 : 1;
-}
-
 void DomoticzSensor(uint8_t idx, int value) {
   char data[16];
   snprintf_P(data, sizeof(data), PSTR("%d"), value);
@@ -482,6 +478,10 @@ void DomoticzFloatSensor(uint8_t idx, float value) {
   char data[FLOATSZ];
   dtostrfd(value, resolution, data);
   DomoticzSensor(idx, data);
+}
+
+uint8_t DomoticzHumidityState(float h) {
+  return (!h) ? 0 : (h < 40) ? 2 : (h > 70) ? 3 : 1;
 }
 
 //void DomoticzTempHumPressureSensor(float temp, float hum, float baro = -1);
