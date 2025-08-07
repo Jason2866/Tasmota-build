@@ -144,6 +144,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry raise webserver hooks from 16 to 32 [#23748](https://github.com/arendst/Tasmota/issues/23748)
 
 ### Fixed
+- Syslog RFC5424 compliance [#23509](https://github.com/arendst/Tasmota/issues/23509)
 - AHT30 sensor start with null values after deep sleep [#23624](https://github.com/arendst/Tasmota/issues/23624)
 - NeoPool reset to default settings [#23734](https://github.com/arendst/Tasmota/issues/23734)
 - Berry vulnerability in JSON parsing for unicode [#23603](https://github.com/arendst/Tasmota/issues/23603)

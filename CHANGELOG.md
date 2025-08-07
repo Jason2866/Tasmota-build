@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 ### Fixed
+- Syslog RFC5424 compliance (#23509)
 
 ### Removed
 

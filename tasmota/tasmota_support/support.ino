@@ -2516,16 +2516,16 @@ void SyslogAsync(bool refresh) {
       char* msg_start = line +mxtime;
       uint32_t msg_len = len -mxtime -1;
 
-      /* RFC5424 - Syslog protocol - <PRI>VERSION TIMESTAMP HOSTNAME APP_NAME PROCID STRUCTURED-DATA MSGID MSG
+      /* RFC5424 - Syslog protocol - <PRI>VERSION TIMESTAMP HOSTNAME APP_NAME PROCID MSGID STRUCTURED-DATA MSG
          <PRI>[5] = Facility 16 (= local use 0), Severity 6 (= informational) => 16 * 8 + 6 = <134>
          VERSION[2] = 1
          TIMESTAMP = yyyy-mm-ddThh:mm:ss.nnnnnn-hh:mm (= local with timezone)
          HOSTNAME[255] = wemos5
          APP_NAME[48] = tasmota
          PROCID[128] = -
-         STRUCTURED-DATA = -
          MSGID[32] = HTP:
-         SYSLOG-MSG = <134>1 1970-01-01T00:00:02.096000+01:00 wemos5 tasmota - - HTP: Web server active on wemos5 with IP address 192.168.2.172
+         STRUCTURED-DATA = -
+         SYSLOG-MSG = <134>1 1970-01-01T00:00:02.096000+01:00 wemos5 tasmota - HTP: - Web server active on wemos5 with IP address 192.168.2.172
          Result = 1970-01-01T00:00:02.096000+00:00 wemos5 tasmota HTP: Web server active on wemos5 with IP address 192.168.2.172
          Notice date and time is provided by Tasmota device.
 
@@ -2536,43 +2536,46 @@ void SyslogAsync(bool refresh) {
       char timestamp[mxtime];
       subStr(timestamp, line, " ", 1);                        // 00:00:02.096-026
       subStr(timestamp, timestamp, "-", 1);                   // 00:00:02.096
-/*
+
       snprintf_P(header, sizeof(header), PSTR("<%d>1 %s%s000%s %s tasmota - - -"),
-        128 + min(loglevel * 3, 7),
+        128 + min(loglevel * 3, 7),                           // Error (1) = 131, Info (2) = 134, Debug (3) = 135, DebugMore = (4) 135
         GetDate().c_str(), timestamp, GetTimeZone().c_str(),  // 1970-01-01T00:00:02.096000+01:00
         NetworkHostname());
-*/
 /*
       // msgid is currently not well supported in rsyslog (https://github.com/rsyslog/rsyslog/issues/3592#issuecomment-480186237)
       char msgid[5];
       char* line_msgid = strchr(msg_start, ' ');
       if (line_msgid && (line_msgid - msg_start < sizeof(msgid))) {  // Only 3 character message ids supported
         subStr(msgid, msg_start, " ", 1);                     // HTP:
-        msg_start += strlen(msgid);
-        msg_len -= strlen(msgid);
+        uint32_t strlen_msgid = strlen(msgid) +1;
+        msg_start += strlen_msgid;
+        msg_len -= strlen_msgid;
       } else {
         strcpy(msgid, "-");                                   // -
       }
-*/
+/*
       char msgid[2] = { 0 };
       char* line_msgid = strchr(msg_start, ':');
       if ((line_msgid == nullptr) || (line_msgid - msg_start != 3)) {  // Only 3 character message id supported
         strcpy(msgid, "-");                                   // -
       }
-
-      snprintf_P(header, sizeof(header), PSTR("<%d>1 %s%s000%s %s tasmota - - %s"),
+*/
+/*
+      snprintf_P(header, sizeof(header), PSTR("<%d>1 %s%s000%s %s tasmota - %s -"),
         128 + min(loglevel * 3, 7),                           // Error (1) = 131, Info (2) = 134, Debug (3) = 135, DebugMore = (4) 135
         GetDate().c_str(), timestamp, GetTimeZone().c_str(),  // 1970-01-01T00:00:02.096000+01:00
         NetworkHostname(), msgid);
+*/
 
 /*
-      TasConsole.printf("Loglevel ");
-      TasConsole.print(loglevel);
-      TasConsole.printf(", Header '");
+      TasConsole.printf((char*)"Loglevel ");
+      char number[10];
+      TasConsole.printf(itoa(loglevel, number, 10));
+      TasConsole.printf((char*)", Header '");
       TasConsole.printf(header);
-      TasConsole.printf("', Msg '");
+      TasConsole.printf((char*)"', Msg '");
       TasConsole.write((uint8_t*)msg_start, msg_len);
-      TasConsole.printf("'\r\n");
+      TasConsole.printf((char*)"'\r\n");
 */
 #ifdef ESP8266
       // Packets over 1460 bytes are not send
