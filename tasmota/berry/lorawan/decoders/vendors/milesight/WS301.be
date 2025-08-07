@@ -94,19 +94,20 @@ class LwDecoWS301
       msg += lwdecode.header(name, name_tooltip, battery + 100000, battery_last_seen, rssi, last_seen)
 
       # Sensors
-      var door_open = sensor[6]
-      var door_open_last_seen = sensor[7]
-      var installed = sensor[8]
-      var installed_last_seen = sensor[9]
+      var dopen = lwdecode.dhm(sensor[7])
+      var dopen_tt = nil
+      var dopen_alt = (sensor[6] == true) ? "&#x1F513;" : "&#x1F512;" # Open Lock 🔓 / Lock 🔒
 
-      msg += "<tr class='htr'><td colspan='4'>&#9478;"                      # |
-      msg += string.format(" %s %s", (door_open == true) ? "&#x1F513" : "&#x1F512", # Open or Closed lock - Door
-                                     lwdecode.dhm(door_open_last_seen))
+      var inst = lwdecode.dhm(sensor[9])
+      var inst_tt = nil
+      var inst_alt =  (sensor[8] == true) ? "&#x2705;" : "&#x274C;" # Heavy Check Mark ✅ / Cross Mark ❌
 
-      msg += string.format(" %s %s", (installed == true) ? "&#x2705" : "&#x274C",   # Installed
-                                     lwdecode.dhm(installed_last_seen))
-
-      msg += "{e}"                                                          # = </td></tr>
+      var fmt = LwSensorFormatter_cls()
+      msg += fmt.start_line()
+        .add_sensor( "string", dopen, dopen_tt, dopen_alt )
+        .add_sensor( "string", inst,  inst_tt,  inst_alt )
+        .end_line()
+        .get_msg()
     end
     return msg
   end #add_web_sensor()

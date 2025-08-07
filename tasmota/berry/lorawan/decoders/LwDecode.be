@@ -7,6 +7,88 @@ var LwDeco
 import mqtt 
 import string
 
+class LwSensorFormatter_cls
+  var Msg
+
+  static Formatter = {
+    "string":           { "u": nil,   "f": " %s",    "i": nil         },
+    "volt":             { "u": "V",   "f": " %.1f",  "i": "&#x26A1;"  }, # High Voltage    ⚡ 
+    "milliamp":         { "u": "mA",  "f": " %.0f",  "i": "&#x1F50C;" }, # Electric Plug   🔌
+    "power_factor%":    { "u": "%",   "f": " %.0f",  "i": "&#x1F4CA;" }, # Bar Chart       📊      
+    "power":            { "u": "W",   "f": " %.0f",  "i": "&#x1F4A1;" }, # Light Bulb      💡    
+    "energy":           { "u": "Wh",  "f": " %.0f",  "i": "&#x1F9EE;" }, # Abacus          🧮
+    "altitude":         { "u": "mt",  "f": " %d",    "i": "&#x26F0;"  }, # Moutain         ⛰
+    "empty":            { "u": nil,   "f": nil,     "i": nil         }
+  }
+
+  def init()
+    self.Msg = ""
+  end
+  
+  def start_line()
+    self.Msg += format("<tr class='htr'><td colspan='4'>&#9478;" )  # | <sensor1><sensor2>...
+    return self
+  end
+
+  def end_line()
+    self.Msg += "{e}"  # End of line
+    return self
+  end
+
+  def next_line()
+    return self.end_line().start_line()  # End of current line and start new line
+  end
+
+  def begin_tooltip(ttip)
+    self.Msg += format("&nbsp;<div title='%s' class='si'>", ttip)
+    return self
+  end
+
+  def end_tooltip()
+    self.Msg += "</div>"
+    return self
+  end
+
+  def add_link(title, url, target)
+    self.Msg += format( " <a target=%s href='%s'>%s</a>", ( target ? target : "_blank" ), url, title )
+    return self
+  end
+
+  def add_sensor(formatter, value, tooltip, alt_icon)
+    if tooltip
+      self.begin_tooltip(tooltip)
+    end
+
+    var fmt = self.Formatter.find(formatter)
+
+    if alt_icon 
+      self.Msg += format(" %s", alt_icon )  # Use alternative icon
+    elif fmt && fmt.find("i") && fmt["i"]
+      self.Msg += format(" %s", fmt["i"] )  # Use icon from formatter
+    end
+
+    if fmt && fmt.find("f") && fmt["f"]
+      self.Msg += format(fmt["f"], value)
+    else
+      self.Msg += str(value)  # Default to string representation
+    end
+
+    if fmt && fmt.find("u") && fmt["u"]
+      self.Msg += format("%s", fmt["u"])  # Append unit if defined
+    end
+
+    if tooltip
+      return self.end_tooltip()
+    end
+
+    return self
+  end
+
+  def get_msg()
+    return self.Msg
+  end
+end
+
 class lwdecode_cls
   var LwDecoders
   var topic
@@ -24,6 +106,17 @@ class lwdecode_cls
     end
     tasmota.add_driver(global.lwdecode_driver := self)
     tasmota.add_rule("LwReceived", /value, trigger, payload -> self.LwDecode(payload))
+  end
+
+  def SendDownlink(nodes, cmd, idx, payload, ok_result)
+    if nodes.find(idx)
+      var sendcmd = 'LoRaWanSend'
+      var output = tasmota.cmd( f'{sendcmd}{idx} {payload}', true)
+      if output.find(sendcmd) == 'Done'
+        return tasmota.resp_cmnd(f'{{"{cmd}{idx}":"{ok_result}"}}')
+      end
+      return output
+    end
   end
 
   def LwDecode(data)
@@ -83,6 +176,10 @@ class lwdecode_cls
       unit = "m"
     end
     return format("%02d%s", since, unit)
+  end
+
+  def dhm_tt(last_time)
+    return format( "Received %s ago", self.dhm(last_time) )
   end
 
   def header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
