@@ -6,7 +6,9 @@
 
 import string
 
-global.ws522Nodes = {}
+if !global.ws522Nodes      # data survive to decoder reload
+  global.ws522Nodes = {}
+end
 
 def uint16le(value)
   return string.format( "%02x%02x",

@@ -6,7 +6,9 @@
 
 import string
 
-global.DrgSN50v3LNodes = {}
+if !global.DrgSN50v3LNodes      # data survive to decoder reload
+  global.DrgSN50v3LNodes = {}
+end
 
 class LwDecoDrgSN50v3L
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

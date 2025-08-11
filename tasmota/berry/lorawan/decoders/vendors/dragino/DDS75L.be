@@ -6,7 +6,9 @@
 
 import string
 
-global.dds75lbNodes = {}
+if !global.dds75lbNodes      # data survive to decoder reload
+  global.dds75lbNodes = {}
+end
 
 class LwDecoDDS75LB
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

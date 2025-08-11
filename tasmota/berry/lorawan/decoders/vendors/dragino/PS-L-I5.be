@@ -7,7 +7,9 @@
 
 import string
 
-global.psli5Nodes = {}
+if !global.psli5Nodes      # data survive to decoder reload
+  global.psli5Nodes = {}
+end
 
 class LwDecoPSLI5
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

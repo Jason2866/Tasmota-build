@@ -6,7 +6,9 @@
 
 import string
 
-global.lds02Nodes = {}
+if !global.lds02Nodes      # data survive to decoder reload
+  global.lds02Nodes = {}
+end
 
 class LwDecoLDS02
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

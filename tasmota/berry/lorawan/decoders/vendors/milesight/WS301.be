@@ -6,7 +6,9 @@
 
 import string
 
-global.ws301Nodes = {}
+if !global.ws301Nodes      # data survive to decoder reload
+  global.ws301Nodes = {}
+end
 
 class LwDecoWS301
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

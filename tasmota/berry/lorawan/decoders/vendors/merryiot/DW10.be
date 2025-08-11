@@ -6,7 +6,9 @@
 
 import string
 
-global.dw10Nodes = {}
+if !global.dw10Nodes      # data survive to decoder reload
+  global.dw10Nodes = {}
+end
 
 class LwDecoDW10
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

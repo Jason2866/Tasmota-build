@@ -6,7 +6,9 @@
 
 import string
 
-global.lht52Nodes = {}
+if !global.lht52Nodes      # data survive to decoder reload
+  global.lht52Nodes = {}
+end
 
 class LwDecoLHT52
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

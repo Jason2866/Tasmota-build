@@ -309,7 +309,6 @@ class lwdecode_cls
   end
 
   def header(name, name_tooltip, battery, battery_last_seen, rssi, last_seen)
-    var color_text = format('%s', tasmota.webcolor(0))
     var msg = format("<tr class='ltd htr'><td><b title='%s'>%s</b></td>", name_tooltip, name)
 
     if battery < 1000
@@ -319,15 +318,15 @@ class lwdecode_cls
       if batt_percent < 0 batt_percent = 0 end
       if batt_percent > 98 batt_percent = 98 end              # 98% / 14px = 7
       batt_percent /= 7                                       # 1..14px showing battery load
-      msg += format("<td><i class=\"bt\" title=\"%.3fV (%s)\" style=\"--bl:%dpx;color:%s\"></i></td>",
-                   battery, self.dhm(battery_last_seen), batt_percent, color_text)
+      msg += format("<td><i class=\"bt\" title=\"%.3fV (%s)\" style=\"--bl:%dpx;color:var(--c_txt)\"></i></td>",
+                   battery, self.dhm(battery_last_seen), batt_percent)
     elif battery >= 100000 && battery <= 100100               # battery already expressed in %
       var pbatt = battery - 100000
       var batt_percent = pbatt
       if batt_percent > 98 batt_percent = 98 end              # 98% / 14px = 7
       batt_percent /= 7                                       # 1..14px showing battery load
-      msg += format("<td><i class=\"bt\" title=\"%d%% (%s)\" style=\"--bl:%dpx;color:%s\"></i></td>",
-                   pbatt, self.dhm(battery_last_seen), batt_percent, color_text)
+      msg += format("<td><i class=\"bt\" title=\"%d%% (%s)\" style=\"--bl:%dpx;color:var(--c_txt)\"></i></td>",
+                   pbatt, self.dhm(battery_last_seen), batt_percent)
     else
       msg += "<td>&nbsp;</td>"
     end
@@ -344,7 +343,7 @@ class lwdecode_cls
       msg += "<td>&nbsp;</td>"
     end
 
-    msg += format("<td style='color:%s'>&#x1F557;%s</td></tr>", color_text, self.dhm(last_seen))
+    msg += format("<td style='color:var(--c_txt)'>&#x1F557;%s</td></tr>", self.dhm(last_seen))
 
     return msg
   end #sensor()
@@ -367,8 +366,7 @@ class lwdecode_cls
     end
 
     if msg
-      var color_text = format('%s', tasmota.webcolor(0 #-COL_TEXT-#))   # '#eaeaea'
-      var full_msg = format("</table>"                                  # Terminate current two column table and open new table
+      var full_msg = format("</table>"                        # Terminate current two column table and open new table
         "<style>"
         # Table CSS
         ".ltd td:not(:first-child){width:20px;font-size:70%%}"
@@ -377,11 +375,11 @@ class lwdecode_cls
         ".htr{line-height:20px}"
         # Signal Strength Indicator
         ".si{display:inline-flex;align-items:flex-end;height:15px;padding:0}"
-        ".si i{width:3px;margin-right:1px;border-radius:3px;background-color:%s}" # WebColor(COL_TEXT)
+        ".si i{width:3px;margin-right:1px;border-radius:3px;background-color:var(--c_txt)}" # WebColor(COL_TEXT)
         ".si .b0{height:25%%}.si .b1{height:50%%}.si .b2{height:75%%}.si .b3{height:100%%}.o30{opacity:.3}"
         "</style>"
         "{t}%s</table>{t}",
-        color_text, msg)
+        msg)
 
       self.web_msg_cache = full_msg
       self.cache_timeout = current_time + 5000

@@ -6,7 +6,10 @@
 
 import string
 var LHT65_BatteryStatus = ["Very low <= 2.5V","Low <=2.55V","OK","Good >= 2.65V"]
-global.lht65Nodes = {}
+
+if !global.lht65Nodes      # data survive to decoder reload
+  global.lht65Nodes = {}
+end
 
 class LwDecoLHT65
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)

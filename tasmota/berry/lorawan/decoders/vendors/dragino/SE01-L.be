@@ -8,7 +8,9 @@
 
 import string
 
-global.se01LNodes = {}
+if !global.se01LNodes      # data survive to decoder reload
+  global.se01LNodes = {}
+end
 
 class LwDecoSE01L
   static def decodeUplink(Name, Node, RSSI, FPort, Bytes)
