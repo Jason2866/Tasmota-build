@@ -59,7 +59,8 @@ Epd47::Epd47(int16_t dwidth, int16_t dheight) :  Renderer(dwidth, dheight) {
 }
 
 int Epd47::Init(void) {
-  epd_init(&epd_board_lilygo_t5_47, &ED097TC2, EPD_LUT_1K);
+  epd_init(&epd_board_lilygo_t5_47, &ED047TC1, EPD_LUT_64K);
+//  epd_set_vcom(1560);
   hl = epd_hl_init(WAVEFORM);
   epd47_buffer = epd_hl_get_framebuffer(&hl);
   framebuffer = epd47_buffer;

@@ -49,7 +49,7 @@ void EpdInitDriver47(void) {
     }
 
     // init renderer
-    epd47  = new Epd47(Settings->display_width, Settings->display_height);
+    epd47 = new Epd47(Settings->display_width, Settings->display_height);
     epd47->Init();
 
     renderer = epd47;
@@ -57,10 +57,10 @@ void EpdInitDriver47(void) {
     renderer->setTextColor(EPD47_BLACK, EPD47_WHITE);
 
 #ifdef SHOW_SPLASH
-    if (!Settings->flag5.display_no_splash) {
+    if (!Settings->flag5.display_no_splash) {  // SetOption135 - (Display & LVGL) force disabling default splash screen
       // Welcome text
       renderer->setTextFont(2);
-      renderer->DrawStringAt(50, 50, "LILGO 4.7 E-Paper Display!", EPD47_BLACK, 0);
+      renderer->DrawStringAt(50, 50, "LILYGO 4.7 E-Paper Display!", EPD47_BLACK, 0);
       renderer->Updateframe();
     }
 #endif
