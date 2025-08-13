@@ -272,7 +272,79 @@ void EPD47_CheckTouch(void) {
 }
 #endif // USE_TOUCH_BUTTONS
 
+#ifdef USE_DISPLAY_MODES1TO5
 
+void EPD47_PrintLog(void) {
+  // This can take over 3 seconds depending on renderer->Updateframe() speed
+  //   due to not connected busy pin (configure as MISO)
+  static bool printlog_mutex = false;
+
+  if (disp_refresh) { disp_refresh--; }
+  if (disp_refresh || printlog_mutex || TasmotaGlobal.restart_flag || TasmotaGlobal.ota_state_flag) {
+    return;
+  }
+  printlog_mutex = true;
+  disp_refresh = Settings->display_refresh;
+  if (!disp_screen_buffer_cols) { DisplayAllocScreenBuffer(); }
+
+  char* txt = DisplayLogBuffer('\370');
+  if (txt != nullptr) {
+    uint8_t last_row = Settings->display_rows -1;
+
+//      renderer->clearDisplay();
+    renderer->setTextSize(Settings->display_size);
+    renderer->setCursor(0,0);
+    for (byte i = 0; i < last_row; i++) {
+      strlcpy(disp_screen_buffer[i], disp_screen_buffer[i +1], disp_screen_buffer_cols);
+      renderer->println(disp_screen_buffer[i]);
+    }
+    strlcpy(disp_screen_buffer[last_row], txt, disp_screen_buffer_cols);
+    DisplayFillScreen(last_row);
+    renderer->println(disp_screen_buffer[last_row]);
+    renderer->Updateframe();
+  }
+  printlog_mutex = false;
+}
+
+void EPD47_Time(void) {
+  if (disp_refresh) { disp_refresh--; }
+  if (disp_refresh || TasmotaGlobal.restart_flag || TasmotaGlobal.ota_state_flag) {
+    return;
+  }
+  disp_refresh = Settings->display_refresh;
+
+  char line[12];
+
+//  renderer->clearDisplay();
+  renderer->setTextSize(Settings->display_size);
+  renderer->setTextFont(Settings->display_font);
+  renderer->setCursor(0, 10);
+  snprintf_P(line, sizeof(line), PSTR(" %02d" D_HOUR_MINUTE_SEPARATOR "%02d" D_MINUTE_SECOND_SEPARATOR "%02d"), RtcTime.hour, RtcTime.minute, RtcTime.second);  // [ 12:34:56 ]
+  renderer->println(line);
+  renderer->println();
+  snprintf_P(line, sizeof(line), PSTR("%02d" D_MONTH_DAY_SEPARATOR "%02d" D_YEAR_MONTH_SEPARATOR "%04d"), RtcTime.day_of_month, RtcTime.month, RtcTime.year);   // [01-02-2018]
+  renderer->println(line);
+  renderer->Updateframe();
+}
+
+void EPD47_Refresh(void) {  // Every second
+  if (!renderer) return;
+  if (Settings->display_mode) {  // Mode 0 is User text
+    switch (Settings->display_mode) {
+      case 1:  // Time
+        EPD47_Time();
+        break;
+      case 2:  // Local
+      case 3:  // Local
+      case 4:  // Mqtt
+      case 5:  // Mqtt
+        EPD47_PrintLog();
+        break;
+    }
+  }
+}
+
+#endif  // USE_DISPLAY_MODES1TO5
 
 /*********************************************************************************************\
  * Interface
@@ -297,6 +369,12 @@ bool Xdsp16(uint32_t function)
         }
         break;
 #endif // USE_TOUCH_BUTTONS
+
+#ifdef USE_DISPLAY_MODES1TO5
+      case FUNC_DISPLAY_EVERY_SECOND:
+        EPD47_Refresh();
+        break;
+#endif  // USE_DISPLAY_MODES1TO5
     }
   }
   return result;
