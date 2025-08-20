@@ -1321,7 +1321,7 @@ bool MI32StartConnectionTask(){
 }
 
 void MI32ConnectionTask(void *pvParameters){
-#if !defined(CONFIG_IDF_TARGET_ESP32C3) || !defined(CONFIG_IDF_TARGET_ESP32C6) //needs more testing ...
+#if !defined(CONFIG_IDF_TARGET_ESP32C3) || !defined(CONFIG_IDF_TARGET_ESP32C5) || !defined(CONFIG_IDF_TARGET_ESP32C6) //needs more testing ...
     // NimBLEDevice::setOwnAddrType(BLE_OWN_ADDR_RANDOM,false); //seems to be important for i.e. xbox controller, hopefully not breaking other things
 #endif //CONFIG_IDF_TARGET_ESP32C3
     MI32.conCtx->error = MI32_CONN_NO_ERROR;

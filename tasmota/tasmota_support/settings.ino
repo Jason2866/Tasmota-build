@@ -546,6 +546,8 @@ bool SettingsConfigRestore(void) {
     valid_settings = (5 == settings_buffer[0xF36]);  // Settings->config_version ESP32C2
 #elif CONFIG_IDF_TARGET_ESP32C6
     valid_settings = (6 == settings_buffer[0xF36]);  // Settings->config_version ESP32C6
+#elif CONFIG_IDF_TARGET_ESP32C5
+    valid_settings = (7 == settings_buffer[0xF36]);  // Settings->config_version ESP32C5
 #elif CONFIG_IDF_TARGET_ESP32P4
     valid_settings = (7 == settings_buffer[0xF36]);  // Settings->config_version ESP32P4
 #else
@@ -988,6 +990,8 @@ void SettingsDefaultSet2(void) {
   Settings->config_version = 5;  // ESP32C2
 #elif CONFIG_IDF_TARGET_ESP32C6
   Settings->config_version = 6;  // ESP32C6
+#elif CONFIG_IDF_TARGET_ESP32C5
+  Settings->config_version = 7;  // ESP32C5
 #elif CONFIG_IDF_TARGET_ESP32P4
   Settings->config_version = 7;  // ESP32P4
 #else
@@ -1602,6 +1606,8 @@ void SettingsDelta(void) {
       Settings->config_version = 5;  // ESP32C2
 #elif CONFIG_IDF_TARGET_ESP32C6
       Settings->config_version = 6;  // ESP32C6
+#elif CONFIG_IDF_TARGET_ESP32C5
+      Settings->config_version = 7;  // ESP32C5
 #else
       Settings->config_version = 1;  // ESP32
 #endif  // CONFIG_IDF_TARGET_ESP32S3

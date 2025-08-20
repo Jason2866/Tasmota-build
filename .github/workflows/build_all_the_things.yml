@@ -102,6 +102,7 @@ jobs:
           - tasmota32solo1
           - tasmota32c2
           - tasmota32c3
+          - tasmota32c5
           - tasmota32c6
           - tasmota32p4
           - tasmota32s2
@@ -120,6 +121,7 @@ jobs:
           - tasmota32s3-safeboot
           - tasmota32c2-safeboot
           - tasmota32c3-safeboot
+          - tasmota32c5-safeboot
           - tasmota32c6-safeboot
           - tasmota32p4-safeboot
     steps:
