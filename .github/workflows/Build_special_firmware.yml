@@ -102,10 +102,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
+          enable-cache: false
       - name: Install dependencies
         run: |
-          pip install wheel
-          pip install -U https://github.com/Jason2866/platformio-core/archive/refs/tags/v6.1.18.zip
+          uv pip install --system https://github.com/Jason2866/platformio-core/archive/refs/tags/v6.1.18.zip
           curl -O https://raw.githubusercontent.com/Jason2866/Tasmota-build/start_build/copy_safeboot.py
           python copy_safeboot.py
           mkdir -p ./firmware/firmware
