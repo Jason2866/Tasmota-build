@@ -990,10 +990,10 @@ void SettingsDefaultSet2(void) {
   Settings->config_version = 5;  // ESP32C2
 #elif CONFIG_IDF_TARGET_ESP32C6
   Settings->config_version = 6;  // ESP32C6
-#elif CONFIG_IDF_TARGET_ESP32C5
-  Settings->config_version = 7;  // ESP32C5
 #elif CONFIG_IDF_TARGET_ESP32P4
   Settings->config_version = 7;  // ESP32P4
+#elif CONFIG_IDF_TARGET_ESP32C5
+  Settings->config_version = 8;  // ESP32C5
 #else
   Settings->config_version = 1;  // ESP32
 #endif  // CONFIG_IDF_TARGET_ESP32S3
@@ -1606,8 +1606,10 @@ void SettingsDelta(void) {
       Settings->config_version = 5;  // ESP32C2
 #elif CONFIG_IDF_TARGET_ESP32C6
       Settings->config_version = 6;  // ESP32C6
+#elif CONFIG_IDF_TARGET_ESP32P4
+      Settings->config_version = 7;  // ESP32P4
 #elif CONFIG_IDF_TARGET_ESP32C5
-      Settings->config_version = 7;  // ESP32C5
+      Settings->config_version = 8;  // ESP32C5
 #else
       Settings->config_version = 1;  // ESP32
 #endif  // CONFIG_IDF_TARGET_ESP32S3

@@ -11,11 +11,14 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - ESP32 Platform from 2025.07.31 to 2025.08.30, Framework (Arduino Core) from v3.1.3.250712 to v3.1.3.250808 and IDF from v5.3.3.250707 to v5.3.3.250801 (#23778)
 - Epdiy library from v1.0.0 to v2.0.0
+- ESP8266 platform update from 2025.07.00 to 2025.08.00 (#23801)
+- Support for ESP32-C5 (#23804)
 
 ### Fixed
 - Syslog RFC5424 compliance (#23509)
 
 ### Removed
+- `user-scalable=no` from HTTP HEADER (#23798)
 
 ## [15.0.1.2] 20250803
 ### Added
