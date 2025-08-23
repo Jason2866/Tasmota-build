@@ -127,7 +127,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for ESP32-C5 [#23804](https://github.com/arendst/Tasmota/issues/23804)
 - ESP32-P4 command `HostedOta` [#23675](https://github.com/arendst/Tasmota/issues/23675)
 - Berry f-strings now support ':' in expression [#23618](https://github.com/arendst/Tasmota/issues/23618)
-- Berry preview of animation framework [#23740](https://github.com/arendst/Tasmota/issues/23740)
+- Berry preview of animation framework [#23816](https://github.com/arendst/Tasmota/issues/23816)
 - Berry `call()` now works for classes [#23744](https://github.com/arendst/Tasmota/issues/23744)
 
 ### Breaking Changed
