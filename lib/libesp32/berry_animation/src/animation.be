@@ -93,6 +93,8 @@ import "providers/static_value_provider.be" as static_value_provider
 register_to_animation(static_value_provider)
 import "providers/oscillator_value_provider.be" as oscillator_value_provider
 register_to_animation(oscillator_value_provider)
+import "providers/strip_length_provider.be" as strip_length_provider
+register_to_animation(strip_length_provider)
 
 # Import color providers
 import "providers/color_provider.be" as color_provider
@@ -169,7 +171,7 @@ def animation_init_strip(*l)
   import animation
   import introspect
   # we keep a hash of strip configurations to reuse existing engines
-  if !introspect.contains(animation, "_engines")
+  if !introspect.contains(animation, "_strips")
     animation._engines = {}
   end
 
@@ -182,7 +184,6 @@ def animation_init_strip(*l)
   else
     var strip = call(global.Leds, l)    # call global.Leds() with vararg
     engine = animation.create_engine(strip)
-    animation._engines[l_as_string] = engine
   end
 
   return engine
