@@ -329,18 +329,11 @@ void EPD47_Time(void) {
 
 void EPD47_Refresh(void) {  // Every second
   if (!renderer) return;
-  if (Settings->display_mode) {  // Mode 0 is User text
-    switch (Settings->display_mode) {
-      case 1:  // Time
-        EPD47_Time();
-        break;
-      case 2:  // Local
-      case 3:  // Local
-      case 4:  // Mqtt
-      case 5:  // Mqtt
-        EPD47_PrintLog();
-        break;
-    }
+  if (DM_TIME == Settings->display_mode) {
+    EPD47_Time();
+  }
+  else if (Settings->display_mode > DM_TIME) {
+    EPD47_PrintLog();
   }
 }
 

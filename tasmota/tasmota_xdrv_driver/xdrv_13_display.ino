@@ -159,6 +159,17 @@ enum XdspFunctions { FUNC_DISPLAY_INIT_DRIVER, FUNC_DISPLAY_INIT, FUNC_DISPLAY_E
 
 enum DisplayInitModes { DISPLAY_INIT_MODE, DISPLAY_INIT_PARTIAL, DISPLAY_INIT_FULL };
 
+enum DisplayModes { 
+  DM_USER_CONTROL,         // 0
+  DM_TIME,
+  DM_LOCAL_SENSORS,
+  DM_TIME_LOCAL_SENSORS,
+  DM_MQTT_SENSORS,
+  DM_TIME_MQTT_SENSORS,
+  DM_MQTT_TOPIC_UPTIME,
+  DM_MAX
+};
+
 const char kDisplayCommands[] PROGMEM = D_PRFX_DISPLAY "|"  // Prefix
   "|" D_CMND_DISP_MODEL "|" D_CMND_DISP_TYPE "|" D_CMND_DISP_WIDTH "|" D_CMND_DISP_HEIGHT "|" D_CMND_DISP_MODE "|"
   D_CMND_DISP_INVERT "|" D_CMND_DISP_REFRESH "|" D_CMND_DISP_DIMMER "|" D_CMND_DISP_COLS "|" D_CMND_DISP_ROWS "|"
@@ -1790,6 +1801,40 @@ void DisplayAnalyzeJson(char *topic, const char *json) {
   }
 }
 
+void DisplayState(char *topic, const char *json) {
+  static uint32_t minute = 61; 
+
+  char buffer[Settings->display_cols[0] +1];                            // Max sized buffer string
+  if (minute != RtcTime.minute) {
+    minute = RtcTime.minute;
+    char buffer2[Settings->display_cols[0] +1];                         // Max sized buffer string
+    memset(buffer2, '-', sizeof(buffer2));                              // Set to -
+    buffer2[sizeof(buffer2) -1] = '\0';
+    snprintf_P(buffer, sizeof(buffer), PSTR("- %02d" D_HOUR_MINUTE_SEPARATOR "%02d %s"), RtcTime.hour, RtcTime.minute, buffer2);
+    DisplayLogBufferAdd(buffer);
+  }
+
+  const char *uptime = EmptyStr;
+  if (Settings->display_cols[0] > 20) {      // Need space for displaying topic and uptime
+    String jsonStr = json;                   // {"Time":"2025-08-24T14:34:59","Uptime":"0T00:05:10","UptimeSec":310,"Heap":49,...
+    JsonParser parser((char*)jsonStr.c_str());
+    JsonParserObject root = parser.getRootObject();
+    if (root) {                              // Did JSON parsing went ok?
+      uptime = root.getStr(PSTR(D_JSON_UPTIME), EmptyStr);
+      if (strlen(uptime) && (Settings->display_cols[0] <  24)) {
+        char *eol = (char*)uptime + strlen(uptime) -3;
+        *eol = '\0';                         // Remove uptime seconds
+      }
+    }
+  }
+//  int spaces = Settings->display_cols[0] - Settings->display_cols[1] - strlen(topic);  // Left align on DisplayCols2
+  int spaces = Settings->display_cols[0] - strlen(topic) - strlen(uptime);             // Right align on DisplayCols1
+  if (spaces < 1) { spaces = 1; }
+  snprintf_P(buffer, sizeof(buffer), PSTR("%s%*s%s"), topic, spaces, "", uptime);
+
+  DisplayLogBufferAdd(buffer);
+}
+
 void DisplayMqttSubscribe(void) {
 /* Subscribe to tele messages only
  * Supports the following FullTopic formats
@@ -1811,7 +1856,7 @@ void DisplayMqttSubscribe(void) {
   }
   strncat(ntopic, SettingsText(SET_MQTTPREFIX3), sizeof(ntopic) - strlen(ntopic) -1);  // Subscribe to tele messages
   strncat_P(ntopic, PSTR("/#"), sizeof(ntopic) - strlen(ntopic) -1);             // Add multi-level wildcard
-  if (Settings->display_model && (Settings->display_mode &0x04)) {
+  if (Settings->display_model && (Settings->display_mode >= DM_MQTT_SENSORS)) {
     disp_subscribed = true;
     MqttSubscribe(ntopic);
   } else {
@@ -1829,10 +1874,22 @@ bool DisplayMqttData(void) {
     snprintf_P(stopic, sizeof(stopic) , PSTR("%s/"), SettingsText(SET_MQTTPREFIX3));  // tele/
     char *tp = strstr(XdrvMailbox.topic, stopic);
     if (tp) {                                                // tele/tasmota/SENSOR
-      if (Settings->display_mode &0x04) {
-        tp = tp + strlen(stopic);                              // tasmota/SENSOR
-        char *topic = strtok(tp, "/");                         // tasmota
-        DisplayAnalyzeJson(topic, XdrvMailbox.data);
+      if (Settings->display_mode >= DM_MQTT_SENSORS) {       // 4..6
+        tp = tp + strlen(stopic);                            // tasmota/SENSOR
+        char *state = strstr_P(tp, PSTR("STATE"));
+        char *sensor = strstr_P(tp, PSTR("SENSOR"));
+        char *topic = strtok(tp, "/");                       // tasmota
+        if (topic) {
+          if (DM_MQTT_TOPIC_UPTIME == Settings->display_mode) {
+            if (state) {
+              DisplayState(topic, XdrvMailbox.data);
+            }
+          } else {  // DM_MQTT_SENSORS and DM_TIME_MQTT_SENSORS
+            if (state || sensor) {
+              DisplayAnalyzeJson(topic, XdrvMailbox.data);
+            }
+          }
+        }
       }
       return true;
     }
@@ -1840,9 +1897,10 @@ bool DisplayMqttData(void) {
   return false;
 }
 
-void DisplayLocalSensor(void)
-{
-  if ((Settings->display_mode &0x02) && (0 == TasmotaGlobal.tele_period)) {
+void DisplayLocalSensor(void) {
+  if (((DM_LOCAL_SENSORS == Settings->display_mode) ||
+       (DM_TIME_LOCAL_SENSORS == Settings->display_mode)) &&
+      (0 == TasmotaGlobal.tele_period)) {
     char no_topic[1] = { 0 };
 //    DisplayAnalyzeJson(TasmotaGlobal.mqtt_topic, ResponseData());  // Add local topic
     DisplayAnalyzeJson(no_topic, ResponseData());    // Discard any topic
@@ -1899,7 +1957,7 @@ void DisplayInitDriver(void) {
   disp_device = TasmotaGlobal.devices_present;
 
 #ifndef USE_DISPLAY_MODES1TO5
-  Settings->display_mode = 0;
+  Settings->display_mode = DM_USER_CONTROL;
 #else
   DisplayLogBufferInit();
 #endif  // USE_DISPLAY_MODES1TO5
@@ -1987,19 +2045,20 @@ void CmndDisplayMode(void) {
  * 3 = Day                  Local sensors and time               Local sensors and time
  * 4 = Mqtt left and time   Mqtt (incl local) sensors            Mqtt (incl local) sensors
  * 5 = Mqtt up and time     Mqtt (incl local) sensors and time   Mqtt (incl local) sensors and time
+ * 6 = Mqtt topic           Mqtt topic                           Mqtt topic
 */
-  if ((XdrvMailbox.payload >= 0) && (XdrvMailbox.payload <= 5)) {
+  if ((XdrvMailbox.payload >= DM_USER_CONTROL) && (XdrvMailbox.payload < DM_MAX)) {
     uint32_t last_display_mode = Settings->display_mode;
     Settings->display_mode = XdrvMailbox.payload;
     if (last_display_mode != Settings->display_mode) {       // Switch to different mode
-      if ((!last_display_mode && Settings->display_mode) ||  // Switch to mode 1, 2, 3 or 4
+      if ((!last_display_mode && Settings->display_mode) ||  // Switch to mode >0
           (last_display_mode && !Settings->display_mode)) {  // Switch to mode 0
         DisplayInit(DISPLAY_INIT_MODE);
       }
-      if (1 == Settings->display_mode) {                     // Switch to mode 1
+      if (DM_TIME == Settings->display_mode) {               // Switch to mode 1
         DisplayClear();
       }
-      else if (Settings->display_mode > 1) {                 // Switch to mode 2, 3 or 4
+      else if (Settings->display_mode > DM_TIME) {           // Switch to mode 2 .. 6
         DisplayLogBufferInit();
       }
       DisplayMqttSubscribe();

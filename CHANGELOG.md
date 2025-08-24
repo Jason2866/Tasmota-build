@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [15.0.1.3]
 ### Added
+- ESP32 ROM SHA Hardware Acceleration to BearSSL (#23819)
 
 ### Breaking Changed
 
