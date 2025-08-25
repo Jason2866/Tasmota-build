@@ -17,24 +17,24 @@ A powerful, lightweight animation framework for controlling addressable LED stri
 
 ### Simple Pulsing Animation
 
-```dsl
+```berry
 # Define colors
-color red = #FF0000
+color bordeaux = 0x6F2C4F
 
 # Create pulsing animation
-animation pulse_red = pulsating_animation(color=red, period=3s)
+animation pulse_bordeaux = pulsating_animation(color=bordeaux, period=3s)
 
 # Run it
-run pulse_red
+run pulse_bordeaux
 ```
 
 ### Rainbow Color Cycling
 
-```dsl
+```berry
 # Use predefined rainbow palette
 animation rainbow_cycle = rich_palette(
-  palette=PALETTE_RAINBOW,
-  cycle_period=5s,
+  palette=PALETTE_RAINBOW
+  cycle_period=5s
   transition_type=1
 )
 
@@ -43,20 +43,20 @@ run rainbow_cycle
 
 ### Custom Color Palette
 
-```dsl
+```berry
 # Define a sunset palette
 palette sunset = [
-  (0, #191970),    # Midnight blue
-  (64, purple),    # Purple
-  (128, #FF69B4),  # Hot pink
-  (192, orange),   # Orange
+  (0, 0x191970)    # Midnight blue
+  (64, purple)     # Purple
+  (128, 0xFF69B4)  # Hot pink
+  (192, orange)    # Orange
   (255, yellow)    # Yellow
 ]
 
 # Create palette animation
 animation sunset_glow = rich_palette(
-  palette=sunset,
-  cycle_period=8s,
+  palette=sunset
+  cycle_period=8s
   transition_type=1
 )
 
@@ -65,7 +65,7 @@ run sunset_glow
 
 ### Animation Sequences
 
-```dsl
+```berry
 animation red_pulse = pulsating_animation(color=red, period=2s)
 animation green_pulse = pulsating_animation(color=green, period=2s)
 animation blue_pulse = pulsating_animation(color=blue, period=2s)
@@ -106,26 +106,26 @@ run rgb_show
 
 ### DSL-First Design
 Write animations using simple, declarative syntax:
-```dsl
-animation fire_effect = fire_animation(intensity=200, cooling=55, sparking=120)
+```berry
+animation fire_effect = fire_animation(intensity=200, cooling_rate=55, sparking_rate=120)
 run fire_effect
 ```
 
 ### Dynamic Parameters
 Use oscillating values to create complex effects:
-```dsl
+```berry
 animation pulsing_comet = comet_animation(
-  color=red,
-  tail_length=smooth_oscillator(5, 15, 3s),
+  color=red
+  tail_length = smooth(min_value=5, max_value=15, duration=3s)
   speed=2
 )
 ```
 
 ### Color Palettes
 Rich color transitions with predefined or custom palettes:
-```dsl
-palette custom = [(0, blue), (128, purple), (255, pink)]
-animation palette_cycle = rich_palette(palette=custom, cycle_period=4s)
+```berry
+palette custom_palette = [(0, blue), (128, purple), (255, pink)]
+animation palette_cycle = rich_palette(palette=custom_palette, cycle_period=4s)
 ```
 
 ## 🎨 Animation Types
@@ -179,38 +179,15 @@ The framework includes several built-in color palettes:
 - **PALETTE_OCEAN** - Blue and green ocean tones (Navy → Blue → Cyan → Spring Green → Green)
 - **PALETTE_FOREST** - Various green forest tones (Dark Green → Forest Green → Lime Green → Mint Green → Light Green)
 
-```dsl
+```berry
 # Use any predefined palette
 animation ocean_waves = rich_palette(
-  palette=PALETTE_OCEAN,
-  cycle_period=8s,
+  palette=PALETTE_OCEAN
+  cycle_period=8s
   transition_type=1
 )
 run ocean_waves
 ```
-
-## ⚡ Performance
-
-Optimized for embedded systems:
-
-- **Memory Efficient** - Minimal RAM usage
-- **CPU Optimized** - Efficient rendering algorithms  
-- **Scalable** - Handles strips from 10 to 1000+ LEDs
-- **Real-time** - Smooth 30+ FPS animation
-
-### Performance Tips
-- Use longer animation periods (2-5 seconds) for smoother performance
-- Limit simultaneous animations (3-5 max recommended)
-- Consider strip length when designing complex effects
-
-## 🤝 Contributing
-
-Contributions are welcome! Areas for contribution:
-- New animation effects
-- Performance optimizations  
-- Documentation improvements
-- Example animations
-- Bug fixes and testing
 
 ## 📄 License
 

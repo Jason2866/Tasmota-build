@@ -11,26 +11,26 @@ Get up and running with the Berry Animation Framework in 5 minutes using the DSL
 
 Create a simple pulsing red light:
 
-```dsl
+```berry
 # Define colors
-color red = #FF0000
+color bordeaux = 0x6F2C4F
 
 # Create pulsing animation
-animation pulse_red = pulsating_animation(color=red, period=3s)
+animation pulse_bordeaux = pulsating_animation(color=bordeaux, period=3s)
 
 # Run it
-run pulse_red
+run pulse_bordeaux
 ```
 
 ## Step 2: Color Cycling
 
 Create smooth color transitions:
 
-```dsl
+```berry
 # Use predefined rainbow palette
 animation rainbow_cycle = rich_palette(
-  palette=PALETTE_RAINBOW,
-  cycle_period=5s,
+  palette=PALETTE_RAINBOW
+  cycle_period=5s
   transition_type=1
 )
 
@@ -41,20 +41,20 @@ run rainbow_cycle
 
 Create your own color palettes:
 
-```dsl
+```berry
 # Define a sunset palette
 palette sunset = [
-  (0, #191970),    # Midnight blue
-  (64, purple),    # Purple
-  (128, #FF69B4),  # Hot pink
-  (192, orange),   # Orange
+  (0, 0x191970)    # Midnight blue
+  (64, purple)     # Purple
+  (128, 0xFF69B4)  # Hot pink
+  (192, orange)    # Orange
   (255, yellow)    # Yellow
 ]
 
 # Create palette animation
 animation sunset_glow = rich_palette(
-  palette=sunset,
-  cycle_period=8s,
+  palette=sunset
+  cycle_period=8s
   transition_type=1
 )
 
@@ -65,7 +65,7 @@ run sunset_glow
 
 Create complex shows with sequences:
 
-```dsl
+```berry
 animation red_pulse = pulsating_animation(color=red, period=2s)
 animation green_pulse = pulsating_animation(color=green, period=2s)
 animation blue_pulse = pulsating_animation(color=blue, period=2s)
@@ -90,26 +90,26 @@ run rgb_show
 
 Add movement and variation to your animations:
 
-```dsl
+```berry
 # Breathing effect with smooth oscillation
 animation breathing = pulsating_animation(
-  color=blue,
-  min_brightness=50,
-  max_brightness=255,
+  color=blue
+  min_brightness=20%
+  max_brightness=100%
   period=4s
 )
 
 # Moving comet effect
 animation comet = comet_animation(
-  color=white,
-  tail_length=8,
+  color=white
+  tail_length=8
   speed=2000
 )
 
 # Sparkle effect
 animation sparkles = sparkle_animation(
-  color=white,
-  density=80,
+  color=white
+  density=80
   fade_speed=60
 )
 
@@ -119,10 +119,10 @@ run breathing
 ## Common Patterns
 
 ### Fire Effect
-```dsl
+```berry
 animation fire = rich_palette(
-  palette=PALETTE_FIRE,
-  cycle_period=2s,
+  palette=PALETTE_FIRE
+  cycle_period=2s
   transition_type=1
 )
 
@@ -130,10 +130,10 @@ run fire
 ```
 
 ### Ocean Waves
-```dsl
+```berry
 animation ocean = rich_palette(
-  palette=PALETTE_OCEAN,
-  cycle_period=6s,
+  palette=PALETTE_OCEAN
+  cycle_period=6s
   transition_type=1
 )
 
@@ -177,9 +177,9 @@ end
 animation.register_user_function("sparkle", my_sparkle)
 ```
 
-```dsl
+```berry
 # Use in DSL - engine is automatically passed
-animation gold_sparkles = sparkle(#FFD700, 8, 500ms)
+animation gold_sparkles = sparkle(0xFFD700, 8, 500ms)
 run gold_sparkles
 ```
 
