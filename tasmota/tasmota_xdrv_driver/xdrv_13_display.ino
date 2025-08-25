@@ -167,6 +167,7 @@ enum DisplayModes {
   DM_MQTT_SENSORS,
   DM_TIME_MQTT_SENSORS,
   DM_MQTT_TOPIC_UPTIME,
+  DM_MQTT_HOSTNAME_IPADDRESS,
   DM_MAX
 };
 
@@ -1801,38 +1802,72 @@ void DisplayAnalyzeJson(char *topic, const char *json) {
   }
 }
 
-void DisplayState(char *topic, const char *json) {
+void DisplayState(const char *topic, const char *json) {
+  // Impact DisplayCols1 and DisplayCols2:
+  // 12345678901234567890123456 = DisplayCols1 = 26 - Visible display columns
+  // leftitem         rightitem   DisplayCols2 = 3  - Display both left and rightaligned item
+  // leftitem             right   DisplayCols2 = 2  - Display both left and truncated rightaligned item
+  // leftitem                     DisplayCols2 = 1  - Display left item only
   static uint32_t minute = 61; 
 
-  char buffer[Settings->display_cols[0] +1];                            // Max sized buffer string
-  if (minute != RtcTime.minute) {
-    minute = RtcTime.minute;
-    char buffer2[Settings->display_cols[0] +1];                         // Max sized buffer string
-    memset(buffer2, '-', sizeof(buffer2));                              // Set to -
-    buffer2[sizeof(buffer2) -1] = '\0';
-    snprintf_P(buffer, sizeof(buffer), PSTR("- %02d" D_HOUR_MINUTE_SEPARATOR "%02d %s"), RtcTime.hour, RtcTime.minute, buffer2);
-    DisplayLogBufferAdd(buffer);
-  }
+  String jsonStr = json;                           // {"Time":"2025-08-24T14:34:59","Uptime":"0T00:05:10","UptimeSec":310,"Heap":49,...
+  JsonParser parser((char*)jsonStr.c_str());
+  JsonParserObject root = parser.getRootObject();
+  if (!root) { return; }                           // Did JSON parsing went ok?
 
-  const char *uptime = EmptyStr;
-  if (Settings->display_cols[0] > 20) {      // Need space for displaying topic and uptime
-    String jsonStr = json;                   // {"Time":"2025-08-24T14:34:59","Uptime":"0T00:05:10","UptimeSec":310,"Heap":49,...
-    JsonParser parser((char*)jsonStr.c_str());
-    JsonParserObject root = parser.getRootObject();
-    if (root) {                              // Did JSON parsing went ok?
-      uptime = root.getStr(PSTR(D_JSON_UPTIME), EmptyStr);
-      if (strlen(uptime) && (Settings->display_cols[0] <  24)) {
-        char *eol = (char*)uptime + strlen(uptime) -3;
-        *eol = '\0';                         // Remove uptime seconds
+  const char *leftitem = EmptyStr;
+  const char *rightitem = EmptyStr;
+
+  if (DM_MQTT_TOPIC_UPTIME == Settings->display_mode) {
+    leftitem = topic;
+    if (Settings->display_cols[1] > 1) {           // Need space for displaying topic and uptime
+      rightitem = root.getStr(PSTR(D_JSON_UPTIME), EmptyStr);
+      if (strlen(rightitem) && (2 == Settings->display_cols[1])) {
+        char *eol = (char*)rightitem + strlen(rightitem) -3;
+        *eol = '\0';                               // Remove uptime seconds
       }
     }
   }
-//  int spaces = Settings->display_cols[0] - Settings->display_cols[1] - strlen(topic);  // Left align on DisplayCols2
-  int spaces = Settings->display_cols[0] - strlen(topic) - strlen(uptime);             // Right align on DisplayCols1
-  if (spaces < 1) { spaces = 1; }
-  snprintf_P(buffer, sizeof(buffer), PSTR("%s%*s%s"), topic, spaces, "", uptime);
+  else if (DM_MQTT_HOSTNAME_IPADDRESS == Settings->display_mode) {
+    leftitem = root.getStr(PSTR(D_CMND_HOSTNAME), EmptyStr);
+    if (Settings->display_cols[1] > 1) {           // Need space for displaying hostname and ipaddress
+      rightitem = root.getStr(PSTR(D_CMND_IPADDRESS), EmptyStr);
+      if (strlen(rightitem) && (2 == Settings->display_cols[1])) {
+        uint32_t netmask = Settings->ipv4_address[2];  // Assume WiFi netmask = Ethernet netmask
+#if defined(ESP32) && defined(USE_ETHERNET)
+        if (0 == netmask) {                        // Assume Ethernet netmask = WiFi netmask
+          netmask = Settings->eth_ipv4_address[2];
+        }
+#endif
+        if (netmask != 0) {
+          for (uint32_t i = 0; i < 3; i++) {
+            if (netmask >= 0x000000FF) {
+              rightitem = strchr(rightitem +1, '.');  // Skip network IP address octets
+            }
+            netmask >>= 8;
+          }
+        } else {
+          rightitem = strrchr(rightitem, '.');     // last IP address octet assuming netmask 255.255.255.0
+        }
+      }
+    }
+  }
 
-  DisplayLogBufferAdd(buffer);
+  if (strlen(leftitem)) {
+    char buffer[Settings->display_cols[0] +1];     // Max sized buffer string
+    if (minute != RtcTime.minute) {
+      minute = RtcTime.minute;
+      char buffer2[Settings->display_cols[0] +1];  // Max sized buffer string
+      memset(buffer2, '-', sizeof(buffer2));       // Set to -
+      buffer2[sizeof(buffer2) -1] = '\0';
+      snprintf_P(buffer, sizeof(buffer), PSTR("- %02d" D_HOUR_MINUTE_SEPARATOR "%02d %s"), RtcTime.hour, RtcTime.minute, buffer2);
+      DisplayLogBufferAdd(buffer);
+    }
+    int spaces = Settings->display_cols[0] - strlen(leftitem) - strlen(rightitem);  // Right align on DisplayCols1
+    if (spaces < 1) { spaces = 1; }
+    snprintf_P(buffer, sizeof(buffer), PSTR("%s%*s%s"), leftitem, spaces, "", rightitem);
+    DisplayLogBufferAdd(buffer);
+  }
 }
 
 void DisplayMqttSubscribe(void) {
@@ -1880,11 +1915,12 @@ bool DisplayMqttData(void) {
         char *sensor = strstr_P(tp, PSTR("SENSOR"));
         char *topic = strtok(tp, "/");                       // tasmota
         if (topic) {
-          if (DM_MQTT_TOPIC_UPTIME == Settings->display_mode) {
+          if ((DM_MQTT_TOPIC_UPTIME == Settings->display_mode) ||
+             (DM_MQTT_HOSTNAME_IPADDRESS == Settings->display_mode)) {
             if (state) {
               DisplayState(topic, XdrvMailbox.data);
             }
-          } else {  // DM_MQTT_SENSORS and DM_TIME_MQTT_SENSORS
+          } else {                                           // DM_MQTT_SENSORS and DM_TIME_MQTT_SENSORS
             if (state || sensor) {
               DisplayAnalyzeJson(topic, XdrvMailbox.data);
             }

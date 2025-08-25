@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [15.0.1.3]
 ### Added
 - ESP32 ROM SHA Hardware Acceleration to BearSSL (#23819)
+- Extend state JSON message with functional hostname and ipaddress which could be WiFi or Ethernet
 
 ### Breaking Changed
 
@@ -18,7 +19,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Syslog RFC5424 compliance (#23509)
-- Berry fix calling `setmember` with a function
+- Berry calling `setmember` with a function (#23825)
 
 ### Removed
 - `user-scalable=no` from HTTP HEADER (#23798)
