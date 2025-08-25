@@ -1804,10 +1804,10 @@ void DisplayAnalyzeJson(char *topic, const char *json) {
 
 void DisplayState(const char *topic, const char *json) {
   // Impact DisplayCols1 and DisplayCols2:
-  // 12345678901234567890123456 = DisplayCols1 = 26 - Visible display columns
-  // leftitem         rightitem   DisplayCols2 = 3  - Display both left and rightaligned item
-  // leftitem             right   DisplayCols2 = 2  - Display both left and truncated rightaligned item
-  // leftitem                     DisplayCols2 = 1  - Display left item only
+  // 12345678901234567890123456 = [DisplayCols1] 26   - Visible display columns
+  // leftitem         rightitem   [DisplayCols2] >= 3 - Display both left and rightaligned item, truncate rightaligned if total is too long
+  // leftitem             right   [DisplayCols2] 2    - Display both left and truncated rightaligned item
+  // leftitem                     [DisplayCols2] 1    - Display left item only
   static uint32_t minute = 61; 
 
   String jsonStr = json;                           // {"Time":"2025-08-24T14:34:59","Uptime":"0T00:05:10","UptimeSec":310,"Heap":49,...
@@ -1822,9 +1822,12 @@ void DisplayState(const char *topic, const char *json) {
     leftitem = topic;
     if (Settings->display_cols[1] > 1) {           // Need space for displaying topic and uptime
       rightitem = root.getStr(PSTR(D_JSON_UPTIME), EmptyStr);
-      if (strlen(rightitem) && (2 == Settings->display_cols[1])) {
-        char *eol = (char*)rightitem + strlen(rightitem) -3;
-        *eol = '\0';                               // Remove uptime seconds
+      if (strlen(rightitem)) {
+        if ((2 == Settings->display_cols[1]) ||
+           ((Settings->display_cols[1] > 2) && ((strlen(leftitem) + strlen(rightitem) +1) > Settings->display_cols[0]))) {
+          char *eol = (char*)rightitem + strlen(rightitem) -3;
+          *eol = '\0';                             // Remove uptime seconds
+        }
       }
     }
   }
@@ -1832,22 +1835,25 @@ void DisplayState(const char *topic, const char *json) {
     leftitem = root.getStr(PSTR(D_CMND_HOSTNAME), EmptyStr);
     if (Settings->display_cols[1] > 1) {           // Need space for displaying hostname and ipaddress
       rightitem = root.getStr(PSTR(D_CMND_IPADDRESS), EmptyStr);
-      if (strlen(rightitem) && (2 == Settings->display_cols[1])) {
-        uint32_t netmask = Settings->ipv4_address[2];  // Assume WiFi netmask = Ethernet netmask
+      if (strlen(rightitem)) {
+        if ((2 == Settings->display_cols[1]) ||
+           ((Settings->display_cols[1] > 2) && ((strlen(leftitem) + strlen(rightitem) +1) > Settings->display_cols[0]))) {
+          uint32_t netmask = Settings->ipv4_address[2];  // Assume WiFi netmask = Ethernet netmask
 #if defined(ESP32) && defined(USE_ETHERNET)
-        if (0 == netmask) {                        // Assume Ethernet netmask = WiFi netmask
-          netmask = Settings->eth_ipv4_address[2];
-        }
-#endif
-        if (netmask != 0) {
-          for (uint32_t i = 0; i < 3; i++) {
-            if (netmask >= 0x000000FF) {
-              rightitem = strchr(rightitem +1, '.');  // Skip network IP address octets
-            }
-            netmask >>= 8;
+          if (0 == netmask) {                      // Assume Ethernet netmask = WiFi netmask
+            netmask = Settings->eth_ipv4_address[2];
           }
-        } else {
-          rightitem = strrchr(rightitem, '.');     // last IP address octet assuming netmask 255.255.255.0
+#endif
+          if (netmask != 0) {
+            for (uint32_t i = 0; i < 3; i++) {
+              if (netmask >= 0x000000FF) {
+                rightitem = strchr(rightitem +1, '.');  // Remove network IP address octets
+              }
+              netmask >>= 8;
+            }
+          } else {
+            rightitem = strrchr(rightitem, '.');   // last IP address octet assuming netmask 255.255.255.0
+          }
         }
       }
     }
@@ -1863,7 +1869,7 @@ void DisplayState(const char *topic, const char *json) {
       snprintf_P(buffer, sizeof(buffer), PSTR("- %02d" D_HOUR_MINUTE_SEPARATOR "%02d %s"), RtcTime.hour, RtcTime.minute, buffer2);
       DisplayLogBufferAdd(buffer);
     }
-    int spaces = Settings->display_cols[0] - strlen(leftitem) - strlen(rightitem);  // Right align on DisplayCols1
+    int spaces = Settings->display_cols[0] - strlen(leftitem) - strlen(rightitem);
     if (spaces < 1) { spaces = 1; }
     snprintf_P(buffer, sizeof(buffer), PSTR("%s%*s%s"), leftitem, spaces, "", rightitem);
     DisplayLogBufferAdd(buffer);
