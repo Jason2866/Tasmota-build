@@ -26,6 +26,9 @@
  * #define USE_RX8010
  *   RX8010 at I2C address 0x32
  *   Used by IOTTIMER (v1 and v2)
+ * #define USE_RX8030
+ *   RX8010 at I2C address 0x32
+ *   Used by #23855
 \*********************************************************************************************/
 
 #define XDRV_56             56
@@ -637,12 +640,12 @@ void Pcf85363Detected(void) {
 #endif // USE_PCF85363
 
 /*********************************************************************************************\
- * RX8010 - Real Time Clock
+ * RX8010 and RX8030 - Real Time Clock
  * based on linux/rtc-rx8010.c
  *
  * I2C Address: 0x32
 \*********************************************************************************************/
-#ifdef USE_RX8010
+#if defined(USE_RX8010) || defined(USE_RX8030)
 
 #define XI2C_90             90       // See I2CDEVICES.md
 
@@ -656,7 +659,13 @@ void Pcf85363Detected(void) {
 #define RX8010_REG_MDAY		  0x14
 #define RX8010_REG_MONTH	  0x15
 #define RX8010_REG_YEAR		  0x16
-#define RX8010_REG_CTRL		  0x1F
+#ifdef USE_RX8030
+#define RX80x0_REG_CTRL     0x1E
+#endif
+#ifdef USE_RX8010
+#undef RX80x0_REG_CTRL
+#define RX80x0_REG_CTRL		  0x1F
+#endif
 
 // Control Register (1Fh) bit positions
 #define RX8010_BIT_CTRL_STOP	6
@@ -687,7 +696,7 @@ void Rx8010SetTime(uint32_t epoch_time) {
   TIME_T tm;
   BreakTime(epoch_time, tm);
 	// Set STOP bit before changing clock/calendar
-  I2cWrite8(RtcChip.address, RX8010_REG_CTRL, I2cRead8(RtcChip.address, RX8010_REG_CTRL, RtcChip.bus) | _BV(RX8010_BIT_CTRL_STOP), RtcChip.bus);
+  I2cWrite8(RtcChip.address, RX80x0_REG_CTRL, I2cRead8(RtcChip.address, RX80x0_REG_CTRL, RtcChip.bus) | _BV(RX8010_BIT_CTRL_STOP), RtcChip.bus);
   uint8_t data[7];
   data[0] = Dec2Bcd(tm.second);
   data[1] = Dec2Bcd(tm.minute);
@@ -698,7 +707,7 @@ void Rx8010SetTime(uint32_t epoch_time) {
   data[6] = Dec2Bcd(tm.day_of_week);
   I2cWriteBuffer(RtcChip.address, RX8010_REG_SEC, data, 7, RtcChip.bus);
 	// Clear STOP bit after changing clock/calendar
-  I2cWrite8(RtcChip.address, RX8010_REG_CTRL, I2cRead8(RtcChip.address, RX8010_REG_CTRL, RtcChip.bus) & ~_BV(RX8010_BIT_CTRL_STOP), RtcChip.bus);
+  I2cWrite8(RtcChip.address, RX80x0_REG_CTRL, I2cRead8(RtcChip.address, RX80x0_REG_CTRL, RtcChip.bus) & ~_BV(RX8010_BIT_CTRL_STOP), RtcChip.bus);
 }
 
 /*-------------------------------------------------------------------------------------------*\
@@ -709,9 +718,13 @@ void Rx8010Detected(void) {
     RtcChip.address = RX8010_ADDRESS;
     for (RtcChip.bus = 0; RtcChip.bus < 2; RtcChip.bus++) {
       if (!I2cSetDevice(RtcChip.address, RtcChip.bus)) { continue; }
-      if (I2cValidRead(RtcChip.address, RX8010_REG_CTRL, 1, RtcChip.bus)) {
+      if (I2cValidRead(RtcChip.address, RX80x0_REG_CTRL, 1, RtcChip.bus)) {
         RtcChip.detected = 1;
+#ifdef USE_RX8030
+        strcpy_P(RtcChip.name, PSTR("RX8030"));
+#else
         strcpy_P(RtcChip.name, PSTR("RX8010"));
+#endif
         RtcChip.ReadTime = &Rx8010ReadTime;
         RtcChip.SetTime = &Rx8010SetTime;
         RtcChip.mem_size = -1;
@@ -742,7 +755,7 @@ void RtcChipDetect(void) {
 #ifdef USE_PCF85363
   Pcf85363Detected();
 #endif // USE_PCF85363
-#ifdef USE_RX8010
+#if defined(USE_RX8010) || defined(USE_RX8030)
   Rx8010Detected();
 #endif  // USE_RX8010
 #ifdef USE_PCF85063

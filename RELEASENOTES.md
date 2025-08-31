@@ -119,6 +119,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Commands `LoRaWanDecoder "` and `LoRaWanName "` to clear name [#23394](https://github.com/arendst/Tasmota/issues/23394)
 - Command `I2sPause` [#23646](https://github.com/arendst/Tasmota/issues/23646)
 - Support for RV3028 RTC [#23672](https://github.com/arendst/Tasmota/issues/23672)
+- Support for RX8030 RTC [#23855](https://github.com/arendst/Tasmota/issues/23855)
 - Extend state JSON message with functional hostname and ipaddress which could be WiFi or Ethernet
 - Internal function 'WSContentSendRaw_P' [#23641](https://github.com/arendst/Tasmota/issues/23641)
 - Universal display driver for ZJY169S0800TG01 ST7789 280x240 [#23638](https://github.com/arendst/Tasmota/issues/23638)
@@ -131,8 +132,10 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry f-strings now support ':' in expression [#23618](https://github.com/arendst/Tasmota/issues/23618)
 - Berry preview of animation framework [#23816](https://github.com/arendst/Tasmota/issues/23816)
 - Berry `call()` now works for classes [#23744](https://github.com/arendst/Tasmota/issues/23744)
+- Berry multiplication between string and int [#23850](https://github.com/arendst/Tasmota/issues/23850)
 
 ### Breaking Changed
+- Berry `animate` framework is DEPRECATED, will be replace by `animation` framework [#23854](https://github.com/arendst/Tasmota/issues/23854)
 
 ### Changed
 - ESP8266 platform update from 2025.05.00 to 2025.08.00 [#23801](https://github.com/arendst/Tasmota/issues/23801)
