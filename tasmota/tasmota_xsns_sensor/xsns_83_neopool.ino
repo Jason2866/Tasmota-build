@@ -1450,6 +1450,9 @@ void NeoPoolInit(void) {
       if (2 == result) {
           ClaimSerial();
       }
+#ifdef ESP32
+      AddLog(LOG_LEVEL_DEBUG, PSTR("NEO: Serial UART%d"), NeoPoolModbus->getUart());
+#endif
       if (NeoPoolInitData()) {  // Claims heap space
         neopool_active = true;
       }
