@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - ESP8266 platform update from 2025.07.00 to 2025.08.00 (#23801)
 - Support for ESP32-C5 (#23804)
 - Berry update of preview of animation framework (#23816)
+- ESP8266 platform update from 2025.08.00 to 2025.09.00 (#23801)
 
 ### Fixed
 - Syslog RFC5424 compliance (#23509)
