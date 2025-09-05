@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Syslog RFC5424 compliance (#23509)
 - Berry calling `setmember` with a function (#23825)
+- Unable to use default serial GPIOs by TasmotaSerial regression from v14.5.0 with IDF 5.3.2.250120 (#23775)
 
 ### Removed
 - `user-scalable=no` from HTTP HEADER (#23798)

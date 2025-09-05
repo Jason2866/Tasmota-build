@@ -27,6 +27,9 @@ extern "C" {
 
 #include <TasmotaSerial.h>
 
+extern void AddLog(uint32_t loglevel, PGM_P formatP, ...);
+enum LoggingLevels {LOG_LEVEL_NONE, LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_DEBUG, LOG_LEVEL_DEBUG_MORE};
+
 #ifdef ESP8266
 
 void IRAM_ATTR callRxRead(void *self) { ((TasmotaSerial*)self)->rxRead(); };
@@ -152,17 +155,33 @@ void TasmotaSerial::setTransmitEnablePin(int tx_enable_pin) {
 
 #ifdef ESP32
 bool TasmotaSerial::freeUart(void) {
-  for (uint32_t i = SOC_UART_HP_NUM -1; i >= 0; i--) {
-    if (0 == bitRead(tasmota_serial_uart_bitmap, i)) {
-      m_uart = uart_port_t(i);
-      bitSet(tasmota_serial_uart_bitmap, m_uart);
-      return true;
+  // If users selects default serial interface keep using UART0
+  //  From cores\esp32\HardwareSerial.cpp: There is always Seria0 for UART0
+  int pin_soc_rx0 = gpioNumberToDigitalPin(SOC_RX0);
+  int pin_soc_tx0 = gpioNumberToDigitalPin(SOC_TX0);
+  if (((pin_soc_rx0 == m_rx_pin) && (pin_soc_tx0 == m_tx_pin)) ||
+      ((pin_soc_rx0 == m_tx_pin) && (pin_soc_tx0 == m_rx_pin))) {
+    m_uart = uart_port_t(0);
+    bitSet(tasmota_serial_uart_bitmap, m_uart);
+    return true;
+  } else {
+    // Find a free UART which may end up as UART0
+    for (uint32_t i = SOC_UART_HP_NUM -1; i >= 0; i--) {
+      if (0 == bitRead(tasmota_serial_uart_bitmap, i)) {
+        m_uart = uart_port_t(i);
+        bitSet(tasmota_serial_uart_bitmap, m_uart);
+        return true;
+      }
     }
   }
   return false;
 }
 
 void TasmotaSerial::Esp32Begin(void) {
+  // Workaround IDF #14787 introduced in Tasmota v14.5.0, Core 3.1.1, IDF 5.3.2.250120
+  //  which kept new Rx low instead of float
+  pinMode(m_rx_pin, INPUT_PULLUP);
+  pinMode(m_tx_pin, INPUT_PULLUP);
   TSerial->begin(m_speed, m_config, m_rx_pin, m_tx_pin, m_invert);
   // For low bit rate, below 9600, set the Full RX threshold at 10 bytes instead of the default 120
   if (m_speed <= 9600) {
@@ -251,10 +270,13 @@ bool TasmotaSerial::begin(uint32_t speed, uint32_t config) {
 #if ARDUINO_USB_MODE
         TSerial = new HardwareSerial(m_uart);
 #else
-        if (0 == m_uart) {
+        if (0 == m_uart) {         // From cores\esp32\HardwareSerial.cpp: There is always Seria0 for UART0
+/*
+          // Not needed anymore since Core 3.1.0
           Serial.flush();
           Serial.end();
           delay(10);             // Allow time to cleanup queues - if not used hangs ESP32
+*/
           TSerial = &Serial;
         } else {
           TSerial = new HardwareSerial(m_uart);
