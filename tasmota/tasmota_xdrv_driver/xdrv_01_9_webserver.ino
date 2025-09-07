@@ -437,7 +437,7 @@ const char HTTP_COUNTER[] PROGMEM =
   "<br><div id='t' style='text-align:center;'></div>";
 
 const char HTTP_END[] PROGMEM =
-  "<div style='text-align:right;font-size:11px;'><hr><a href='https://github.com/arendst/Tasmota' target='_blank' style='color:#aaa;'>Tasmota %s %s " D_BY " Theo Arends</a></div>"
+  "<p></p><div style='text-align:right;font-size:11px;'><hr><a href='https://github.com/arendst/Tasmota' target='_blank' style='color:#aaa;'>Tasmota %s %s " D_BY " Theo Arends</a></div>"
   "</div>"
   "</body>"
   "</html>";
@@ -1121,7 +1121,7 @@ void WSContentButton(uint32_t title_index, bool show=true) {
 /*-------------------------------------------------------------------------------------------*/
 
 void WSContentSpaceButton(uint32_t title_index, bool show=true) {
-  WSContentSend_P(PSTR("<div></div>"));            // 5px padding
+  WSContentSend_P(PSTR("<div><p></p></div>"));            // 5px padding
   WSContentButton(title_index, show);
 }
 
@@ -1451,7 +1451,7 @@ void HandleRoot(void) {
   WSContentSend_P(HTTP_SCRIPT_ROOT_PART2);
   WSContentSendStyle();
 
-  WSContentSend_P(PSTR("<div style='padding:0;' id='l1' name='l1'></div><div></div>"));
+  WSContentSend_P(PSTR("<div style='padding:0;' id='l1' name='l1'></div><div><p></p></div>"));
 
 #ifndef FIRMWARE_MINIMAL
 
@@ -3796,7 +3796,7 @@ void HandleManagement(void) {
 
   XdrvMailbox.index = 0;
   XdrvXsnsCall(FUNC_WEB_ADD_CONSOLE_BUTTON);
-//  WSContentSend_P(PSTR("<div></div>"));            // 5px padding
+//  WSContentSend_P(PSTR("<div><p></p></div>"));     // 5px padding
   XdrvCall(FUNC_WEB_ADD_MANAGEMENT_BUTTON);
 
   WSContentSpaceButton(BUTTON_MAIN);

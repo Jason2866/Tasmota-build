@@ -410,7 +410,7 @@ class webPageLoRaWAN : Driver
   end
 
   def web_add_config_button()
-    webserver.content_send("<p><form id=ac action='lrw' style='display: block;' method='get'><button>LoRaWAN</button></form></p>")
+    webserver.content_send("<p></p><form id=ac action='lrw' style='display: block;' method='get'><button>LoRaWAN</button></form>")
   end
 
   def _get_max_nodes()

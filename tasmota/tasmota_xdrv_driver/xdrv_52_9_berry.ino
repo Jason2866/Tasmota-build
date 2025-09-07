@@ -821,7 +821,7 @@ void HandleBerryBECLoaderButton(void) {
     const BeBECCode_t &bec = BECCode[i];
     if (!(*bec.loaded)) {
       if (be_global_find(vm, be_newstr(vm, bec.id)) < 0) {    // the global name  doesn't exist
-        WSContentSend_P("<form id=but_part_mgr style='display:block;' action='tapp' method='get'><input type='hidden' name='n' value='%s'/><button>[Load %s]</button></form><p></p>", bec.id, bec.display_name);
+        WSContentSend_P("<p></p><form id=but_part_mgr style='display:block;' action='tapp' method='get'><input type='hidden' name='n' value='%s'/><button>[Load %s]</button></form>", bec.id, bec.display_name);
       } else {
         *bec.loaded = true;
       }
