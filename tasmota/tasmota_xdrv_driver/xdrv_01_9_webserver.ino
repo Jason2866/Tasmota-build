@@ -1451,7 +1451,7 @@ void HandleRoot(void) {
   WSContentSend_P(HTTP_SCRIPT_ROOT_PART2);
   WSContentSendStyle();
 
-  WSContentSend_P(PSTR("<div style='padding:0;' id='l1' name='l1'></div><div><p></p></div>"));
+  WSContentSend_P(PSTR("<div style='padding:0;' id='l1' name='l1'></div><div></div>"));
 
 #ifndef FIRMWARE_MINIMAL
 
@@ -1683,7 +1683,6 @@ void HandleRoot(void) {
   }
 
   // Init buttons 
-  WSContentSend_P(PSTR("<script>"));
   uint32_t max_devices = TasmotaGlobal.devices_present;
 
 #ifdef USE_SONOFF_IFAN
@@ -1692,6 +1691,7 @@ void HandleRoot(void) {
   }
 #endif  // USE_SONOFF_IFAN
 
+  bool use_script = false;
   for (uint32_t idx = 1; idx <= max_devices; idx++) {
     bool not_active = !bitRead(TasmotaGlobal.power, idx -1);
 
@@ -1702,10 +1702,16 @@ void HandleRoot(void) {
 #endif  // USE_SONOFF_IFAN
 
     if (not_active) {
+      if (!use_script) {
+        use_script = true;
+        WSContentSend_P(PSTR("<script>"));
+      }
       WSContentSend_P(PSTR("eb('o%d').style.background='var(--c_btnoff)';"), idx);
     }
   }
-  WSContentSend_P(PSTR("</script>"));
+  if (use_script) {
+    WSContentSend_P(PSTR("</script>"));
+  }
 
   XdrvXsnsCall(FUNC_WEB_ADD_MAIN_BUTTON);
 #endif  // Not FIRMWARE_MINIMAL
