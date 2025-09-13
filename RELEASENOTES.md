@@ -149,6 +149,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - VEML6070 and AHT2x device detection [#23581](https://github.com/arendst/Tasmota/issues/23581)
 - Domoticz supports persistent settings for all relays, keys and switches when filesystem `#define USE_UFILESYS` is enabled
 - ESP32 LoRaWan decoding won't duplicate non-decoded message if `SO147 0`
+- Use HAL instead of ROM for SHA HW acceleration as used by TLS [#23902](https://github.com/arendst/Tasmota/issues/23902)
 - BLE updates for esp-nimble-cpp v2.x [#23553](https://github.com/arendst/Tasmota/issues/23553)
 - Berry raise webserver hooks from 16 to 32 [#23748](https://github.com/arendst/Tasmota/issues/23748)
 

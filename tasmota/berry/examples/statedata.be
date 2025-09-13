@@ -15,7 +15,8 @@ class mqttdata_cls
   var line_cnt                                      # Number of lines
   var line_teleperiod                               # Skip any device taking longer to respond (probably offline)
   var line_highlight                                # Highlight latest change duration
-  var line_highlight_color                          # Highlight color
+  var line_highlight_color                          # Latest change highlight color
+  var line_lowuptime_color                          # Low uptime highlight color
   var line_duration                                 # Duration option
   var line_topic_is_hostname                        # Treat topic as hostname
   var list_buffer                                   # Buffer storing lines
@@ -24,9 +25,10 @@ class mqttdata_cls
 #    self.line_option = 1                            # Scroll line_cnt lines
     self.line_option = 2                            # Show devices updating within line_teleperiod
     self.line_cnt = 10                              # Option 1 number of lines to show
-    self.line_teleperiod = 1200                     # Option 2 number of teleperiod seconds for devices to be shown
+    self.line_teleperiod = 600                      # Option 2 number of teleperiod seconds for devices to be shown
     self.line_highlight = 10                        # Highlight latest change duration in seconds
-    self.line_highlight_color = "yellow"            # Highlight HTML color like "#FFFF00" or "yellow"
+    self.line_highlight_color = "yellow"            # Latest change highlight HTML color like "#FFFF00" or "yellow"
+    self.line_lowuptime_color = "lime"              # Low uptime highlight HTML color like "#00FF00" or "lime"
     self.line_duration = 0                          # Show duration of last state message (1)
     self.line_topic_is_hostname = 0                 # Treat topic as hostname (1)
 
@@ -159,8 +161,16 @@ class mqttdata_cls
           end
         end
 
+        var uptime_str = string.replace(uptime, "T", ":")  # 11T21:50:34 -> 11:21:50:34
+        var uptime_splits = string.split(uptime_str, ":")
+        var uptime_sec = (int(uptime_splits[0]) * 86400) + # 11 * 86400
+                         (int(uptime_splits[1]) * 3600) +  # 21 * 3600
+                         (int(uptime_splits[2]) * 60) +    # 50 * 60
+                         int(uptime_splits[3])      # 34 
         if last_seen >= (now - self.line_highlight) # Highlight changes within latest seconds
           msg += format("<td align='right' style='color:%s'>%s</td>", self.line_highlight_color, uptime)
+        elif uptime_sec < self.line_teleperiod      # Highlight changes just after restart
+          msg += format("<td align='right' style='color:%s'>%s</td>", self.line_lowuptime_color, uptime)
         else 
           msg += format("<td align='right'>%s</td>", uptime)
         end
