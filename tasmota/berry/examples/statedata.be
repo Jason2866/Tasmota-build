@@ -69,8 +69,9 @@ class mqttdata_cls
         if self.list_buffer.size()
           var list_index = 0
           var list_size = size(self.list_buffer)
+          var topic_comma = format("%s,", topic)    # Add find delimiter
           while list_index < list_size              # Use while loop as counter is decremented
-            if 0 == string.find(self.list_buffer[list_index], topic)
+            if 0 == string.find(self.list_buffer[list_index], topic_comma)
               self.list_buffer.remove(list_index)   # Remove current state
               list_size -= 1                        # Continue for duplicates
             end
@@ -150,14 +151,14 @@ class mqttdata_cls
 
         msg += "<tr>"
         if ipaddress
-          msg += format("<td><a target=_blank href='http://%s.'>%s</a></td><td><a target=_blank href='http://%s'>%s</a></td>",
+          msg += format("<td><a target=_blank href='http://%s.'>%s&nbsp</a></td><td><a target=_blank href='http://%s'>%s&nbsp</a></td>",
                         topic, topic, ipaddress, ipaddress)
         else
           if self.line_topic_is_hostname
-            msg += format("<td><a target=_blank href='http://%s.'>%s</a></td><td>&nbsp</td>",
+            msg += format("<td><a target=_blank href='http://%s.'>%s&nbsp</a></td><td>&nbsp</td>",
                           topic, topic)
           else
-            msg += format("<td>%s</td><td>&nbsp</td>", topic)
+            msg += format("<td>%s&nbsp</td><td>&nbsp</td>", topic)
           end
         end
 

@@ -63,11 +63,13 @@ class mqttdata_cls
       var ipaddress = config['ip']
       var devicename = config['dn']
       var line = format("%s,%s,%s,%s", topic, hostname, ipaddress, devicename)
+#      tasmota.log(format("STD: 111 Size %03d, Topic '%s', Line '%s'", self.list_config.size(), topic, line), 3)
       if self.list_config.size()
         var list_index = 0
         var list_size = size(self.list_config)
+        var topic_comma = format("%s,", topic)      # Add find delimiter
         while list_index < list_size                # Use while loop as counter is decremented
-          if 0 == string.find(self.list_config[list_index], topic)
+          if 0 == string.find(self.list_config[list_index], topic_comma)
             self.list_config.remove(list_index)     # Remove current config
             list_size -= 1                          # Continue for duplicates
           end
@@ -75,7 +77,7 @@ class mqttdata_cls
         end
       end
       self.list_config.push(line)                   # Add (re-discovered) config as last entry
-#      tasmota.log(format("STD: Size %d, Line '%s'", self.list_config.size(), line), 3)
+#      tasmota.log(format("STD: 222 Size %03d, Topic '%s', Line '%s'", self.list_config.size(), topic, line), 3)
     end
   end
 
@@ -93,6 +95,7 @@ class mqttdata_cls
           break
         end
       end
+#      tasmota.log(format("STD: Topic '%s', Index %d, Size %d, Line '%s'", topic, topic_index, self.list_config.size(), self.list_config[topic_index]), 3)
       if topic_index == -1 return true end          # Assume topic is in retained discovery list
 
       var state = json.load(data)
@@ -114,8 +117,9 @@ class mqttdata_cls
         if self.list_buffer.size()
           var list_index = 0
           var list_size = size(self.list_buffer)
+          var topic_comma = format("%s,", topic)    # Add find delimiter
           while list_index < list_size              # Use while loop as counter is decremented
-            if 0 == string.find(self.list_buffer[list_index], topic)
+            if 0 == string.find(self.list_buffer[list_index], topic_comma)
               self.list_buffer.remove(list_index)   # Remove current state
               list_size -= 1                        # Continue for duplicates
             end
