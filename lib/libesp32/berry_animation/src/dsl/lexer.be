@@ -120,6 +120,7 @@ class DSLLexer
   
   # Scan identifier or keyword
   def scan_identifier_or_keyword()
+    import animation_dsl
     var start_pos = self.position - 1
     var start_column = self.column - 1
     
@@ -495,6 +496,7 @@ class DSLLexer
   
   # Add token to tokens list
   def add_token(token_type, value, length)
+    import animation_dsl
     var token = animation_dsl.Token(token_type, value, self.line, self.column - length, length)
     self.tokens.push(token)
   end
@@ -532,6 +534,7 @@ end
 # @param source: string - DSL source code
 # @return list - Array of Token objects
 def tokenize_dsl(source)
+  import animation_dsl
   var lexer = animation_dsl.DSLLexer(source)
   return lexer.tokenize()
 end
