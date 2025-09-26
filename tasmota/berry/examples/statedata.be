@@ -64,14 +64,14 @@ class mqttdata_cls
           ipaddress = state['IPAddress']            # 192.168.2.123
         end
         var last_seen = tasmota.rtc('local')
-        var line = format("%s,%s,%s,%d", topic, ipaddress, uptime, last_seen)
+        var line = format("%s\001%s\001%s\001%d", topic, ipaddress, uptime, last_seen)
 
         if self.list_buffer.size()
           var list_index = 0
           var list_size = size(self.list_buffer)
-          var topic_comma = format("%s,", topic)    # Add find delimiter
+          var topic_delim = format("%s\001", topic) # Add find delimiter
           while list_index < list_size              # Use while loop as counter is decremented
-            if 0 == string.find(self.list_buffer[list_index], topic_comma)
+            if 0 == string.find(self.list_buffer[list_index], topic_delim)
               self.list_buffer.remove(list_index)   # Remove current state
               list_size -= 1                        # Continue for duplicates
             end
@@ -121,7 +121,7 @@ class mqttdata_cls
       var list_index = 0
       var list_size = size(self.list_buffer)
       while list_index < list_size
-        var splits = string.split(self.list_buffer[list_index], ",")
+        var splits = string.split(self.list_buffer[list_index], "\001")
         var last_seen = int(splits[3])
         if time_window > last_seen                  # Remove offline devices
           self.list_buffer.remove(list_index)
@@ -143,7 +143,7 @@ class mqttdata_cls
       end
       var msg = "</table><table style='width:100%;font-size:80%'>" # Terminate two column table and open new table
       while list_index < list_size
-        var splits = string.split(self.list_buffer[list_index], ",")
+        var splits = string.split(self.list_buffer[list_index], "\001")
         var topic = splits[0]                       # topic or hostname
         var ipaddress = splits[1]
         var uptime = splits[2]
