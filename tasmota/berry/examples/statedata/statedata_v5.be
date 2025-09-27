@@ -24,6 +24,9 @@ class mqttdata_cls
   var bool_devicename                               # Show device name
   var bool_version                                  # Show version
   var bool_ipaddress                                # Show IP address
+  var sort_direction                                # Sort direction
+  var sort_column                                   # Sort column
+  var sort_last_column                              # Sort last column
   var list_buffer                                   # Buffer storing lines
   var list_config                                   # Buffer storing retained config
 
@@ -40,6 +43,16 @@ class mqttdata_cls
     self.bool_devicename = persist.std_devicename   # Show device name
     self.bool_version = persist.std_version         # Show version
     self.bool_ipaddress = persist.std_ipaddress     # Show IP address
+
+    self.sort_direction = persist.std_direction     # Sort direction (0) Up or (1) Down
+    if !self.sort_direction
+      self.sort_direction = 0                       # Default Up
+    end
+    self.sort_column = persist.std_column           # Sort column
+    if !self.sort_column
+      self.sort_column = 0                          # Default Hostname
+    end
+    self.sort_last_column = self.sort_column        # Sort last column to detect direction toggle
 
     self.list_buffer = []                           # Init line buffer list
     self.list_config = []                           # Init retained config buffer list
@@ -148,7 +161,18 @@ class mqttdata_cls
     return true
   end
 
-  def sort(l, cmp)                                  # Sort list
+  def sort_col(l, col, dir)                         # Sort list based on col and Hostname (is first entry in line)
+    # For 50 records takes 6ms (primary key) or 25ms(ESP32S3&240MHz) / 50ms(ESP32@160MHz) (primary and secondary key)
+    var cmp = /a,b -> a < b                         # Sort up
+    if dir
+      cmp = /a,b -> a > b                           # Sort down
+    end
+    if col                                          # col is new primary key (not Hostname)
+      for i:l.keys()
+        var splits = string.split(l[i], "\001")
+        l[i] = splits[col] + "\002" + l[i]          # Add primary key to secondary key as "col" + Hostname
+      end
+    end
     for i:1..size(l)-1
       var k = l[i]
       var j = i
@@ -157,6 +181,12 @@ class mqttdata_cls
         j -= 1
       end
       l[j] = k
+    end
+    if col
+      for i:l.keys()
+        var splits = string.split(l[i], "\002")     # Remove primary key
+        l[i] = splits[1]
+      end
     end
     return l
   end
@@ -181,6 +211,8 @@ class mqttdata_cls
     persist.std_devicename = self.bool_devicename
     persist.std_version = self.bool_version
     persist.std_ipaddress = self.bool_ipaddress
+    persist.std_column = self.sort_column
+    persist.std_direction = self.sort_direction
     persist.save()
 #    tasmota.log("STD: Persist saved", 3)
   end
@@ -197,6 +229,14 @@ class mqttdata_cls
     elif webserver.has_arg("sd_ip")
       # Toggle display IP address
       if self.bool_ipaddress self.bool_ipaddress = false else self.bool_ipaddress = true end
+      self.persist_save()
+    elif webserver.has_arg("sd_sort")
+      # Toggle sort column
+      self.sort_column = int(webserver.arg("sd_sort"))
+      if self.sort_last_column == self.sort_column
+        self.sort_direction ^= 1
+      end
+      self.sort_last_column = self.sort_column
       self.persist_save()
     end
 
@@ -216,30 +256,45 @@ class mqttdata_cls
       end
       if !list_size return end                      # If list became empty bail out
 
-      if 2 == self.line_option
-        var less = /a,b -> a < b
-        self.sort(self.list_buffer, less)           # Sort list by topic and/or hostname
-      end
+      var msg = "</table><table style='width:100%;font-size:80%'>" # Terminate two column table and open new table
+      msg += "<tr>"
 
       list_index = 0
       if 1 == self.line_option
         list_index = list_size - self.line_cnt      # Offset in list using self.line_cnt
         if list_index < 0 list_index = 0 end
-      end
-      var msg = "</table><table style='width:100%;font-size:80%'>" # Terminate two column table and open new table
 
-      msg += "<tr>"
-      if self.bool_devicename
-        msg += "<th>Device Name&nbsp</th>"
+        if self.bool_devicename
+          msg += "<th>Device Name&nbsp</th>"
+        end
+        if self.bool_version
+          msg += "<th>Version&nbsp</th>"
+        end
+        msg += "<th>Hostname&nbsp</th>"
+        if self.bool_ipaddress
+          msg += "<th>IP Address&nbsp</th>"
+        end
+        msg += "<th align='right'>Uptime&nbsp</th>"
+      else
+#        var start = tasmota.millis()
+        self.sort_col(self.list_buffer, self.sort_column, self.sort_direction) # Sort list by column
+#        var stop = tasmota.millis()
+#        tasmota.log(format("STD: Sort duration %d ms", stop - start), 3)
+
+        var icon_direction = self.sort_direction ? "&#x25BC" : "&#x25B2"
+        if self.bool_devicename
+          msg += format("<th><a href='#p' onclick='la(\"&sd_sort=4\");'>Device Name</a>%s&nbsp</th>", self.sort_column == 4 ? icon_direction : "")
+        end
+        if self.bool_version
+          msg += format("<th><a href='#p' onclick='la(\"&sd_sort=5\");'>Version</a>%s&nbsp</th>", self.sort_column == 5 ? icon_direction : "")
+        end
+        msg += format("<th><a href='#p' onclick='la(\"&sd_sort=0\");'>Hostname</a>%s&nbsp</th>", self.sort_column == 0 ? icon_direction : "")
+        if self.bool_ipaddress
+          msg += format("<th><a href='#p' onclick='la(\"&sd_sort=1\");'>IP Address</a>%s&nbsp</th>", self.sort_column == 1 ? icon_direction : "")
+        end
+        msg += format("<th align='right'><a href='#p' onclick='la(\"&sd_sort=2\");'>Uptime</a>%s&nbsp</th>", self.sort_column == 2 ? icon_direction : "")
       end
-      if self.bool_version
-        msg += "<th>Version&nbsp</th>"
-      end
-      msg += "<th>Hostname&nbsp</th>"
-      if self.bool_ipaddress
-        msg += "<th>IP Address&nbsp</th>"
-      end
-      msg += "<th align='right'>Uptime&nbsp</th>"
+
       msg += "</tr>"
 
       while list_index < list_size

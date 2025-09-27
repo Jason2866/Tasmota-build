@@ -126,6 +126,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - NeoPool add Redox tank alarm [#19811](https://github.com/arendst/Tasmota/issues/19811)
 - I2S additions [#23543](https://github.com/arendst/Tasmota/issues/23543)
 - ESP32 ROM SHA Hardware Acceleration to BearSSL [#23819](https://github.com/arendst/Tasmota/issues/23819)
+- ESP32 Extension Manager, replacing loading of Partition Wizard [#23955](https://github.com/arendst/Tasmota/issues/23955)
 - Support for ESP32-P4 [#23663](https://github.com/arendst/Tasmota/issues/23663)
 - Support for ESP32-C5 [#23804](https://github.com/arendst/Tasmota/issues/23804)
 - ESP32-P4 command `HostedOta` [#23675](https://github.com/arendst/Tasmota/issues/23675)
@@ -152,6 +153,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Use HAL instead of ROM for SHA HW acceleration as used by TLS [#23902](https://github.com/arendst/Tasmota/issues/23902)
 - BLE updates for esp-nimble-cpp v2.x [#23553](https://github.com/arendst/Tasmota/issues/23553)
 - Berry raise webserver hooks from 16 to 32 [#23748](https://github.com/arendst/Tasmota/issues/23748)
+- Berry add argument to `werbserver.content_send_style` [#23953](https://github.com/arendst/Tasmota/issues/23953)
 
 ### Fixed
 - Syslog RFC5424 compliance [#23509](https://github.com/arendst/Tasmota/issues/23509)
