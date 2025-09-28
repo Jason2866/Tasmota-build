@@ -146,6 +146,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - JPEGDEC library from v1.5.0 to v1.8.3 [#23883](https://github.com/arendst/Tasmota/issues/23883)
 - Library names [#23560](https://github.com/arendst/Tasmota/issues/23560)
 - Web UI styles and HTML syntax [#23847](https://github.com/arendst/Tasmota/issues/23847)
+- Make GUI Timer parameters mobile phone friendly [#23959](https://github.com/arendst/Tasmota/issues/23959)
 - CSS uses named colors variables [#23597](https://github.com/arendst/Tasmota/issues/23597)
 - VEML6070 and AHT2x device detection [#23581](https://github.com/arendst/Tasmota/issues/23581)
 - Domoticz supports persistent settings for all relays, keys and switches when filesystem `#define USE_UFILESYS` is enabled

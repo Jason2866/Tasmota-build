@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - ESP32 Platform from 2025.08.30 to 2025.09.30, Framework (Arduino Core) from v3.1.3.250808 to v3.1.4 and IDF from v5.3.3.250801 to v5.3.4.250826 (#23888)
 - Use HAL instead of ROM for SHA HW acceleration as used by TLS (#23902)
 - Berry add argument to `werbserver.content_send_style` (#23953)
+- Make GUI Timer parameters mobile phone friendly (#23959)
 
 ### Fixed
 
