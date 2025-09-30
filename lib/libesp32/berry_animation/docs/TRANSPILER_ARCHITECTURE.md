@@ -354,10 +354,10 @@ add(name, entry)
 **Example Conflict Detection:**
 ```berry
 # This would raise an error:
-color max = #FF0000  # Conflicts with built-in math function "max"
+color max = 0xFF0000  # Conflicts with built-in math function "max"
 
 # This would also raise an error:
-color red = #FF0000
+color red = 0xFF0000
 animation red = solid(color=blue)  # Redefining "red" as different type
 ```
 

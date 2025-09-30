@@ -1,11 +1,15 @@
-#-
-  Show optional devicename and/or version and/or IP adress with hostname and uptime from MQTT discovery and STATE messages in GUI
-
-  Enable either
-   self.line_option = 1  : Scroll 'line_cnt' lines
-  or
-   self.line_option = 2  : Show devices updating within 'line_teleperiod'
--#
+###################################################################################
+# Display in Main GUI Devices Online based on MQTT Tasmota Discovery Config and STATE reports
+#
+# Copyright (C) 2025  Stephan Hadinger & Theo Arends
+#
+# Enable either
+#  line_option = 1  : Scroll 'line_cnt' lines
+# or
+#  line_option = 2  : Show devices updating within 'line_teleperiod'
+#
+# rm Devices_Online.tapp; zip -j -0 Devices_Online.tapp Devices_Online/autoexec.be Devices_Online/devices_online.be Devices_Online/manifest.json
+###################################################################################
 
 import mqtt 
 import json
@@ -13,13 +17,16 @@ import string
 import webserver
 import persist
 
-class mqttdata_cls
-  var line_option                                   # Line option
-  var line_cnt                                      # Number of lines
-  var line_teleperiod                               # Skip any device taking longer to respond (probably offline)
-  var line_highlight                                # Highlight latest change duration
-  var line_highlight_color                          # Latest change highlight color
-  var line_lowuptime_color                          # Low uptime highlight color
+class devices_online
+#  static var line_option = 1                       # Scroll line_cnt lines
+  static var line_option = 2                        # Show devices updating within line_teleperiod
+
+  static var line_cnt = 10                          # Option 1 number of lines to show
+  static var line_teleperiod = 600                  # Option 2 number of teleperiod seconds for devices to be shown as online
+  static var line_highlight = 10                    # Highlight latest change duration in seconds
+  static var line_highlight_color = "yellow"        # Latest change highlight HTML color like "#FFFF00" or "yellow"
+  static var line_lowuptime_color = "lime"          # Low uptime highlight HTML color like "#00FF00" or "lime"
+
   var mqtt_tele                                     # MQTT tele STATE subscribe format
   var bool_devicename                               # Show device name
   var bool_version                                  # Show version
@@ -30,15 +37,12 @@ class mqttdata_cls
   var list_buffer                                   # Buffer storing lines
   var list_config                                   # Buffer storing retained config
 
+  #################################################################################
+  # init
+  #
+  # install the extension and allocate all resources
+  #################################################################################
   def init()
-#    self.line_option = 1                            # Scroll line_cnt lines
-    self.line_option = 2                            # Show devices updating within line_teleperiod
-
-    self.line_cnt = 10                              # Option 1 number of lines to show
-    self.line_teleperiod = 600                      # Option 2 number of teleperiod seconds for devices to be shown
-    self.line_highlight = 10                        # Highlight latest change duration in seconds
-    self.line_highlight_color = "yellow"            # Latest change highlight HTML color like "#FFFF00" or "yellow"
-    self.line_lowuptime_color = "lime"              # Low uptime highlight HTML color like "#00FF00" or "lime"
     self.bool_devicename = persist.std_devicename   # Show device name
     self.bool_version = persist.std_version         # Show version
     self.bool_ipaddress = persist.std_ipaddress     # Show IP address
@@ -56,24 +60,31 @@ class mqttdata_cls
     self.list_buffer = []                           # Init line buffer list
     self.list_config = []                           # Init retained config buffer list
 
-#    var full_topic = tasmota.cmd('FullTopic', true) # "%prefix%/%topic%/"
+#    var full_topic = tasmota.cmd("FullTopic", true)['FullTopic'] # "%prefix%/%topic%/"
     var prefix_tele = tasmota.cmd("Prefix", true)['Prefix3'] # tele = Prefix3 used by STATE message
     self.mqtt_tele = format("%s/#", prefix_tele)
     mqtt.subscribe(self.mqtt_tele, /topic, idx, data, databytes -> self.handle_state_data(topic, idx, data, databytes))
     mqtt.subscribe("tasmota/discovery/+/config", /topic, idx, data, databytes -> self.handle_discovery_data(topic, idx, data, databytes))
 
-    if global.mqttdata_driver
-      global.mqttdata_driver.stop()                 # Let previous instance bail out cleanly
-    end
-    tasmota.add_driver(global.mqttdata_driver := self)
+    tasmota.add_driver(self)
   end
 
-  def stop()
+  #################################################################################
+  # unload
+  #
+  # Uninstall the extension and deallocate all resources
+  #################################################################################
+  def unload()
     mqtt.unsubscribe("tasmota/discovery/+/config")
     mqtt.unsubscribe(self.mqtt_tele)
     tasmota.remove_driver(self)
   end
 
+  #################################################################################
+  # handle_discovery_data(discovery_topic, idx, data, databytes)
+  #
+  # Handle MQTT Tasmota Discovery Config data
+  #################################################################################
   def handle_discovery_data(discovery_topic, idx, data, databytes)
     var config = json.load(data)
     if config
@@ -103,6 +114,11 @@ class mqttdata_cls
     return true                                     # return true to stop propagation as a Tasmota cmd
   end
 
+  #################################################################################
+  # handle_state_data(tele_topic, idx, data, databytes)
+  #
+  # Handle MQTT STATE data
+  #################################################################################
   def handle_state_data(tele_topic, idx, data, databytes)
     var subtopic = string.split(tele_topic, "/")
     if subtopic[-1] == "STATE"                      # tele/atomlite2/STATE
@@ -154,6 +170,11 @@ class mqttdata_cls
     return true                                     # return true to stop propagation as a Tasmota cmd
   end
 
+  #################################################################################
+  # sort_col(l, col, dir)
+  #
+  # Shell sort list of online devices based on user selected column and direction
+  #################################################################################
   def sort_col(l, col, dir)                         # Sort list based on col and Hostname (is first entry in line)
     # For 50 records takes 6ms (primary key) or 25ms(ESP32S3&240MHz) / 50ms(ESP32@160MHz) (primary and secondary key)
     var cmp = /a,b -> a < b                         # Sort up
@@ -184,22 +205,11 @@ class mqttdata_cls
     return l
   end
 
-  def dhm(last_time)                                # Duration
-    var since = tasmota.rtc('local') - last_time
-    var unit = "d"
-    if since > (24 * 3600)
-      since /= (24 * 3600)
-      if since > 99 since = 99 end
-    elif  since > 3600
-      since /= 3600
-      unit = "h"
-    else
-      since /= 60
-      unit = "m"
-    end
-    return format("%02d%s", since, unit)
-  end
-
+  #################################################################################
+  # persist_save
+  #
+  # Save user data to be used on restart
+  #################################################################################
   def persist_save()
     persist.std_devicename = self.bool_devicename
     persist.std_version = self.bool_version
@@ -210,6 +220,11 @@ class mqttdata_cls
 #    tasmota.log("STD: Persist saved", 3)
   end
 
+  #################################################################################
+  # web_sensor
+  #
+  # Display Devices Online in user selected sorted columns
+  #################################################################################
   def web_sensor()
     if webserver.has_arg("sd_dn")
       # Toggle display Device Name
@@ -269,10 +284,7 @@ class mqttdata_cls
         end
         msg += "<th align='right'>Uptime&nbsp</th>"
       else
-#        var start = tasmota.millis()
         self.sort_col(self.list_buffer, self.sort_column, self.sort_direction) # Sort list by column
-#        var stop = tasmota.millis()
-#        tasmota.log(format("STD: Sort duration %d ms", stop - start), 3)
 
         var icon_direction = self.sort_direction ? "&#x25BC" : "&#x25B2"
         if self.bool_devicename
@@ -344,4 +356,4 @@ class mqttdata_cls
 
 end
 
-mqttdata = mqttdata_cls()
+return devices_online()

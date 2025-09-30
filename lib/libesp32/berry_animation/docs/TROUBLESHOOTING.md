@@ -658,9 +658,9 @@ animation.register_user_function("pulse_effect", create_pulse_effect)
    ```berry
    # Good - reasonable palette size
    palette simple_fire = [
-     (0, #000000),
-     (128, #FF0000),
-     (255, #FFFF00)
+     (0, 0x000000),
+     (128, 0xFF0000),
+     (255, 0xFFFF00)
    ]
    
    # Avoid - very large palettes

@@ -67,6 +67,23 @@ class Extension_manager
   end
 
   #####################################################################################################
+  # ext_repo_local()
+  #
+  # Takes OtaUrl, extract the host url and adds extensions/
+  # Ex: 'http://otaserver/ota/tasmota/tasmota32.bin' becomes 'http://otaserver/extensions/'
+  #
+  # @return string - the url of the local extensions repository
+  #####################################################################################################
+  static def ext_repo_local()
+    import string
+
+    var ota_url = tasmota.cmd("_OtaUrl", true)['OtaUrl']
+    var url = string.split(ota_url, "/")
+    var result = f"{url[0]}//{url[2]}/extensions/" # http://otaserver/extensions/
+    return result
+  end
+
+  #####################################################################################################
   # General functions to get information about tapp files (installed or from store)
   #####################################################################################################
   #####################################################################################################
@@ -295,7 +312,8 @@ class Extension_manager
     tapp_fname = self.tapp_name(tapp_fname) + ".tapp"
     # full url
     var ext_url = f"{self.EXT_REPO}{self.EXT_REPO_FOLDER}{tapp_fname}"
-    log(f"EXT: installing from '{ext_url}'", 3)
+    var ext_repo = self.ext_repo_local()
+    var ext_url_local = f"{ext_repo}{self.EXT_REPO_FOLDER}{tapp_fname}"
     # load from web
     try
       # check if directory exists
@@ -303,11 +321,20 @@ class Extension_manager
       
       var local_file = f"{self.EXT_FOLDER}{tapp_fname}"
       var cl = webclient()
-      cl.begin(ext_url)
+      log(f"EXT: installing from '{ext_url_local}'", 3)
+      cl.begin(ext_url_local)
       var r = cl.GET()
       if r != 200
-        log(f"EXT: return_code={r}", 2)
-        return false
+        cl.close()
+        if self.EXT_REPO != ext_repo
+          log(f"EXT: installing from '{ext_url}'", 3)
+          cl.begin(ext_url)
+          r = cl.GET()
+        end
+        if r != 200
+          log(f"EXT: return_code={r}", 2)
+          return false
+        end
       end
       var ret = cl.write_file(local_file)
       cl.close()
@@ -634,17 +661,27 @@ class Extension_manager
       var version = f"0x{tasmota.version():08X}"
 
       var url = f"{self.EXT_REPO}{self.EXT_REPO_MANIFEST}?a={arch}&v={version}"
-      log(f"EXT: fetching extensions manifest '{url}'", 3)
+      var ext_repo = self.ext_repo_local()
+      var url_local = f"{ext_repo}{self.EXT_REPO_MANIFEST}?a={arch}&v={version}"
       # Add architeture and version information
       # They are not used for now but may be interesting in the future to serve
       # different content based on architecture (Ex: ESP32) and version (ex: 0x0E060001 for 14.6.0.1)
       # load the template
       var cl = webclient()
-      cl.begin(url)
+      log(f"EXT: fetching extensions manifest '{url_local}'", 3)
+      cl.begin(url_local)
       var r = cl.GET()
       if r != 200
-        log(f"EXT: error fetching manifest {r}", 2)
-        raise "webclient_error", f"Error fetching manifest code={r}"
+        cl.close()
+        if self.EXT_REPO != ext_repo
+          log(f"EXT: fetching extensions manifest '{url}'", 3)
+          cl.begin(url)
+          r = cl.GET()
+        end
+        if r != 200
+          log(f"EXT: error fetching manifest {r}", 2)
+          raise "webclient_error", f"Error fetching manifest code={r}"
+        end
       end
       var s = cl.get_string()
       cl.close()

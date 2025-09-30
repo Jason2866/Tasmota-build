@@ -48,7 +48,7 @@ For detailed information about the DSL transpiler's internal architecture, inclu
 Compiles DSL source code to Berry code without executing it.
 
 ```berry
-var dsl_source = "color red = #FF0000\n"
+var dsl_source = "color red = 0xFF0000\n"
                  "animation red_anim = solid(color=red)\n"
                  "run red_anim"
 
@@ -60,7 +60,7 @@ print(berry_code)  # Shows generated Berry code
 Compiles and executes DSL source code in one step.
 
 ```berry
-animation_dsl.execute("color blue = #0000FF\n"
+animation_dsl.execute("color blue = 0x0000FF\n"
                       "animation blue_anim = solid(color=blue)\n"
                       "run blue_anim for 5s")
 ```
@@ -71,7 +71,7 @@ Loads DSL source from a file and executes it.
 ```berry
 # Create a DSL file
 var f = open("my_animation.dsl", "w")
-f.write("color green = #00FF00\n"
+f.write("color green = 0x00FF00\n"
         "animation pulse_green = pulsating_animation(color=green, period=2s)\n"
         "run pulse_green")
 f.close()
@@ -100,7 +100,7 @@ The Animation DSL uses a declarative syntax with named parameters. All animation
 - **Import statements**: `import module_name` for loading Berry modules
 - **Named parameters**: All function calls use `name=value` syntax
 - **Time units**: `2s`, `500ms`, `1m`, `1h` 
-- **Hex colors**: `#FF0000`, `#80FF0000` (ARGB)
+- **Hex colors**: `0xFF0000`, `0x80FF0000` (ARGB)
 - **Named colors**: `red`, `blue`, `white`, etc.
 - **Comments**: `# This is a comment`
 - **Property assignment**: `animation.property = value`
@@ -116,8 +116,8 @@ import user_functions
 strip length 60
 
 # Color definitions
-color red = #FF0000
-color blue = #0000FF
+color red = 0xFF0000
+color blue = 0x0000FF
 
 # Animation definitions with named parameters
 animation pulse_red = pulsating_animation(color=red, period=2s)
@@ -149,7 +149,7 @@ animation wave = wave_animation(waveform=SINE)
 # Transpiles to: animation.SINE (direct access)
 
 # If custom_color doesn't exist in animation module  
-color custom_color = #FF0000
+color custom_color = 0xFF0000
 animation solid_red = solid(color=custom_color)
 # Transpiles to: custom_color_ (user-defined variable)
 ```
@@ -448,7 +448,7 @@ animation.register_user_function("twinkle", custom_twinkle)
 
 ```berry
 # Use in DSL - engine is automatically passed as first argument
-animation gold_twinkle = twinkle(#FFD700, 8, 500ms)
+animation gold_twinkle = twinkle(0xFFD700, 8, 500ms)
 animation blue_twinkle = twinkle(blue, 12, 300ms)
 run gold_twinkle
 ```
@@ -463,8 +463,8 @@ Define event handlers that respond to triggers:
 
 ```berry
 # Define animations for different states
-color normal = #000080
-color alert = #FF0000
+color normal = 0x000080
+color alert = 0xFF0000
 
 animation normal_state = solid(color=normal)
 animation alert_state = pulsating_animation(color=alert, period=500ms)
@@ -718,11 +718,11 @@ import animation_dsl
 
 def handle_rule_trigger(event)
   if event == "motion"
-    animation_dsl.execute("color alert = #FF0000\n"
+    animation_dsl.execute("color alert = 0xFF0000\n"
                           "animation alert_anim = pulsating_animation(color=alert, period=500ms)\n"
                           "run alert_anim for 5s")
   elif event == "door"
-    animation_dsl.execute("color welcome = #00FF00\n"
+    animation_dsl.execute("color welcome = 0x00FF00\n"
                           "animation welcome_anim = breathe_animation(color=welcome, period=2s)\n"
                           "run welcome_anim for 8s")
   end
@@ -763,8 +763,8 @@ webserver.on("/execute_dsl", web_execute_dsl)
    strip length 60
    
    # Colors next
-   color red = #FF0000
-   color blue = #0000FF
+   color red = 0xFF0000
+   color blue = 0x0000FF
    
    # Animations with named parameters
    animation red_solid = solid(color=red)
@@ -785,20 +785,20 @@ webserver.on("/execute_dsl", web_execute_dsl)
 2. **Use meaningful names**:
    ```berry
    # Good
-   color warning_red = #FF0000
+   color warning_red = 0xFF0000
    animation door_alert = pulsating_animation(color=warning_red, period=500ms)
    
    # Avoid
-   color c1 = #FF0000
+   color c1 = 0xFF0000
    animation a1 = pulsating_animation(color=c1, period=500ms)
    ```
 
 3. **Comment your DSL**:
    ```berry
    # Security system colors
-   color normal_blue = #000080    # Idle state
-   color alert_red = #FF0000      # Alert state
-   color success_green = #00FF00  # Success state
+   color normal_blue = 0x000080    # Idle state
+   color alert_red = 0xFF0000      # Alert state
+   color success_green = 0x00FF00  # Success state
    
    # Main security animation sequence
    sequence security_demo {
