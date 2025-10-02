@@ -324,21 +324,26 @@ class Extension_manager
       log(f"EXT: installing from '{ext_url_local}'", 3)
       cl.begin(ext_url_local)
       var r = cl.GET()
-      if r != 200
-        cl.close()
-        cl = webclient()
-        if self.EXT_REPO != ext_repo
-          log(f"EXT: installing from '{ext_url}'", 3)
-          cl.begin(ext_url)
-          r = cl.GET()
-        end
-        if r != 200
-          log(f"EXT: return_code={r}", 2)
-          return false
-        end
+      var ret
+      if r == 200
+        ret = cl.write_file(local_file)
       end
-      var ret = cl.write_file(local_file)
       cl.close()
+      if r != 200 && self.EXT_REPO != ext_repo
+        # Open a new webclient session as the previous sometimes hasn't finished yet
+        var cl2 = webclient()
+        log(f"EXT: installing from '{ext_url}'", 3)
+        cl2.begin(ext_url)
+        r = cl2.GET()
+        if r == 200
+          ret = cl2.write_file(local_file)
+        end
+        cl2.close()
+      end
+      if r != 200
+        log(f"EXT: return_code={r}", 2)
+        return false
+      end
       # test if file exists and tell its size
       if ret > 0 && path.exists(local_file)        
         log(f"EXT: successfully installed '{local_file}' {ret} bytes", 3)
@@ -672,21 +677,26 @@ class Extension_manager
       log(f"EXT: fetching extensions manifest '{url_local}'", 3)
       cl.begin(url_local)
       var r = cl.GET()
-      if r != 200
-        cl.close()
-        cl = webclient()
-        if self.EXT_REPO != ext_repo
-          log(f"EXT: fetching extensions manifest '{url}'", 3)
-          cl.begin(url)
-          r = cl.GET()
-        end
-        if r != 200
-          log(f"EXT: error fetching manifest {r}", 2)
-          raise "webclient_error", f"Error fetching manifest code={r}"
-        end
+      var s
+      if r == 200
+        s = cl.get_string()
       end
-      var s = cl.get_string()
       cl.close()
+      if r != 200 && self.EXT_REPO != ext_repo
+        # Open a new webclient session as the previous sometimes hasn't finished yet
+        var cl2 = webclient()
+        log(f"EXT: fetching extensions manifest '{url}'", 3)
+        cl2.begin(url)
+        r = cl2.GET()
+        if r == 200
+          s = cl2.get_string()
+        end
+        cl2.close()
+      end
+      if r != 200
+        log(f"EXT: error fetching manifest {r}", 2)
+        raise "webclient_error", f"Error fetching manifest code={r}"
+      end
       return s
     except .. as e, m
       log(format("EXT: exception '%s' - '%s'", e, m), 2)
