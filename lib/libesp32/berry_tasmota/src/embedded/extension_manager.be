@@ -326,6 +326,7 @@ class Extension_manager
       var r = cl.GET()
       if r != 200
         cl.close()
+        cl = webclient()
         if self.EXT_REPO != ext_repo
           log(f"EXT: installing from '{ext_url}'", 3)
           cl.begin(ext_url)
@@ -673,6 +674,7 @@ class Extension_manager
       var r = cl.GET()
       if r != 200
         cl.close()
+        cl = webclient()
         if self.EXT_REPO != ext_repo
           log(f"EXT: fetching extensions manifest '{url}'", 3)
           cl.begin(url)
