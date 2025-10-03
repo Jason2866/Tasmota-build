@@ -8,7 +8,7 @@
 # or
 #  line_option = 2  : Show devices updating within 'line_teleperiod'
 #
-# rm Devices_Online.tapp; zip -j -0 Devices_Online.tapp Devices_Online/autoexec.be Devices_Online/devices_online.be Devices_Online/manifest.json
+# rm Devices_Online.tapp; zip -j -0 Devices_Online.tapp Devices_Online/*
 ###################################################################################
 
 import mqtt 

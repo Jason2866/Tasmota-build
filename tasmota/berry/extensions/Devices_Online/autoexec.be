@@ -1,4 +1,4 @@
-# rm Devices_Online.tapp; zip -j -0 Devices_Online.tapp Devices_Online/autoexec.be Devices_Online/devices_online.be Devices_Online/manifest.json
+# rm Devices_Online.tapp; zip -j -0 Devices_Online.tapp Devices_Online/*
 do                          # embed in `do` so we don't add anything to global namespace
   import introspect
   var devices_online = introspect.module('devices_online', true)     # load module but don't cache
