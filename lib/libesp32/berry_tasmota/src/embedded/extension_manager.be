@@ -622,7 +622,14 @@ class Extension_manager
 
       json_pos = lf_pos + 1
     end
-            
+
+    webserver.content_send("<p></p>"
+                           "<hr style='margin:2px 0 0 0;'>"
+                           "<p></p>")
+    webserver.content_send(f"<form action='/ext' method='post'>"
+                            "<input type='text' id='x' name='x' placeholder='{self.ext_repo}'>"
+                            "</form>")
+
     webserver.content_send("<p></p></fieldset><p></p>")
     webserver.content_close()
   end
@@ -637,11 +644,11 @@ class Extension_manager
       var arch = tasmota.arch()         # architecture, ex: "esp32" - not used currently but might be useful
       var version = f"0x{tasmota.version():08X}"
 
-#      if !self.ext_repo
+      if !self.ext_repo
         var ota_url = tasmota.cmd("OtaUrl", true)['OtaUrl']
         var url_parts = string.split(ota_url, "/")
         self.ext_repo = f"{url_parts[0]}//{url_parts[2]}/extensions/" # http://otaserver/extensions/
-#      end
+      end
       var url = f"{self.ext_repo}{self.EXT_REPO_MANIFEST}?a={arch}&v={version}"
       log(f"EXT: fetching extensions manifest '{url}'", 3)
       # Add architeture and version information
@@ -719,6 +726,21 @@ class Extension_manager
             self.enable_disable_ext(action_path, false)
           end
         end
+
+      # And finally try the new repository website
+      elif (action == 'x')              # user input repository website
+        var url = webserver.arg(0)
+        var url_parts = string.split(url, "/")
+        var is_httpx = url_parts[0] == "http:" || url_parts[0] == "https:"
+        if is_httpx && url_parts[1] == "" && url_parts[-1] == "extensions"
+          self.ext_repo = url
+          if self.ext_repo[-1] != '/'
+            self.ext_repo += '/'
+          end
+        else
+          self.ext_repo = ""            # Use OtaUrl or default
+        end
+
       else
         log(f"EXT: wrong action '{btn_name}'", 3)
       end
@@ -727,7 +749,7 @@ class Extension_manager
     except .. as e, m
       log(f"EXT: Exception> '{e}' - {m}", 2)
       #- display error page -#
-      webserver.content_start("Parameter error")           #- title of the web page -#
+      webserver.content_start("Parameter error")      #- title of the web page -#
       webserver.content_send_style()                  #- send standard Tasmota styles -#
 
       webserver.content_send(f"<p style='width:340px;'><b>Exception:</b><br>'{webserver.html_escape(e)}'<br>{webserver.html_escape(m)}</p>")
