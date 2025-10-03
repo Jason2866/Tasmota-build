@@ -727,18 +727,23 @@ class Extension_manager
           end
         end
 
-      # And finally try the new repository website
-      elif (action == 'x')              # user input repository website
+      # And finally try the provided repository website
+      elif (action == 'x')              # User input repository website
         var url = webserver.arg(0)
-        var url_parts = string.split(url, "/")
-        var is_httpx = url_parts[0] == "http:" || url_parts[0] == "https:"
-        if is_httpx && url_parts[1] == "" && url_parts[-1] == "extensions"
-          self.ext_repo = url
-          if self.ext_repo[-1] != '/'
-            self.ext_repo += '/'
+        self.ext_repo = ""              # Use OtaUrl or default
+        if size(url) > 0                # Input validation
+          var url_parts = string.split(url, "/")
+          if url_parts.size() > 2       # http: / / server / extensions
+            var is_httpx = url_parts[0] == "http:" || url_parts[0] == "https:"
+            var is_delim = url[-1] == '/'
+            var is_extensions = url_parts[(is_delim)?-2:-1] == "extensions"
+            if is_httpx && url_parts[1] == "" && is_extensions
+              self.ext_repo = url
+              if !is_delim
+                self.ext_repo += '/'
+              end
+            end
           end
-        else
-          self.ext_repo = ""            # Use OtaUrl or default
         end
 
       else
