@@ -732,15 +732,20 @@ class Extension_manager
         var url = webserver.arg(0)
         self.ext_repo = ""              # Use OtaUrl or default
         if size(url) > 0                # Input validation
-          var url_parts = string.split(url, "/")
-          if url_parts.size() > 2       # http: / / server / extensions
-            var is_httpx = url_parts[0] == "http:" || url_parts[0] == "https:"
-            var is_delim = url[-1] == '/'
-            var is_extensions = url_parts[(is_delim)?-2:-1] == "extensions"
-            if is_httpx && url_parts[1] == "" && is_extensions
-              self.ext_repo = url
-              if !is_delim
-                self.ext_repo += '/'
+          if url == "0"                 # Reset to use OtaUrl or default
+          elif url == "1"               # Default repository
+            self.ext_repo = self.EXT_REPO
+          else                          # Process user input
+            var url_parts = string.split(url, "/")
+            if url_parts.size() > 2     # http: / / server / extensions
+              var is_httpx = url_parts[0] == "http:" || url_parts[0] == "https:"
+              var is_delim = url[-1] == '/'
+              var is_extensions = url_parts[(is_delim)?-2:-1] == "extensions"
+              if is_httpx && url_parts[1] == "" && is_extensions
+                self.ext_repo = url
+                if !is_delim
+                  self.ext_repo += '/'
+                end
               end
             end
           end
