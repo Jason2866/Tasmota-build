@@ -805,7 +805,7 @@ const char HTTP_TIMER_SCRIPT6[] PROGMEM =
 const char HTTP_TIMER_STYLE[] PROGMEM =
   ".tl{float:left;border-radius:0;border:1px solid var(--c_frm);padding:1px;width:12.5%%;}";  // COLOR_FORM, Border color needs to be the same as Fieldset background color from HTTP_HEAD_STYLE1 (transparent won't work)
 const char HTTP_FORM_TIMER1[] PROGMEM =
-  "<fieldset style=text-align:center;'>"
+  "<fieldset style='text-align:center;'>"
   "<legend style='text-align:left;'><b>&nbsp;" D_TIMER_PARAMETERS "&nbsp;</b></legend>"
   "<form method='post' action='" WEB_HANDLE_TIMER "' onsubmit='return st();'>"
   "<br><label><input id='e0' type='checkbox'%s><b>" D_TIMER_ENABLE "</b></label><br><br><hr>"

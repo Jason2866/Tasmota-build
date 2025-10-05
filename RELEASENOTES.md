@@ -40,10 +40,6 @@ This release will be supported from ESP32/Arduino library Core version **v3.1.3.
 
 Support of ESP8266 Core versions before 2.7.8 and ESP32 Core versions before v3.1.3.250504 have been removed.
 
-## Support of TLS
-
-In addition to TLS using fingerprints now also user supplied CA certs, AWS IoT and Azure IoT is supported. Read [full documentation](https://tasmota.github.io/docs/AWS-IoT)
-
 ## Initial configuration tools
 
 For initial configuration this release supports Webserver based **WifiManager** or **Serial** based command interface.
