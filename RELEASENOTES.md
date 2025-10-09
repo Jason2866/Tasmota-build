@@ -164,6 +164,8 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry security issues in `berry_mapping` and improve documentation [#23606](https://github.com/arendst/Tasmota/issues/23606)
 - Berry Hue regression from #23429 [#23623](https://github.com/arendst/Tasmota/issues/23623)
 - Berry calling `setmember` with a function [#23825](https://github.com/arendst/Tasmota/issues/23825)
+- Berry fixed 'be_top is non zero' warning when calling C mapped functions [#23989](https://github.com/arendst/Tasmota/issues/23989)
+- Berry fixed 'be_top is non zero' when `Br` command fails [#23990](https://github.com/arendst/Tasmota/issues/23990)
 - LVGL restore `lv_chart.set_range` removed in LVGL 9.3.0 in favor of `lv_chart.set_axis_range` [#23567](https://github.com/arendst/Tasmota/issues/23567)
 
 ### Removed
