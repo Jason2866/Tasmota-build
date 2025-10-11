@@ -131,7 +131,6 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry `call()` now works for classes [#23744](https://github.com/arendst/Tasmota/issues/23744)
 - Berry multiplication between string and int [#23850](https://github.com/arendst/Tasmota/issues/23850)
 - Berry animation framework web ui to compile DSL [#23962](https://github.com/arendst/Tasmota/issues/23962)
-- Berry Devices Online Extension App
 
 ### Breaking Changed
 - Berry `animate` framework is DEPRECATED, will be replace by `animation` framework [#23854](https://github.com/arendst/Tasmota/issues/23854)
