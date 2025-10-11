@@ -3,12 +3,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [15.0.1.5]
+## [15.1.0.1]
 ### Added
-
 
 ### Breaking Changed
 
+### Changed
+
+### Fixed
+
+### Removed
+
+
+## [Released]
+
+## [15.1.0] 20251011
+- Release Stella
+
+## [15.0.1.5] 20251011
 ### Changed
 - ESP8266 platform update from 2025.09.00 to 2025.10.00 (#23971)
 - ESP32 Platform from 2025.09.30 to 2025.10.30, Framework (Arduino Core) from v3.1.3.250808 to v3.1.4 and IDF from v5.3.3.250801 to v5.3.4.250826 (#23971)
@@ -17,9 +29,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Berry fixed 'be_top is non zero' warning when calling C mapped functions (#23989)
 - Berry fixed 'be_top is non zero' when `Br` command fails (#23990)
-
-### Removed
-
 
 ## [15.0.1.4] 20251002
 ### Added
@@ -103,8 +112,6 @@ All notable changes to this project will be documented in this file.
 - Berry security issues in `berry_mapping` and improve documentation (#23606)
 - Berry Hue regression from #23429 (#23623)
 - AHT30 sensor start with null values after deep sleep (#23624)
-
-## [Released]
 
 ## [15.0.1] 20250614
 - Release Sharon
