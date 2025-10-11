@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Berry fixed 'be_top is non zero' warning when calling C mapped functions (#23989)
 - Berry fixed 'be_top is non zero' when `Br` command fails (#23990)
+- TLS fix ECDSA and add `SetOption165 1` to enable ECDSA in addition to RSA
 
 ## [15.0.1.4] 20251002
 ### Added
