@@ -649,9 +649,14 @@ class Extension_manager
       var version = f"0x{tasmota.version():08X}"
 
       if !self.ext_repo
+        self.ext_repo = self.EXT_REPO   # Default
         var ota_url = tasmota.cmd("OtaUrl", true)['OtaUrl']
-        var url_parts = string.split(ota_url, "/")
-        self.ext_repo = f"{url_parts[0]}//{url_parts[2]}/extensions/" # http://otaserver/extensions/
+        if size(ota_url) > 0
+          var url_parts = string.split(ota_url, "/")
+          if url_parts.size() > 2
+            self.ext_repo = f"{url_parts[0]}//{url_parts[2]}/extensions/" # http://otaserver/extensions/
+          end
+        end
       end
       var url = f"{self.ext_repo}{self.EXT_REPO_MANIFEST}?a={arch}&v={version}"
       log(f"EXT: fetching extensions manifest '{url}'", 3)
