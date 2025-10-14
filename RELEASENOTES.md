@@ -75,19 +75,19 @@ Historical binaries can be downloaded from
 
 The latter links can be used for OTA upgrades too like ``OtaUrl http://ota.tasmota.com/tasmota/release/tasmota.bin.gz``
 
-### ESP32, ESP32-C2, ESP32-C3, ESP32-C6, ESP32-S2, ESP32-S3 and ESP32-P4 based
+### ESP32, ESP32-C2, ESP32-C3, ESP32-C5, ESP32-C6, ESP32-P4, ESP32-S2 and ESP32-S3 based
 The following binary downloads have been compiled with ESP32/Arduino library core version **v3.1.4**.
 
 - **tasmota32.bin** = The Tasmota version with most drivers including additional sensors and KNX for 4M+ flash.  **RECOMMENDED RELEASE BINARY**
 - **tasmota32solo1.bin** = The Tasmota version with most drivers including additional sensors and KNX for single core ESP32 and 4M+ flash.
-- **tasmota32s2.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-S2 with serial and 4M+ flash.
-- **tasmota32s2cdc.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-S2 with serial over embedded USB CDC only and 4M+ flash.
-- **tasmota32s3.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-S3 with USB HWCDC and fallback to serial and 4M+ flash.
 - **tasmota32c2.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C2 with serial and 4M+ flash.
 - **tasmota32c3.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C3 with USB HWCDC and fallback to serial and 4M+ flash.
 - **tasmota32c5.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C5 with USB HWCDC and fallback to serial and 4M+ flash.
 - **tasmota32c6.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-C6 with USB HWCDC and fallback to serial and 4M+ flash.
 - **tasmota32p4.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-P4 with USB HWCDC and fallback to serial and 4M+ flash.
+- **tasmota32s2.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-S2 with serial and 4M+ flash.
+- **tasmota32s2cdc.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-S2 with serial over embedded USB CDC only and 4M+ flash.
+- **tasmota32s3.bin** = The Tasmota version with most drivers including additional sensors and KNX for ESP32-S3 with USB HWCDC and fallback to serial and 4M+ flash.
 - **tasmota32-AD.bin** to **tasmota32-VN.bin** = The Tasmota version in different languages for 4M+ flash.
 - **tasmota32-bluetooth.bin** = The Bluetooth version adds BLE support for 4M+ flash.
 - **tasmota32-display.bin** = The Display version without Energy Monitoring but adds display support for 4M+ flash.
@@ -114,6 +114,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ## Changelog v15.1.0.1
 ### Added
+- TLS enabled ECDSA by default for ESP8266 [#24009](https://github.com/arendst/Tasmota/issues/24009)
 
 ### Breaking Changed
 
@@ -123,5 +124,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Fixed
 - TLS fix ECDSA and add `SetOption165 1` to enable ECDSA in addition to RSA [#24000](https://github.com/arendst/Tasmota/issues/24000)
 - Extension Manager exception when `OtaUrl` is not defined or invalid
+- Extension Manager Light Theme support and Extensions input field control
+- HASPmota exception in `cpicker` (colorwheel) [#24010](https://github.com/arendst/Tasmota/issues/24010)
 
 ### Removed
