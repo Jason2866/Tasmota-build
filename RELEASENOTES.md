@@ -115,6 +115,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ## Changelog v15.1.0.1
 ### Added
 - TLS enabled ECDSA by default for ESP8266 [#24009](https://github.com/arendst/Tasmota/issues/24009)
+- Berry add `cb.free_cb` for extension manager [#24014](https://github.com/arendst/Tasmota/issues/24014)
 
 ### Breaking Changed
 
