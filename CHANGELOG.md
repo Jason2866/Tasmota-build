@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Extension Manager exception when `OtaUrl` is not defined or invalid
 - HASPmota exception in `cpicker` (colorwheel) (#24010)
 - Extension Manager Light Theme support and Extensions input field control
+- InfluxDb receives IPAddress as a value regression from v15.0.1.3 (#24031)
 
 ### Removed
 
