@@ -991,7 +991,7 @@ void CmndStatus(void)
                           , ESP.getSdkVersion(),
                           ESP.getCpuFreqMHz(), GetDeviceHardwareRevision().c_str(),
 #ifdef CONFIG_ESP_WIFI_REMOTE_ENABLED
-                          GetHostedMCU().c_str(), GetHostedMCUFwVersion().c_str(),
+                          GetHostedMCU().c_str(), GetHostedFwVersion(1).c_str(),
 #endif  // CONFIG_ESP_WIFI_REMOTE_ENABLED
                           GetStatistics().c_str());
     CmndStatusResponse(2);

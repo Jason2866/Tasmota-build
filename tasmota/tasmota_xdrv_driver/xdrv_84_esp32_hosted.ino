@@ -22,6 +22,12 @@ extern "C" {
 
 #include "port/esp/freertos/include/port_esp_hosted_host_config.h"
 
+#if ESP_HOSTED_VERSION_MAJOR_1 >= 2 && ESP_HOSTED_VERSION_MINOR_1 >= 6
+#  define ESP_HOSTED_NEW_OTA
+#endif
+
+enum EspHostTypes { ESP_HOST, ESP_HOSTED };
+
 struct Hosted_t {
   char *hosted_ota_url;                     // Hosted MCU OTA URL
   int hosted_ota_state_flag;                // Hosted MCU OTA initiated flag
@@ -29,51 +35,48 @@ struct Hosted_t {
 
 /*********************************************************************************************/
 
+uint32_t GetHostFwVersion(void) {
+  uint32_t host_version = (ESP_HOSTED_VERSION_MAJOR_1 << 16) | (ESP_HOSTED_VERSION_MINOR_1 << 8) | (ESP_HOSTED_VERSION_PATCH_1);
+  return host_version;
+}
+
+int GetHostedMCUFwVersion(void) {
+  static int hosted_version = -1;
+
+  if (!esp_hosted_is_config_valid()) {
+    return 0;
+  }
+  if (-1 == hosted_version) {
+    hosted_version = 6;   // v0.0.6
+    esp_hosted_coprocessor_fwver_t ver_info;
+    esp_err_t err = esp_hosted_get_coprocessor_fwversion(&ver_info);  // This takes almost 4 seconds on <v0.0.6
+    if (err == ESP_OK) {
+      hosted_version = ver_info.major1 << 16 | ver_info.minor1 << 8 | ver_info.patch1;
+    } else {
+      // We can not know exactly, as API was added after 0.0.6
+      AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: Error %d, hosted version 0.0.6 or older"), err);
+    }  
+  }
+  return hosted_version;
+}
+
+String GetHostedFwVersion(uint32_t device) {
+  int version = (device) ? GetHostedMCUFwVersion() : GetHostFwVersion();
+
+  uint16_t major1 = version >> 16;
+  uint8_t minor1 = version >> 8;
+  uint8_t patch1 = version;
+  char data[40];
+  snprintf_P(data, sizeof(data), PSTR("%d.%d.%d"), major1, minor1, patch1);
+  return String(data);
+}
+
 String GetHostedMCU(void) {
   // Function is not yet implemented in Arduino Core so emulate it here
   if (0 == strcasecmp_P(CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET, PSTR("esp32c6"))) {
     return String("ESP32-C6");
   }
   return String("Unknown");
-}
-
-int GetFwVersionNumber(void) {
-  // Function is not yet implemented in Arduino Core so emulate it here
-  return 0x0200000E;   // v2.0.14
-}
-
-int GetHostedMCUFwVersionNumber(void) {
-  static int version = -1;
-
-  if (!esp_hosted_is_config_valid()) {
-    return 0;
-  }
-  if (-1 == version) {
-    version = 6;   // v0.0.6
-    esp_hosted_coprocessor_fwver_t ver_info;
-    esp_err_t err = esp_hosted_get_coprocessor_fwversion(&ver_info);  // This takes almost 4 seconds on <v0.0.6
-    if (err == ESP_OK) {
-      version = ver_info.major1 << 24 | ver_info.minor1 << 16 | ver_info.patch1;
-    } else {
-      // We can not know exactly, as API was added after 0.0.6
-      AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: Error %d, hosted version 0.0.6 or older"), err);
-    }  
-  }
-  return version;
-}
-
-String GetHostedMCUFwVersion(void) {
-  int version = GetHostedMCUFwVersionNumber();
-
-  if (0 == version) {
-    return String("");
-  }
-  uint8_t major1 = version >> 24;
-  uint8_t minor1 = version >> 16;
-  uint16_t patch1 = version;
-  char data[40];
-  snprintf_P(data, sizeof(data), PSTR("%d.%d.%d"), major1, minor1, patch1);
-  return String(data);
 }
 
 void HostedMCUStatus(void) {
@@ -95,7 +98,7 @@ void HostedMCUStatus(void) {
       }
     }
     AddLog(LOG_LEVEL_INFO, PSTR("HST: Hosted MCU %s v%s%s"),
-      GetHostedMCU().c_str(), GetHostedMCUFwVersion().c_str(), config);
+      GetHostedMCU().c_str(), GetHostedFwVersion(ESP_HOSTED).c_str(), config);
   }
 }
 
@@ -112,9 +115,72 @@ void HostedMCUEverySecond(void) {
     }
 */
     if (Hosted.hosted_ota_state_flag <= 0) {
-      // Blocking
       AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: About to OTA update with %s"), Hosted.hosted_ota_url);
-      int ret = esp_hosted_slave_ota(Hosted.hosted_ota_url);
+      int ret = -1;
+      // Blocking
+
+#ifdef ESP_HOSTED_NEW_OTA      
+      AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: Using streaming OTA API"));
+      HTTPClientLight http;
+      if (!http.begin(Hosted.hosted_ota_url)) {
+        AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: HTTP begin failed"));
+        ret = -1;
+      } else {
+        http.setTimeout(15000);
+        int httpCode = http.GET();
+        if (httpCode != 200) {
+          AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: HTTP GET failed %d"), httpCode);
+          http.end();
+          ret = -1;
+        } else {
+          // Start OTA on coprocessor
+          if ((ret = esp_hosted_slave_ota_begin()) != ESP_OK) {
+            AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: ota_begin failed %d"), ret);
+            http.end();
+          } else {
+            const size_t bufSize = 1024;
+            uint8_t *buf = (uint8_t*)malloc(bufSize);
+            if (!buf) {
+              http.end();
+              ret = -1;
+            } else {
+              // Stream response in blocks
+              WiFiClient& stream = http.getStream();
+              int read;
+              bool write_ok = true;
+              int chunk_count = 0;
+              while ((read = stream.readBytes((char*)buf, bufSize)) > 0) {
+                if ((ret = esp_hosted_slave_ota_write(buf, (uint32_t)read)) != ESP_OK) {
+                  AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: ota_write failed %d"), ret);
+                  write_ok = false;
+                  break;
+                }
+                chunk_count++;
+                if (chunk_count % 100 == 0) {
+                  AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: ota_write %dK"), chunk_count);
+                }
+                yield();
+              }
+              free(buf);
+              http.end();
+              AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: ota_write done"));
+              if (write_ok) {
+                if ((ret = esp_hosted_slave_ota_end()) != ESP_OK) {
+                  AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: ota_end failed %d"), ret);
+                } else {
+                  // Activate will likely reboot the slave
+                  ret = esp_hosted_slave_ota_activate();
+                }
+              }
+            }
+          }
+        }
+      }
+#else   // OLD_OTA
+      AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: Using legacy OTA API"));
+      ret = esp_hosted_slave_ota(Hosted.hosted_ota_url);
+#endif  // ESP_HOSTED_NEW_OTA
+
       AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: Done with result %d"), ret);
       free(Hosted.hosted_ota_url);
       Hosted.hosted_ota_url = nullptr;
@@ -137,10 +203,16 @@ void HostedMCUEverySecond(void) {
 \*********************************************************************************************/
 
 const char kHostedCommands[] PROGMEM = "Hosted|"  // Prefix
-  "Ota";
+  "|Ota";
 
 void (* const HostedCommand[])(void) PROGMEM = {
-  &CmndHostedOta };
+  &CmndHosted, &CmndHostedOta };
+
+void CmndHosted(void) {
+  Response_P(PSTR("{\"Hosted\":{\"Host\":\"%s\",\"Hosted\":\"%s\",\"MCU\":\"%s\"}}"),
+    GetHostedFwVersion(ESP_HOST).c_str(), GetHostedFwVersion(ESP_HOSTED).c_str(), GetHostedMCU().c_str()
+  );
+}
 
 void CmndHostedOta(void) {
   /*
@@ -162,7 +234,7 @@ void CmndHostedOta(void) {
     strlcpy(Hosted.hosted_ota_url, GetOtaUrl(ota_url, sizeof(ota_url)), 200);
     char *bch = strrchr(Hosted.hosted_ota_url, '/');      // Only consider filename after last backslash
     if (bch == nullptr) { bch = Hosted.hosted_ota_url; }  // No path found so use filename only
-    *bch = '\0';                                                 // full_ota_url = https://ota.tasmota.com/tasmota32
+    *bch = '\0';                                          // full_ota_url = https://ota.tasmota.com/tasmota32
     char version[16] = { 0 };
     if (XdrvMailbox.data_len) {
       snprintf_P(version, sizeof(version), PSTR("/%s"), XdrvMailbox.data);
@@ -172,7 +244,7 @@ void CmndHostedOta(void) {
   }
   Hosted.hosted_ota_state_flag = 1;
   Response_P(PSTR("{\"%s\":\"" D_JSON_VERSION " %s " D_JSON_FROM " %s\"}"), 
-    XdrvMailbox.command, GetHostedMCUFwVersion().c_str(), Hosted.hosted_ota_url);
+    XdrvMailbox.command, GetHostedFwVersion(ESP_HOSTED).c_str(), Hosted.hosted_ota_url);
 }
 
 /*********************************************************************************************\
