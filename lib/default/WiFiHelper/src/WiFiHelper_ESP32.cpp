@@ -166,7 +166,7 @@ int WiFiHelper::getPhyMode() {
       WIFI_PHY_MODE_HE20, // PHY mode for Bandwidth HE20 (11ax)
     } wifi_phy_mode_t;
   */
- #ifndef SOC_WIFI_SUPPORTED
+#ifndef SOC_WIFI_SUPPORTED
   // ESP32-P4 does not support PHY modes, return 0
   return 0;
 #else
@@ -179,13 +179,13 @@ int WiFiHelper::getPhyMode() {
     }
   }
   return phy_mode;
-# endif
+#endif
 }
 
 bool WiFiHelper::setPhyMode(WiFiPhyMode_t mode) {
-# ifndef SOC_WIFI_SUPPORTED
+#ifndef SOC_WIFI_SUPPORTED
   return false;  // ESP32-P4 does not support PHY modes
-# else
+#else
   uint8_t protocol_bitmap = WIFI_PROTOCOL_11B;      // 1
   switch (mode) {
 #if ESP_IDF_VERSION_MAJOR >= 5

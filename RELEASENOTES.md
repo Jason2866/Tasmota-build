@@ -114,6 +114,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ## Changelog v15.1.0.1
 ### Added
+- HostedMCU file update using command `HostedLoad <version>|<filename>`
 - TLS enabled ECDSA by default for ESP8266 [#24009](https://github.com/arendst/Tasmota/issues/24009)
 - Berry `cb.free_cb` for extension manager [#24014](https://github.com/arendst/Tasmota/issues/24014)
 - Berry `light.get()` direct access to values [#24033](https://github.com/arendst/Tasmota/issues/24033)
@@ -123,6 +124,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Changed
 - LVGL library from v9.3.0 to v9.4.0 [#24028](https://github.com/arendst/Tasmota/issues/24028)
 - Refactored library UDisplay [#24007](https://github.com/arendst/Tasmota/issues/24007)
+- Increased filesystem file name size from 48 to 50 characters
 
 ### Fixed
 - InfluxDb receives IPAddress as a value regression from v15.0.1.3 [#24031](https://github.com/arendst/Tasmota/issues/24031)
