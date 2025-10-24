@@ -110,7 +110,6 @@ void HostedMCUStatus(void) {
 void HostedMCUEverySecond(void) {
   if (!CommandsReady()) { return; }
 
-#ifdef ESP_HOSTED_NEW_OTA
   if (Hosted.ota_file_state_flag) {
     Hosted.ota_file_state_flag--;
     if (Hosted.ota_file_state_flag <= 0) {
@@ -179,8 +178,7 @@ void HostedMCUEverySecond(void) {
       MqttPublishPrefixTopicRulesProcess_P(STAT, PSTR(D_CMND_HOSTEDLOAD));
     }
   }
-#endif  // ESP_HOSTED_NEW_OTA
-  if (Hosted.ota_http_state_flag) {
+  else if (Hosted.ota_http_state_flag) {
     Hosted.ota_http_state_flag--;
 /*
     if (2 == Hosted.ota_http_state_flag) {
@@ -242,8 +240,10 @@ void HostedMCUEverySecond(void) {
                 if ((ret = esp_hosted_slave_ota_end()) != ESP_OK) {
                   AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("HST: ota_end failed %d"), ret);
                 } else {
-                  // Activate will likely reboot the slave
-                  ret = esp_hosted_slave_ota_activate();
+                  if (GetHostedMCUFwVersion() >= 0x00020600) { 
+                    // Activate will likely reboot the slave
+                    ret = esp_hosted_slave_ota_activate();
+                  }
                 }
               }
             }
@@ -277,18 +277,10 @@ void HostedMCUEverySecond(void) {
 \*********************************************************************************************/
 
 const char kHostedCommands[] PROGMEM = "Hosted|"  // Prefix
-  "|"
-#ifdef ESP_HOSTED_NEW_OTA      
-  "Load|"
-#endif  // ESP_HOSTED_NEW_OTA      
-  "Ota";
+  "|Load|Ota";
 
 void (* const HostedCommand[])(void) PROGMEM = {
-  &CmndHosted,
-#ifdef ESP_HOSTED_NEW_OTA      
-  &CmndHostedLoad,
-#endif  // ESP_HOSTED_NEW_OTA      
-  &CmndHostedOta };
+  &CmndHosted, &CmndHostedLoad, &CmndHostedOta };
 
 void CmndHosted(void) {
   Response_P(PSTR("{\"Hosted\":{\"Host\":\"%s\",\"Hosted\":\"%s\",\"MCU\":\"%s\"}}"),
@@ -296,7 +288,6 @@ void CmndHosted(void) {
   );
 }
 
-#ifdef ESP_HOSTED_NEW_OTA      
 void CmndHostedLoad(void) {
   /*
   Expect files in folder /coprocessor/v2.0.17/network_adapter_esp32c6.bin
@@ -305,8 +296,6 @@ void CmndHostedLoad(void) {
   Or allow user to enter required version like:
    HostedLoad v2.0.17
   */
-  if (GetHostedMCUFwVersion() < 0x00020600) { return; }
-
   Hosted.ota_url = (char*)calloc(200, sizeof(char));
   if (!Hosted.ota_url) { return; }                 // Unable to allocate memory
   if (XdrvMailbox.data_len > 15) {
@@ -323,7 +312,6 @@ void CmndHostedLoad(void) {
   Response_P(PSTR("{\"%s\":\"" D_JSON_VERSION " %s " D_JSON_FROM " %s\"}"), 
     XdrvMailbox.command, GetHostedFwVersion(ESP_HOSTED).c_str(), Hosted.ota_url);
 }
-#endif  // ESP_HOSTED_NEW_OTA      
 
 void CmndHostedOta(void) {
   /*
