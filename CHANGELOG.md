@@ -9,7 +9,8 @@ All notable changes to this project will be documented in this file.
 - Berry `cb.free_cb` for extension manager (#24014)
 - Berry `light.get()` direct access to values (#24033)
 - HostedMCU file update using command `HostedLoad <version>|<filename>`
-- Berry add `gc_heap` and `gc_time` to `tasmota.memory()`
+- Berry `gc_heap` and `gc_time` to `tasmota.memory()` (#24054)
+- Scripter array transfer via UFS (#24060)
 
 ### Breaking Changed
 
@@ -17,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Refactored library UDisplay (#24007)
 - LVGL library from v9.3.0 to v9.4.0 (#24028)
 - Increased filesystem file name size from 48 to 50 characters
+- GPIOViewer from v1.6.3 to v1.7.0
 
 ### Fixed
 - TLS fix ECDSA and add `SetOption165 1` to enable ECDSA in addition to RSA (#24000)
@@ -24,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - HASPmota exception in `cpicker` (colorwheel) (#24010)
 - Extension Manager Light Theme support and Extensions input field control
 - InfluxDb receives IPAddress as a value regression from v15.0.1.3 (#24031)
+- Scripter UDP and switch case (#24060)
 
 ### Removed
 

@@ -720,6 +720,44 @@ float CpuTemperature(void) {
 
 // #include "esp_chip_info.h"
 
+String GetDeviceFeatures(void) {
+  esp_chip_info_t chip_info;
+  esp_chip_info(&chip_info);
+
+  String chip_features = "[";
+  bool first_feature = true;
+  auto appendFeature = [&](const char *name) {
+    if (!first_feature) {
+      chip_features += ",";
+    }
+    first_feature = false;
+    chip_features += "\"";
+    chip_features += name;
+    chip_features += "\"";
+  };
+
+  if (chip_info.features & CHIP_FEATURE_WIFI_BGN) {
+    appendFeature("WIFI_BGN");
+  }
+  if (chip_info.features & CHIP_FEATURE_BLE) {
+    appendFeature("BLE");
+  }
+  if (chip_info.features & CHIP_FEATURE_BT) {
+    appendFeature("BT");
+  }
+  if (chip_info.features & CHIP_FEATURE_EMB_FLASH) {
+    appendFeature("EMB_FLASH");
+  }
+  if (chip_info.features & CHIP_FEATURE_IEEE802154) {
+    appendFeature("IEEE802154");
+  }
+  if (chip_info.features & CHIP_FEATURE_EMB_PSRAM) {
+    appendFeature("EMB_PSRAM");
+  }
+  chip_features += "]";
+  return chip_features;
+}
+
 String GetDeviceHardware(void) {
   // https://www.espressif.com/en/products/socs
 
