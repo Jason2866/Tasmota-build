@@ -374,7 +374,7 @@ void GVHandleEspInfo(void) {
   appendField("flash_chip_size", String(ESP.getFlashChipRealSize()), false);
 #endif
 
-  appendField("flash_chip_speed", String(ESP.getFlashChipSpeed()), false);
+  appendField("flash_chip_speed", String(ESP_getFlashChipSpeed()), false);
   appendField("heap_size", String(ESP_getHeapSize()), false);
   appendField("heap_max_alloc", String(ESP_getMaxAllocHeap()), false);
   appendField("psram_size", String(ESP_getPsramSize()), false);
@@ -441,6 +441,7 @@ void GVHandlePartition(void) {
   String jsonResponse = "["; // Start of JSON array
 #ifdef ESP32
   bool firstEntry = true;    // Used to format the JSON array correctly
+  const esp_partition_t *cur_part = esp_ota_get_running_partition();
 
   auto appendPartitions = [&](esp_partition_type_t type) {
     esp_partition_iterator_t iter = esp_partition_find(type, ESP_PARTITION_SUBTYPE_ANY, NULL);
@@ -455,7 +456,20 @@ void GVHandlePartition(void) {
 
       // Append partition information in JSON format
       jsonResponse += "{";
-      jsonResponse += "\"label\":\"" + String(partition->label) + "\",";
+
+//      jsonResponse += "\"label\":\"" + String(partition->label) + "\",";
+      String label = partition->label;
+      if (label == "spiffs") {
+        label = "littlefs";
+      }
+      else if ((label == "app0") || (label == "app1")) {
+        if (label = String(cur_part->label)) {
+          label = "tasmota-" + String(CODE_IMAGE_STR);
+          label.toLowerCase();
+        }
+      }
+      jsonResponse += "\"label\":\"" + label + "\",";
+
       jsonResponse += "\"type\":" + String(partition->type) + ",";
       jsonResponse += "\"subtype\":" + String(partition->subtype) + ",";
       jsonResponse += "\"address\":\"0x" + String(partition->address, HEX) + "\",";
