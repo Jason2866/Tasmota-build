@@ -81,7 +81,7 @@
 
 #define XDRV_121              121
 
-#define GV_USE_ESPINFO                     // Provide ESP info
+//#define GV_USE_ESPINFO                   // Add ESP8266 info
 //#define GV_DEBUG
 
 #ifndef GV_PORT
@@ -439,6 +439,57 @@ void GVHandleEspInfo(void) {
 
 void GVHandlePartition(void) {
   String jsonResponse = "["; // Start of JSON array
+#ifdef ESP8266
+#ifdef GV_USE_ESPINFO
+  int fl_tasmota = 0x0;
+  int fl_settings = (SETTINGS_LOCATION - CFG_ROTATES) * SPI_FLASH_SEC_SIZE;
+  int fl_filesystem = (FLASH_FS_SIZE) ? FLASH_FS_START * SPI_FLASH_SEC_SIZE : -1;
+  int fl_eeprom = EEPROM_LOCATION * SPI_FLASH_SEC_SIZE;  // eeprom, rfcal, wifi
+  int fl_end = ESP.getFlashChipSize();
+  int fl_ota = ((fl_filesystem > 0x100000) || (fl_eeprom > 0x100000)) ? 0x100000 : -1;
+
+  int fl_settings_pend = fl_eeprom;
+  if (fl_ota > 0) { 
+    fl_settings_pend = fl_ota;
+  }
+  else if (fl_filesystem > 0) {
+    fl_settings_pend = fl_filesystem;
+  }
+  int fl_ota_end = fl_eeprom;
+  if (fl_filesystem > 0) {
+    fl_ota_end = fl_filesystem;
+  }
+
+  struct Partition {
+    String label;       // Label, zero-terminated ASCII string
+    uint8_t type;       // 0 = Application, 1 = Data
+    uint8_t subtype;    // 0 = OTA selection, 1 = PHY init data, 16 = OTA0, 17 = OTA1, 131 = LITTLEFS
+    int address;        // Starting address in flash
+    int size;           // Size in bytes
+  };
+
+  static const Partition part_info[] = {
+    { "tasmota", 0, 16, fl_tasmota, fl_settings - fl_tasmota },
+    { "settings", 1, 0, fl_settings, fl_settings_pend - fl_settings },
+    { "ota1", 0, 17, fl_ota, fl_ota_end - fl_ota },
+    { "littlefs", 1, 131, fl_filesystem, fl_eeprom - fl_filesystem  },
+    { "rfcal", 1, 1, fl_eeprom, fl_end - fl_eeprom }
+  };
+
+  for (uint32_t i = 0; i < 5; i++) {
+    if (part_info[i].address != -1) {
+      if (jsonResponse.length() > 2) {
+        jsonResponse += ",";
+      }
+      jsonResponse += "{\"label\":\"" + String(part_info[i].label);
+      jsonResponse += "\",\"type\":" + String(part_info[i].type);
+      jsonResponse += ",\"subtype\":" + String(part_info[i].subtype);
+      jsonResponse += ",\"address\":\"0x" + String(part_info[i].address, HEX);
+      jsonResponse += "\",\"size\":" + String(part_info[i].size) + "}";
+    }
+  }
+#endif  // GV_USE_ESPINFO
+#endif  // ESP8266
 #ifdef ESP32
   bool firstEntry = true;    // Used to format the JSON array correctly
   const esp_partition_t *cur_part = esp_ota_get_running_partition();
@@ -464,8 +515,7 @@ void GVHandlePartition(void) {
       }
       else if ((label == "app0") || (label == "app1")) {
         if (label = String(cur_part->label)) {
-          label = "tasmota-" + String(CODE_IMAGE_STR);
-          label.toLowerCase();
+          label = "tasmota";
         }
       }
       jsonResponse += "\"label\":\"" + label + "\",";

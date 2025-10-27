@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - HostedMCU file update using command `HostedLoad <version>|<filename>`
 - Berry `gc_heap` and `gc_time` to `tasmota.memory()` (#24054)
 - Scripter array transfer via UFS (#24060)
+- ESP8266 GPIOViewer memory map if enabled with `#define GV_USE_ESPINFO`
 
 ### Breaking Changed
 
