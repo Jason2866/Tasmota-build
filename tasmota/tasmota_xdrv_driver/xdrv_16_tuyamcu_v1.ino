@@ -1104,8 +1104,8 @@ void TuyaNormalPowerModePacketProcess(void)
 
       // Establish pairing mode - WIFI_RESET is assumed to be AP mode
       uint8_t first = 0x01;
-      if (is_select && !(payload_len >= 1 && Tuya.buffer[6] == 0x01))
-          first = 0x00;
+      if (is_select && !(payload_len >= 1 && Tuya.buffer[6] == 0x01)) {
+        first = 0x00;
       }
 
       // Send ACK, then WIFI_STATE ramp up to cloud connected to re-enable MCU control
@@ -1115,8 +1115,8 @@ void TuyaNormalPowerModePacketProcess(void)
       st = 0x03;           TuyaSendCmd(TUYA_CMD_WIFI_STATE, &st, 1);
       st = 0x04;           TuyaSendCmd(TUYA_CMD_WIFI_STATE, &st, 1);
 
-      AddLog(LOG_LEVEL_INFO, PSTR("TYA: %s received (%s), sent WIFI_STATE ramp"),
-            is_select ? PSTR("WIFI_SELECT") : PSTR("WIFI_RESET"),
+      AddLog(LOG_LEVEL_DEBUG, PSTR("TYA: WIFI_%s received (%s), sent WIFI_STATE ramp"),
+            is_select ? PSTR("SELECT") : PSTR("RESET"),
             (first == 0x01) ? "AP" : "EZ");
 
       // Now actually reset Tasmota WiFi
