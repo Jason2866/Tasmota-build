@@ -180,9 +180,7 @@ int WiFiHelper::getPhyMode() {
 bool WiFiHelper::setPhyMode(WiFiPhyMode_t mode) {
   uint8_t protocol_bitmap = WIFI_PROTOCOL_11B;      // 1
   switch (mode) {
-#if ESP_IDF_VERSION_MAJOR >= 5
     case 4: protocol_bitmap |= WIFI_PROTOCOL_11AX;  // 16
-#endif
     case 3: protocol_bitmap |= WIFI_PROTOCOL_11N;   // 4
     case 2: protocol_bitmap |= WIFI_PROTOCOL_11G;   // 2
   }
@@ -360,24 +358,20 @@ int WiFiHelper::hostByName(const char* aHostname, IPAddress& aResult)
   return WiFiHelper::hostByName(aHostname, aResult, WifiDNSGetTimeout());
 }
 
-#if (ESP_IDF_VERSION_MAJOR >= 5)
 #include "esp_mac.h"
-#endif
 
 String WiFiHelper::macAddress(void) {
-#if (ESP_IDF_VERSION_MAJOR < 5)
-  return WiFi.macAddress();
-#else
   uint8_t mac[6] = {0,0,0,0,0,0};
   char macStr[18] = { 0 };
 #ifdef CONFIG_SOC_HAS_WIFI
-  esp_read_mac(mac, ESP_MAC_WIFI_STA);
-#else
-  esp_read_mac(mac, ESP_MAC_BASE);
-#endif // CONFIG_SOC_HAS_WIFI
+  esp_read_mac(mac, ESP_MAC_WIFI_STA);  // Local WiFi station MAC address
+#elif CONFIG_ESP_WIFI_REMOTE_ENABLED
+  WiFi.macAddress(mac);                 // Remote WiFi station MAC address (devices without WiFi but hostedMCU)
+#else   // No CONFIG_SOC_HAS_WIFI
+  esp_read_mac(mac, ESP_MAC_BASE);      // Local hardware base MAC address
+#endif  // CONFIG_SOC_HAS_WIFI
   snprintf(macStr, sizeof(macStr), "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
   return String(macStr);
-#endif
 }
 
-#endif // ESP32
+#endif  // ESP32
