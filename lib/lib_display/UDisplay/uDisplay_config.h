@@ -14,7 +14,7 @@ extern void AddLog(uint32_t loglevel, const char* formatP, ...);
 extern int32_t ESP_ResetInfoReason();
 extern float CharToFloat(const char *str);
 extern SPIClass *SpiBegin(uint32 bus);
-extern int Cache_WriteBack_Addr(uint32_t addr, uint32_t size);
+// extern int Cache_WriteBack_Addr(uint32_t addr, uint32_t size);
 extern bool UsePSRAM(void);
 
 enum uColorType { uCOLOR_BW, uCOLOR_COLOR };

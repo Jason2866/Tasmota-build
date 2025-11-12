@@ -24,37 +24,3 @@ void uDisplay::reset_pin(int32_t msl, int32_t msh) {
     delay(msh);
   }
 }
-#define UDSP_BUSY_TIMEOUT 3000
-
-void uDisplay::delay_sync(int32_t ms) {
-  uint8_t busy_level = HIGH;
-  if (lvgl_param.busy_invert) {
-    busy_level = LOW;
-  }
-  uint32_t time = millis();
-  if (busy_pin > 0) {
-    while (digitalRead(busy_pin) == busy_level) {
-      delay(1);
-      if  ((millis() - time) > UDSP_BUSY_TIMEOUT) {
-        break;
-      }
-    }
-  } else {
-    delay(ms);
-  }
-}
-
-// ===== SPI Transaction Control =====
-
-void uDisplay::beginTransaction(SPISettings s) {
-#ifdef ESP32
-  if (lvgl_param.use_dma) {
-    dmaWait();
-  }
-#endif
-  uspi->beginTransaction(s);
-}
-
-void uDisplay::endTransaction(void) {
-  uspi->endTransaction();
-}

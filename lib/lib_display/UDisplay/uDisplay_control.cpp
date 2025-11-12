@@ -1,6 +1,5 @@
 #include "uDisplay.h"
 #include "uDisplay_config.h"
-#include "uDisplay_spi.h"
 
 void udisp_bpwr(uint8_t on);
 
@@ -21,50 +20,43 @@ void uDisplay::DisplayOnff(int8_t on) {
     if (pwr_cbp) {
         pwr_cbp(on);
     }
+    if (universal_panel->displayOnff(on)) {
+        return;
+    }
 
 #define AW_PWMRES 1024
 
-    if (interface == _UDSP_I2C) {
-        if (on) {
-            i2c_command(dsp_on);
-        } else {
-            i2c_command(dsp_off);
+    if (on) {
+        if (bpanel >= 0) {
+#ifdef ESP32
+            if (!bpmode) {
+                analogWrite(bpanel, dimmer10_gamma);
+            } else {
+                analogWrite(bpanel, AW_PWMRES - dimmer10_gamma);
+            }
+#else
+            if (!bpmode) {
+                digitalWrite(bpanel, HIGH);
+            } else {
+                digitalWrite(bpanel, LOW);
+            }
+#endif
         }
     } else {
-        if (on) {
-            if (dsp_on != 0xff) ulcd_command_one(dsp_on);
-            if (bpanel >= 0) {
+        if (bpanel >= 0) {
 #ifdef ESP32
-                if (!bpmode) {
-                    analogWrite(bpanel, dimmer10_gamma);
-                } else {
-                    analogWrite(bpanel, AW_PWMRES - dimmer10_gamma);
-                }
-#else
-                if (!bpmode) {
-                    digitalWrite(bpanel, HIGH);
-                } else {
-                    digitalWrite(bpanel, LOW);
-                }
-#endif
+            if (!bpmode) {
+                analogWrite(bpanel, 0);
+            } else {
+                analogWrite(bpanel, AW_PWMRES - 1);
             }
-        } else {
-            if (dsp_off != 0xff) ulcd_command_one(dsp_off);
-            if (bpanel >= 0) {
-#ifdef ESP32
-                if (!bpmode) {
-                    analogWrite(bpanel, 0);
-                } else {
-                    analogWrite(bpanel, AW_PWMRES - 1);
-                }
 #else
-                if (!bpmode) {
-                    digitalWrite(bpanel, LOW);
-                } else {
-                    digitalWrite(bpanel, HIGH);
-                }
-#endif
+            if (!bpmode) {
+                digitalWrite(bpanel, LOW);
+            } else {
+                digitalWrite(bpanel, HIGH);
             }
+#endif
         }
     }
 }
@@ -93,12 +85,12 @@ void uDisplay::dim10(uint8_t dim, uint16_t dim_gamma) {
     
     if (interface == _UDSP_SPI) {
         if (dim_op != 0xff) {
-            SPI_BEGIN_TRANSACTION
-            SPI_CS_LOW
-            ulcd_command(dim_op);
-            ulcd_data8(dimmer8);
-            SPI_CS_HIGH
-            SPI_END_TRANSACTION
+            spiController->beginTransaction();
+            spiController->csLow();
+            spiController->writeCommand(dim_op);
+            spiController->writeData8(dimmer8);
+            spiController->csHigh();
+            spiController->endTransaction();
         }
     }
 }
@@ -106,24 +98,8 @@ void uDisplay::dim10(uint8_t dim, uint16_t dim_gamma) {
 // ===== Display Inversion =====
 
 void uDisplay::invertDisplay(boolean i) {
-    if (ep_mode) {
-        return;
-    }
-
-    if (interface == _UDSP_SPI || interface == _UDSP_PAR8 || interface == _UDSP_PAR16) {
-        if (i) {
-            ulcd_command_one(inv_on);
-        } else {
-            ulcd_command_one(inv_off);
-        }
-    }
-    
-    if (interface == _UDSP_I2C) {
-        if (i) {
-            i2c_command(inv_on);
-        } else {
-            i2c_command(inv_off);
-        }
+    if (universal_panel) {
+        universal_panel->invertDisplay(i);
     }
 }
 
@@ -134,7 +110,10 @@ void uDisplay::Splash(void) {
 
     if (ep_mode) {
         Updateframe();
-        delay_sync(lut3time * 10);
+        if (universal_panel) {
+            EPDPanel* epd = static_cast<EPDPanel*>(universal_panel);
+            epd->delay_sync(panel_config->epd.update_time * 10);
+        }
     }
     
     setTextFont(splash_font);
