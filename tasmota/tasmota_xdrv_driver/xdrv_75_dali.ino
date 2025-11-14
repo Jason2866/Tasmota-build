@@ -22,8 +22,7 @@
  * DALI support for Tasmota
  * 
  * Available commands:
- *   <byte1> or <byte3> = 0..255 or 0x00..0xFF + 256/0x100 for optional repeat (send twice)
- *   <byte2> or <byte4> = 0..255 or 0x00..0xFF   - Both decimal and hexadecimal is supported
+ *   <byte1>..<byte4> = 0..255 or 0x00..0xFF     - Both decimal and hexadecimal is supported
  *   <broadcast> = 0                             - DALI default
  *   <device> = 1..64                            - DALI short address + 1
  *   <group> = 101..116                          - DALI group + 101
@@ -59,6 +58,8 @@
   --------------------------------------------------------------------------------------------
   Version yyyymmdd  Action    Description
   --------------------------------------------------------------------------------------------
+  1.1.0.3 20251112  remove    - Remove optional repeat for commands `DaliSend` and `DaliQuery`
+                                Send twice is now based on DALI defined commands type
   1.1.0.2 20251109  update    - Add optional extended commands prefix for commands `DaliSend` and `DaliQuery`
   1.1.0.1 20241101  update    - Enable DALI if another light is already claimed
   1.1.0.0 20241031  update    - Add GUI sliders with feedback when `DaliLight 0`
@@ -153,6 +154,7 @@ struct DALI {
   uint8_t dimmer[DALI_MAX_STORED];
   uint8_t web_dimmer[DALI_MAX_STORED];
   uint8_t target;
+  uint8_t device_type;
   bool allow_light;
   bool last_power;
   bool power[DALI_MAX_STORED];
@@ -419,7 +421,6 @@ void DaliSendDataOnce(uint16_t send_dali_data) {
 /*-------------------------------------------------------------------------------------------*/
 
 void DaliSendData(uint32_t adr, uint32_t cmd) {
-  bool repeat = (adr &0x100);                  // Set repeat if bit 8 is set
   adr &= 0xFF;
   cmd &= 0xFF;
 
@@ -427,31 +428,50 @@ void DaliSendData(uint32_t adr, uint32_t cmd) {
   Dali->command = cmd;
   DaliSaveState(adr, cmd);
 
-  if (!repeat && (adr &0x01)) {                // YAAAAAA1 Commands where user didn't set repeat
-    if ((adr >= 0xA1) && (adr <= 0xFD)) {      // Special commands
-      repeat = ((0xA5 == adr) || (0xA7 == adr));
-    } else {
-      // ((cmd >=0) && (cmd <= 31))            // Arc power control commands
-      repeat = (((cmd >=32) && (cmd <= 143)) ||  // Configuration commands
-                ((cmd >=224) && (cmd <= 236)));  // Extended configuration commands
-      // ((cmd >=144) && (cmd <= 223))         // Query commands
-      // ((cmd >=237) && (cmd <= 255))         // Extended query commands
+  bool send_twice = false;
+  if (adr &0x01) {                             // Selector bit (command) or special command
+    if (DALI_102_ENABLE_DEVICE_TYPE_X == adr) {
+      Dali->device_type = cmd;                 // Next command will be an extended command
+    }
+    uint32_t send_twice_extended_start;
+    uint32_t send_twice_extended_end;
+    if (4 == Dali->device_type) {
+      send_twice_extended_start = DALI_205_REFERENCE_SYSTEM_POWER;
+      send_twice_extended_end = DALI_205_RESERVED237;
+    }
+    else if (6 == Dali->device_type) {
+      send_twice_extended_start = DALI_207_REFERENCE_SYSTEM_POWER;
+      send_twice_extended_end = DALI_207_RESERVED236;
+    }
+    else if (8 == Dali->device_type) {
+      send_twice_extended_start = DALI_209_SET_TEMPORARY_X_COORDINATE;
+      send_twice_extended_end = DALI_209_START_AUTO_CALIBRATION;
+    }
+    if ((DALI_102_INITIALISE == adr) ||
+        (DALI_102_RANDOMISE == adr) ||
+        ((cmd >= DALI_102_RESET) && (cmd <= DALI_102_RESERVED143)) ||  // Configuration commands
+        (Dali->device_type && (cmd >= send_twice_extended_start) && (cmd <= send_twice_extended_end))) {
+      send_twice = true;
     }
   }
 
 #ifdef DALI_DEBUG
-  AddLog(LOG_LEVEL_DEBUG, PSTR("DLI: Tx 0x%d%02X%02X"), repeat, adr, cmd);
+  AddLog(LOG_LEVEL_DEBUG, PSTR("DLI: Tx DT%d, Twice %d, Adr 0x%02X, Cmd 0x%02X"), Dali->device_type, send_twice, adr, cmd);
 #endif  // DALI_DEBUG
 
   uint16_t send_dali_data = adr << 8 | cmd;
 
   DaliDisableRxInterrupt();
   DaliSendDataOnce(send_dali_data);            // Takes 14.7 ms
-  if (repeat) {
+  if (send_twice) {
     DaliSendDataOnce(send_dali_data);          // Takes 14.7 ms
   }
   delay(2);                                    // Block response
   DaliEnableRxInterrupt();
+
+  if (Dali->device_type && (cmd >= 224) && (cmd <= 255)) {  // Extended commands
+    Dali->device_type = 0;                     // Reset after execution of extended command
+  }
 }
 
 /*-------------------------------------------------------------------------------------------*/
@@ -483,13 +503,21 @@ int DaliSendWaitResponse(uint32_t adr, uint32_t cmd, uint32_t timeout) {
  * Courtesy of https://github.com/qqqlab/DALI-Lighting-Interface
 \*********************************************************************************************/
 
+bool DaliSetDTR(uint32_t dtr, uint32_t adr, uint32_t value) {
+  uint8_t dtr_set[3] = { DALI_102_SET_DTR0, DALI_102_SET_DTR1, DALI_102_SET_DTR2 };
+  uint8_t dtr_query[3] = { DALI_102_QUERY_CONTENT_DTR0, DALI_102_QUERY_CONTENT_DTR1, DALI_102_QUERY_CONTENT_DTR2 };
+
+  if (dtr > 2) { dtr = 0; }
+  DaliSendData(dtr_set[dtr], value);           // Store value in DTR
+  int result = DaliSendWaitResponse(adr, dtr_query[dtr]);  // Get DTR value
+  return (result == value);
+}
+
 bool DaliSetValue(uint32_t adr, uint32_t getcmd, uint32_t setcmd, uint32_t v) {
   // Set a parameter value, returns true on success
   int current_v = DaliSendWaitResponse(adr, getcmd);  // Get current parameter value
   if (current_v == v) { return true; }         // Already set
-  DaliSendData(DALI_102_SET_DTR0, v);          // Store value in DTR
-  int dtr = DaliSendWaitResponse(adr, DALI_102_QUERY_CONTENT_DTR0);  // Get DTR value
-  if (dtr != v) { return false; }
+  if (!DaliSetDTR(0, adr, v)) { return false; }
   DaliSendData(adr, setcmd);                   // Set parameter value = DTR
   current_v = DaliSendWaitResponse(adr, getcmd);  // Get current parameter value
   if (current_v != v) { return false; }        // Set failed
@@ -783,7 +811,7 @@ bool DaliInit(uint32_t function) {
   }
   if ((-1 == pin_tx) || (-1 == pin_rx)) { return false; }
 
-  Dali = (DALI*)calloc(sizeof(DALI), 1);
+  Dali = (DALI*)calloc(sizeof(DALI), 1);    // Need calloc to reset registers to 0/false
   if (!Dali) { return false; }
 
   Dali->pin_tx = pin_tx;
@@ -1055,14 +1083,95 @@ void CmndDaliGear(void) {
 
 void CmndDaliSend(void) {
   // Send command
-  // Setting bit 8 will repeat command once
-  // DaliSend 0x1a5,255          - DALI Initialise (0xa5 + 0x100 = send twice)
+  // DaliSend 0xa5,255           - DALI Initialise
   // DaliSend 6,3,0xe2           - DALI DT6 (6) for address 1 (3) extended command disable current protector (0xe2) 
   // DaliSend 0x01,0xa3,0x2d,254 - Set Power On level (0x2d) for address 0 (0x01) to 254 only if Read Power On level (0xa3) is different
-  uint32_t values[4] = { 0 };
-  uint32_t params = ParseParameters(4, values);
 
-  if (2 == params) {                                 // Prepare for Extended command
+  uint32_t values[5] = { 0 };
+  uint32_t params = ParseParameters(5, values);
+
+#ifdef DALI_DEBUG
+  AddLog(LOG_LEVEL_DEBUG, PSTR("DLI: index %d, params %d, values %d,%d,%d,%d,%d"), XdrvMailbox.index, params, values[0], values[1], values[2], values[3], values[4]);
+#endif  // DALI_DEBUG
+
+  if (6 == XdrvMailbox.index) {  // DaliSend6 - DT6 = 207 = Extended LED commands 224...236
+    /*
+    params    0                                               1                                2
+    DaliSend6 <broadcast>|<device>|<group> |<special_command>,<command>|<special_command_data>,<dtr0_data>
+              254         0..126   128..158 160..251          0..255    0..255                 0..255
+    DaliSend6 <broadcast>|<device>|<group>,<command>
+    */
+    if ((params >= 2) && (values[1] >= 224) && (values[1] <= 255)) {  // DT6 extended command
+      if ((DALI_207_SELECT_DIMMING_CURVE == values[1]) ||
+          (DALI_207_SET_FAST_FADE_TIME == values[1])) {
+        // DaliSend6 <broadcast>|<device>|<group>,<command>,<dtr0>
+        if (!DaliSetDTR(0, values[0], values[2])) { return; }
+      }
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 6);  // Enable Extended command
+      DaliSendData(values[0], values[1]);
+      ResponseCmndDone();
+      return;
+    }
+  }
+  if (8 == XdrvMailbox.index) {  // DaliSend8 - DT8 = 209 = Extended colour commands 224...246
+    /*
+    params    0                                               1                                2                                     3                       4
+    DaliSend8 <broadcast>|<device>|<group> |<special_command>,<command>|<special_command_data>,<dtr0_data>|<dtr0_1_data>|<dtr2_data>,<dtr1_data>|<dtr2_data>,<dtr2_data>
+              254         0..126   128..158 160..251          0..255    0..255                 0..255      0..65535      0..255      0..255      0..255      0..255
+    DaliSend8 <special_command>,<special_command_data>
+    DaliSend8 <broadcast>|<device>|<group>,<command>
+    */
+    if ((params >= 2) && (values[1] >= 224) && (values[1] <= 255)) {  // DT8 extended command
+      // params == 3
+      if ((DALI_209_SET_TEMPORARY_RGBWAF_CONTROL == values[1]) ||
+          (DALI_209_STORE_GEAR_FEATURES_STATUS == values[1]) ||
+          (DALI_209_ASSIGN_COLOUR_TO_LINKED_COMMAND == values[1])) {
+        // DaliSend8 <broadcast>|<device>|<group>,<command>,<dtr0_data>
+        if (!DaliSetDTR(0, values[0], values[2])) { return; }
+      }
+      else if ((DALI_209_SET_TEMPORARY_X_COORDINATE == values[1]) ||
+               (DALI_209_SET_TEMPORARY_Y_COORDINATE == values[1]) ||
+               (DALI_209_SET_TEMPORARY_COLOUR_TEMP_TC == values[1])) {
+        // DaliSend8 <broadcast>|<device>|<group>,<command>,<dtr0_1_data>
+        if (!DaliSetDTR(0, values[0], values[2] % 256)) { return; }
+        if (!DaliSetDTR(1, values[0], values[2] / 256)) { return; }
+      }
+      else if (DALI_209_STORE_XY_COORDINATE_PRIMARY_N == values[1]) {
+        // DaliSend8 <broadcast>|<device>|<group>,<command>,<dtr2_data>
+        if (!DaliSetDTR(2, values[0], values[2])) { return; }
+      }
+      // params == 4
+      else if ((DALI_209_SET_TEMPORARY_PRIMARY_N_DIMLEVEL == values[1]) ||
+               (DALI_209_STORE_TY_PRIMARY_N == values[1]) ||
+               (DALI_209_STORE_COLOUR_TEMP_TC_LIMIT == values[1])) {
+        // DaliSend8 <broadcast>|<device>|<group>,<command>,<dtr0_1_data>,<dtr2_data>
+        if (!DaliSetDTR(0, values[0], values[2] % 256)) { return; }
+        if (!DaliSetDTR(1, values[0], values[2] / 256)) { return; }
+        if (!DaliSetDTR(2, values[0], values[3])) { return; }
+      }    
+      // params == 5
+      else if ((DALI_209_SET_TEMPORARY_RGB_DIMLEVEL == values[1]) ||
+               (DALI_209_SET_TEMPORARY_WAF_DIMLEVEL == values[1])) {
+        // DaliSend8 <broadcast>|<device>|<group>,<command>,<dtr0_data>,<dtr1_data>,<dtr2_data>
+        if (!DaliSetDTR(0, values[0], values[2])) { return; }
+        if (!DaliSetDTR(1, values[0], values[3])) { return; }
+        if (!DaliSetDTR(2, values[0], values[4])) { return; }
+      }
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+      DaliSendData(values[0], values[1]);
+      ResponseCmndDone();
+      return;
+    }
+  }
+  /*
+  params    0     1                                               2                                3             4
+  DaliSend [<dt>,]<broadcast>|<device>|<group> |<special_command>,<command>|<special_command_data>,<dtr0_1_data>,<dtr2_data>
+            6,8   254         0..126   128..158 160..251          0..255    0..255                 0..255/65535  0..255
+  DaliSend <special_command>,<special_command_data>
+  DaliSend <broadcast>|<device>|<group>,<command>
+  DaliSend <broadcast>|<device>|<group>,<command>,<dtr0>
+  */
+  if (2 == params) {                                 // Prepare for default Extended command DT6 - LEDs
     if ((values[1] >= 224) && (values[1] <= 255)) {  // Extended command
       values[2] = values[1];
       values[1] = values[0];
@@ -1077,7 +1186,7 @@ void CmndDaliSend(void) {
     params = 2;
   }
   if (2 == params) {
-    DaliSendData(values[0] &0x1FF, values[1] &0xFF);
+    DaliSendData(values[0], values[1]);
     ResponseCmndDone();
   }
   else if (4 == params) {
@@ -1093,12 +1202,40 @@ void CmndDaliSend(void) {
 
 void CmndDaliQuery(void) {
   // Send command and return response or -1 (no response within DALI_TIMEOUT)
-  // Setting bit 8 will repeat command once
   // DaliQuery 0xff,0x90 - DALI Query status
   // DaliQuery 0xff,144  - DALI Query status
   // DaliQuery 6,7,237   - DALI DT6 (6) for address 3 (7) extended command query status (237)
   uint32_t values[3] = { 0 };
   uint32_t params = ParseParameters(3, values);
+
+  if (6 == XdrvMailbox.index) {  // DaliQuery6 - DT6 = 207 = Extended LED commands 224...236
+    if ((params >= 2) && (values[1] >= 224) && (values[1] <= 255)) {  // DT6 extended command
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 6);  // Enable Extended command
+      int result = DaliSendWaitResponse(values[0], values[1]);
+      ResponseCmndNumber(result);
+      return;
+    }
+  }
+  if (8 == XdrvMailbox.index) {  // DaliQuery8 - DT8 = 209 = Extended colour commands 224...246
+    if ((params >= 2) && (values[1] >= 224) && (values[1] <= 255)) {  // DT8 extended command
+      if (DALI_209_QUERY_COLOUR_VALUE == values[1]) {
+        if (!DaliSetDTR(0, values[0], values[2])) { return; }
+      }
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+      int result = DaliSendWaitResponse(values[0], values[1]);
+      if (DALI_209_QUERY_COLOUR_VALUE == values[1]) {
+        if (result >= 0) {
+          uint32_t result2 = result << 8;
+          int result = DaliSendWaitResponse(values[0], DALI_102_QUERY_CONTENT_DTR0);
+          if (result >= 0) { 
+            result = result2 | result;
+          }
+        }
+      }
+      ResponseCmndNumber(result);
+      return;
+    }
+  }
   if (2 == params) {
     if ((values[1] >= 224) && (values[1] <= 255)) {  // Extended command
       values[2] = values[1];
@@ -1108,7 +1245,8 @@ void CmndDaliQuery(void) {
     }
   }
   if (3 == params) {
-    DaliSendWaitResponse(DALI_102_ENABLE_DEVICE_TYPE_X, values[0] &0xFF);  // Enable Extended command
+//    DaliSendWaitResponse(DALI_102_ENABLE_DEVICE_TYPE_X, values[0] &0xFF);  // Enable Extended command
+    DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, values[0]);  // Enable Extended command
     values[0] = values[1];
     values[1] = values[2];
     params = 2;
