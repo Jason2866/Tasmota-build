@@ -58,6 +58,7 @@
   --------------------------------------------------------------------------------------------
   Version yyyymmdd  Action    Description
   --------------------------------------------------------------------------------------------
+  1.1.0.4 20251115  fix       - Tasmota light control using non-broadcast address
   1.1.0.3 20251112  remove    - Remove optional repeat for commands `DaliSend` and `DaliQuery`
                                 Send twice is now based on DALI defined commands type
   1.1.0.2 20251109  update    - Add optional extended commands prefix for commands `DaliSend` and `DaliQuery`
@@ -111,6 +112,8 @@
 #define DALI_TIMEOUT               50      // DALI backward frame receive timeout (ms)
 #endif
 
+//#define DALI_LIGHT_COLOR_SUPPORT
+
 //#define DALI_DEBUG
 #ifndef DALI_DEBUG_PIN
 #define DALI_DEBUG_PIN             4       // Debug GPIO
@@ -154,6 +157,7 @@ struct DALI {
   uint8_t dimmer[DALI_MAX_STORED];
   uint8_t web_dimmer[DALI_MAX_STORED];
   uint8_t target;
+  uint8_t target_rgbwaf;
   uint8_t device_type;
   bool allow_light;
   bool last_power;
@@ -192,23 +196,17 @@ uint32_t DaliMirekToKelvin(uint32_t mirek) {
 
 /*-------------------------------------------------------------------------------------------*/
 
-uint32_t DaliTarget2Address(void) {
+uint32_t DaliTarget2Address(uint32_t target) {
   // 1..64    = Short address
   // 101..116 = Group address
   // Others   = Broadcast
-  if ((Dali->target >= 1) && (Dali->target <= 64)) {  // 1 .. 64
-    Dali->target -= 1;                         // Short address
-    Dali->target <<= 1;
+  if ((target >= 1) && (target <= 64)) {       // 1 .. 64
+    return (target -1) << 1;                   // Short address: 0b00000000 .. 0b01111110
   }
-  else if ((Dali->target >= 101) && (Dali->target <= 116)) {  // 101 .. 116
-    Dali->target -= 101;
-    Dali->target <<= 1;
-    Dali->target |= 0x80;                      // Group address
+  else if ((target >= 101) && (target <= 116)) {  // 101 .. 116
+    return ((target -101) << 1) | 0x80;        // Group address: 0b10000000 .. 0b10011110
   }
-  else {                                       // Others
-    Dali->target = DALI_BROADCAST_DP;          // Broadcast address
-  }
-  return Dali->target &0xFE;                   // Direct Arc Power Control command
+  return DALI_BROADCAST_DP;                    // Broadcast address: 0b11111110
 }
 
 /*
@@ -544,6 +542,25 @@ bool DaliSetPowerOnLevel(uint32_t adr, uint32_t v) {
   return DaliSetValue(adr, DALI_102_QUERY_POWER_ON_LEVEL, DALI_102_SET_POWER_ON_LEVEL, v);
 }
 
+int DaliQueryExtendedVersionNumber(uint32_t adr, uint32_t device_type) {
+  DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, device_type);  // Enable Extended command
+  return DaliSendWaitResponse(adr, 255);       // DALI_xxx_QUERY_EXTENDED_VERSION_NUMBER
+}
+
+#ifdef DALI_LIGHT_COLOR_SUPPORT
+uint32_t DaliQueryRGBWAF(uint32_t adr) {
+  uint32_t rgbwaf_channels = 0;
+  if (DaliQueryExtendedVersionNumber(adr, 8) >= 0) {  // Colour device
+    DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+    int result = DaliSendWaitResponse(adr, DALI_209_QUERY_COLOUR_TYPE_FEATURES);
+    if (result >= 0) { 
+      rgbwaf_channels = (result >> 5) & 0x07;  // RGBWAF channels in bits 5..7
+    }
+  }
+  return rgbwaf_channels;
+}
+#endif  // DALI_LIGHT_COLOR_SUPPORT
+
 /*-------------------------------------------------------------------------------------------*/
 
 uint32_t DaliGearPresent(void) {
@@ -690,13 +707,14 @@ uint32_t DaliCommission(uint8_t init_arg) {
   delay(100);
   DaliSendData(DALI_102_TERMINATE, 0x00);      // Terminate the DALI_102_INITIALISE command
 
+  uint32_t address = DALI_BROADCAST_DP;
 #ifdef USE_LIGHT
   DaliInitLight();
-  uint32_t address = (Settings->sbflag1.dali_light) ? DaliTarget2Address() : DALI_BROADCAST_DP;  // DaliLight 1
-  DaliSendData(address, Dali->power[0]);       // Restore lights
-#else
-  DaliSendData(DALI_BROADCAST_DP, Dali->power[0]);  // Restore lights
+  if (Settings->sbflag1.dali_light) {          // DaliLight 1
+    address = DaliTarget2Address(Dali->target);
+  }
 #endif  // USE_LIGHT
+  DaliSendData(address, Dali->power[0]);       // Restore lights
   return cnt;
 }
 
@@ -735,7 +753,7 @@ void DaliLoop(void) {
 
   bool show_response = true;
 #ifdef USE_LIGHT
-  if (Dali->allow_light && (DaliTarget2Address() == Dali->address)) {
+  if (Dali->allow_light && (DaliTarget2Address(Dali->target) == Dali->address)) {
     if (Settings->sbflag1.dali_light) {        // DaliLight 1
       uint8_t dim_old = changeUIntScale(Dali->last_dimmer, 0, 254, 0, 100);
       uint8_t dim_new = changeUIntScale(Dali->dimmer[index], 0, 254, 0, 100);
@@ -779,9 +797,40 @@ bool DaliSetChannels(void) {
     if (Dali->light_sync) {                    // Block local loop
       Dali->light_sync = false;
     } else {
-      uint8_t value = ((uint8_t*)XdrvMailbox.data)[0];
-      if (255 == value) { value = 254; }       // Max Dali value
-      DaliSendData(DaliTarget2Address(), value);
+      uint8_t *cur_col = (uint8_t*)XdrvMailbox.data;
+      // cur_col[0] = Red, cur_col[1] = Green, cur_col[2] = Blue, cur_col[3] = Warm = Amber, cur_col[4] = Cold = White
+      for (uint32_t i = 0; i < 5; i++) {
+        if (255 == cur_col[i]) { cur_col[1] = 254; }  // Max Dali value
+      }
+      uint32_t adr = DaliTarget2Address(Dali->target);
+
+#ifdef DALI_LIGHT_COLOR_SUPPORT
+      if (Dali->target_rgbwaf > 0) {           // Colour control
+        if (!DaliSetDTR(0, adr, 0x7F)) { return true; }  // Linked Channel control
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+        DaliSendData(adr, DALI_209_SET_TEMPORARY_RGBWAF_CONTROL);
+
+        if (!DaliSetDTR(0, adr, cur_col[0])) { return true; }  // DALI Red
+        if (!DaliSetDTR(1, adr, cur_col[1])) { return true; }  // DALI Green
+        if (!DaliSetDTR(2, adr, cur_col[2])) { return true; }  // DALI Blue
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+        DaliSendData(adr, DALI_209_SET_TEMPORARY_RGB_DIMLEVEL);
+
+        if (Dali->target_rgbwaf > 3) {
+          if (!DaliSetDTR(0, adr, cur_col[4])) { return true; }  // DALI While
+          if (!DaliSetDTR(1, adr, cur_col[3])) { return true; }  // DALI Amber
+          if (!DaliSetDTR(2, adr, 255)) { return true; }         // DALI Freecolour - no change
+          DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+          DaliSendData(adr, DALI_209_SET_TEMPORARY_WAF_DIMLEVEL);
+        }
+
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+        DaliSendData(adr, DALI_209_ACTIVATE);
+        return true;
+      }
+#endif  // DALI_LIGHT_COLOR_SUPPORT
+
+      DaliSendData(adr, cur_col[0]);           // DAPC command - dim level
     }
   }
   return true;
@@ -854,6 +903,14 @@ bool DaliInit(uint32_t function) {
   Settings->light_correction = 0;              // Use Dali light correction
   UpdateDevicesPresent(1);
   TasmotaGlobal.light_type = LT_SERIAL1;       // Single channel
+
+#ifdef DALI_LIGHT_COLOR_SUPPORT
+  Dali->target_rgbwaf = DaliQueryRGBWAF(DaliTarget2Address(Dali->target));
+  if (Dali->target_rgbwaf > 0) {
+    TasmotaGlobal.light_type = LT_RGB;         // RGB channel (TBD)
+  }
+#endif  // DALI_LIGHT_COLOR_SUPPORT
+
   return true;
 #else
   return false;
@@ -939,6 +996,9 @@ void CmndDaliTarget(void) {
       (XdrvMailbox.payload == 0)) {
     Dali->target = XdrvMailbox.payload;
   }
+#ifdef DALI_LIGHT_COLOR_SUPPORT
+  Dali->target_rgbwaf = DaliQueryRGBWAF(DaliTarget2Address(Dali->target));
+#endif  // DALI_LIGHT_COLOR_SUPPORT
   ResponseCmndNumber(Dali->target);
 }
 
@@ -968,14 +1028,7 @@ void CmndDaliPower(void) {
           XdrvMailbox.payload = Dali->dimmer[index];
         }
       }
-      uint32_t DALIaddr = DALI_BROADCAST_DP;
-      if (XdrvMailbox.index >= 101) {
-        DALIaddr = ((XdrvMailbox.index -101) << 1) | 0x80;  // Group address
-      }
-      else if ((XdrvMailbox.index > 0) && XdrvMailbox.usridx) {
-        DALIaddr = (XdrvMailbox.index -1) << 1;  // Short address
-      }
-      DaliSendData(DALIaddr, XdrvMailbox.payload);
+      DaliSendData(DaliTarget2Address(XdrvMailbox.index), XdrvMailbox.payload);
     }
   }
   ResponseDali(index);
@@ -996,14 +1049,7 @@ void CmndDaliDimmer(void) {
       ((XdrvMailbox.index >= 101) && (XdrvMailbox.index <= 116))) {
     if ((XdrvMailbox.payload >= 0) && (XdrvMailbox.payload <= 100)) {
       uint8_t dimmer = changeUIntScale(XdrvMailbox.payload, 0, 100, 0, 254);
-      uint32_t DALIaddr = DALI_BROADCAST_DP;
-      if (XdrvMailbox.index >= 101) {
-        DALIaddr = ((XdrvMailbox.index -101) << 1) | 0x80;  // Group address
-      }
-      else if ((XdrvMailbox.index > 0) && XdrvMailbox.usridx) {
-        DALIaddr = (XdrvMailbox.index -1) << 1;  // Short address
-      }
-      DaliSendData(DALIaddr, dimmer);
+      DaliSendData(DaliTarget2Address(XdrvMailbox.index), dimmer);
     }
   }
   ResponseDali(index);
