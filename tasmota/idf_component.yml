@@ -1,6 +1,8 @@
 dependencies:
   # Required IDF version
   idf: ">=5.1"
+  espressif/cmake_utilities:
+    version: "0.*"
   espressif/esp32-camera:
     version: "master"
     git: https://github.com/espressif/esp32-camera.git
