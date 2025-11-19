@@ -120,6 +120,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Scripter array transfer via UFS [#24060](https://github.com/arendst/Tasmota/issues/24060)
 - NeoPool command `NPReadLSB`, `NPReadMSB`, `NPWriteLSB`, `NWriteMSB` for directly read/write LSB/MSB of 16-bit register [#24083](https://github.com/arendst/Tasmota/issues/24083)
 - TLS enabled ECDSA by default for ESP8266 [#24009](https://github.com/arendst/Tasmota/issues/24009)
+- WS2812 and Berry animation support for reverse-order LED strip [#24138](https://github.com/arendst/Tasmota/issues/24138)
 - Berry `cb.free_cb` for extension manager [#24014](https://github.com/arendst/Tasmota/issues/24014)
 - Berry `light.get()` direct access to values [#24033](https://github.com/arendst/Tasmota/issues/24033)
 - Berry `gc_heap` and `gc_time` to `tasmota.memory()` [#24054](https://github.com/arendst/Tasmota/issues/24054)
@@ -139,6 +140,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - InfluxDb receives IPAddress as a value regression from v15.0.1.3 [#24031](https://github.com/arendst/Tasmota/issues/24031)
 - Scripter UDP and switch case [#24060](https://github.com/arendst/Tasmota/issues/24060)
 - TuyaMCU v1 soft lock when WIFI_SELECT / WIFI_RESET is initiated [#24063](https://github.com/arendst/Tasmota/issues/24063)
+- DALI protocol errors
 - TLS fix ECDSA and add `SetOption165 1` to enable ECDSA in addition to RSA [#24000](https://github.com/arendst/Tasmota/issues/24000)
 - Extension Manager exception when `OtaUrl` is not defined or invalid
 - Extension Manager Light Theme support and Extensions input field control

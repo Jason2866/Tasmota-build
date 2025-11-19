@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ## [15.1.0.2]
 ### Added
-- WS2812 and Berry animation support for reverse-order LED strip
+- WS2812 and Berry animation support for reverse-order LED strip (#24138)
+- DALI persistence for `DaliTarget` if filesystem is present
 
 ### Breaking Changed
 
@@ -14,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - JPEGDEC library from v1.8.3 to v1.8.4 (#24120)
 
 ### Fixed
+- DALI protocol errors
 
 ### Removed
 

@@ -26,6 +26,9 @@
 #define DALI_GROUP_ADDRESS15                       0x9E  // 0b10011110  15 - Last group address
 #define DALI_BROADCAST_DP                          0xFE  // 0b11111110 254 - Broadcast address
 
+// Address selector bit - Send with first byte
+#define DALI_SELECTOR_BIT                          0x01  // Mark second byte as standard/extended command
+
 /*-------------------------------------------------------------------------------------------*\
  * DALI Commands for IEC62386 part 102 = Control gears - Send as first byte
 \*-------------------------------------------------------------------------------------------*/
@@ -121,7 +124,7 @@
                                                          //       If the lamp is off it shall be ignited with this command.
 #define DALI_102_STEP_DOWN_AND_OFF                 0x07  //   7 - Decrements the lighting control level and turns off lighting if the level is at the minimum (without fade).
 #define DALI_102_ON_AND_STEP_UP                    0x08  //   8 - Increments the lighting control level and turns on lighting if lighting is off (with fade). 
-#define DALI_102_DIRECT_ARC_POWER_CONTROL          0x09  //   9 - Enable DAPC Sequence
+#define DALI_102_DIRECT_ARC_POWER_CONTROL          0x09  //   9 Deprecated - Enable DAPC Sequence
                                                          //       Indicates the start of a command iteration of DAPC(level) commands.
                                                          //       The control gear shall temporarily use a fade time of 200ms while the command iteration is active independent of the actual fade/extended fade time.
                                                          //       The DAPC sequence shall end if 200ms elapse without the control gear receiving a DAPC(level) command.
@@ -711,7 +714,7 @@
                                                          //       No change shall occur if ‘COLOUR TEMPERATURE TC’ is already at ‘COLOUR TEMPERATURE TC WARMEST’.
                                                          //       If the new colour value does not correspond to a colour temperature attainable by the control gear, this shall be indicated by 
                                                          //        the ‘Colour temperature TC out of range’ bit, bit 1 of the ‘COLOUR STATUS’.
-#define DALI_209_SET_TEMPORARY_PRIMARY_N_DIMLEVEL  0xEA  // 234 - Set temporary primary N dimlevel (Uses DTR0 (LSB), DTR1 (MSB) and DTR2 (N))
+#define DALI_209_SET_TEMPORARY_PRIMARY_N_DIMLEVEL  0xEA  // 234 Deprecated - Set temporary primary N dimlevel (Uses DTR0 (LSB), DTR1 (MSB) and DTR2 (N))
                                                          //       The value is expressed in units of 1/65536.
                                                          //       The maximum ‘PRIMARY N DIMLEVEL’ value is 0,99997 and shall be interpreted on a linear scale.
                                                          //       N depends on DTR2 and shall be in the range from 0 to 5 depending upon the available number of primaries.
@@ -745,13 +748,13 @@
 
 // Application extended configuration commands - Send as second byte with repeat
 #define DALI_209_RESERVED239                       0xEF  // 239 - [Reserved]
-#define DALI_209_STORE_TY_PRIMARY_N                0xF0  // 240 - Store TY Primary N via DTR0/1/2
+#define DALI_209_STORE_TY_PRIMARY_N                0xF0  // 240 Deprecated - Store TY Primary N via DTR0/1/2
                                                          //       The value is expressed in units of 0,5 lumen resulting in a possible range of TYmin = 0 lumen, to TYmax = 32767 lumen.
                                                          //       A value of 65535 (“MASK”) means unknown.
                                                          //       N depends on DTR2 and shall be in the range from 0 to 5 depending upon the available number of primaries.
                                                          //       For any other value of DTR2 the command shall be ignored.
                                                          //       A value of “MASK” means that this primary is undefined and calibration is needed.
-#define DALI_209_STORE_XY_COORDINATE_PRIMARY_N     0xF1  // 241 - Store XY coord primary channel N via DTR2
+#define DALI_209_STORE_XY_COORDINATE_PRIMARY_N     0xF1  // 241 Deprecated - Store XY coord primary channel N via DTR2
                                                          //       The ‘TEMPORARY x-COORDINATE’ and the ‘TEMPORARY y-COORDINATE’, given by command 224 and command 225 shall be stored as ‘x-COORDINATE PRIMARY N’ 
                                                          //        respectively ‘y-COORDINATE PRIMARY N’ of primary N given by the value of DTR2, and shall be in the range from 0 to 5 depending upon the available number of primaries.
                                                          //       For any other value of DTR2 the command shall be ignored.
