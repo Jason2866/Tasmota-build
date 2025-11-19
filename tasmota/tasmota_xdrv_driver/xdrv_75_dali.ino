@@ -32,13 +32,14 @@
  * DaliSend <0xA3>,<byte2>,<byte3>,<byte4>       - Set DALI parameter using DTR0 and do not expect a DALI backward frame
  * DaliQuery <byte1>,<byte2>                     - Execute DALI code and report result (DALI backward frame)
  * DaliQuery <dt>,<byte1>,<byte2>                - Execute DALI extended code for DT and report result (DALI backward frame)
- * DaliScan 1|2                                  - Reset (0) or (1)/and commission device short addresses
+ * DaliScan 1|2[,<max_count>]                    - Reset (0) or (1)/and commission device short addresses up to optional <max_count> - default 64
  * DaliGear 1..64                                - Set max short address to speed up scanning - default 64
  * DaliGroup<1..16> [+]|-<device>,<device>...    - Add(+) or Remove(-) devices to/from group
  * DaliPower<broadcast>|<device>|<group> 0..254  - Control power (0 = Off, 1 = Last dimmer, 2 = Toggle, 3..254 = absolute light brightness)
  * DaliDimmer<broadcast>|<device>|<group> 0..100 - Control dimmer (0 = Off, 1..100 = precentage of brightness)
  * DaliLight 0|1                                 - Enable Tasmota light control for DaliTarget device - default 1
  * DaliTarget <broadcast>|<device>|<group>       - Set Tasmota light control device (0, 1..64, 101..116) - default 0
+ * DaliChannels 1..5                             - Set Tasmota light type (1 = R/C = DT6, 2 = RG/CW, 3 = RGB, 4 = RGBW, 5 = RGBWC) for DaliTarget
  * 
  * DALI background information
  * Address type        Address byte
@@ -50,14 +51,22 @@
  * A = Address bit, S = 0 Direct Arc Power control, S = 1 Command, C = Special command
  * 
  * Shelly DALI Dimmer Gen3 (ESP32C3-8M) - GPIO3 controls DALI power. In following template it is always ON. Max output is 16V/10mA (= 5 DALI gear)
- * Template {"NAME":"Shelly DALI Dimmer Gen3","GPIO":[34,4736,0,3840,11360,11392,128,129,0,1,576,0,0,0,0,0,0,0,0,1,1,1],"FLAG":0,"BASE":1}
- * AdcGpio1 10000,10000,4000        <- Temperature parameters
- * Backlog ButtonTopic 0; SetOption1 1; SetOption11 0; SetOption32 20; DimmerStep 5; LedTable 0
- * rule1 on button1#state=2 do dimmer + endon on button2#state=2 do dimmer - endon on button1#state=3 do power 2 endon on button2#state=3 do power 2 endon
+ * - Template {"NAME":"Shelly DALI Dimmer Gen3","GPIO":[34,4736,0,3840,11360,11392,128,129,0,1,576,0,0,0,0,0,0,0,0,1,1,1],"FLAG":0,"BASE":1}
+ * - AdcGpio1 10000,10000,4000        <- Temperature parameters
+ * - Backlog ButtonTopic 0; SetOption1 1; SetOption11 0; SetOption32 20; DimmerStep 5; LedTable 0
+ * - rule1 on button1#state=2 do dimmer + endon on button2#state=2 do dimmer - endon on button1#state=3 do power 2 endon on button2#state=3 do power 2 endon
  *
+ * DALI RGBWAF color support tested with MiBoxer DALI 5 in 1 LED Controller (DT8) and 12V RGB led strip:
+ * - Reset device (long press M button 10 seconds until digital display shows AES).
+ * - Set fixed unused short address (Scanning/Commissioning doesn't work for this device) ie. 005.
+ * - Use command `DaliTarget 6` to link Tasmota color control to this device ie. 005 +1 = 6.
+ * - Use command `DaliChannels 3` to set the amount of color hardware channels connected ie. RGB ledstrip is 3.
+ * - Use command `DaliLight 1` to enable Tasmota color control.
   --------------------------------------------------------------------------------------------
   Version yyyymmdd  Action    Description
   --------------------------------------------------------------------------------------------
+  1.3.0.0 20251119  update    - Add DALI DT8 RGBWAF color support using Tasmota light control
+                              - Add command `DaliChannels` to select Tasmota color type
   1.2.0.0 20251116  update    - Add persistence for `DaliTarget` if filesystem is present
   1.1.0.4 20251115  fix       - Tasmota light control using non-broadcast address
   1.1.0.3 20251112  remove    - Remove optional repeat for commands `DaliSend` and `DaliQuery`
@@ -104,25 +113,25 @@
 #define XDRV_75                    75
 
 #ifndef DALI_INIT_STATE
-#define DALI_INIT_STATE            50      // DALI init dimmer state 50/254
+#define DALI_INIT_STATE            50          // DALI init dimmer state 50/254
 #endif
 #ifndef DALI_INIT_FADE 
-#define DALI_INIT_FADE             1       // Fade between light states in number of seconds
+#define DALI_INIT_FADE             1           // Fade between light states in number of seconds
 #endif
 #ifndef DALI_TIMEOUT
-#define DALI_TIMEOUT               50      // DALI backward frame receive timeout (ms)
+#define DALI_TIMEOUT               50          // DALI backward frame receive timeout (ms)
 #endif
 
 //#define DALI_LIGHT_COLOR_SUPPORT
 
 //#define DALI_DEBUG
 #ifndef DALI_DEBUG_PIN
-#define DALI_DEBUG_PIN             4       // Debug GPIO
+#define DALI_DEBUG_PIN             4           // Debug GPIO
 #endif
 
 #include "include/xdrv_75_dali.h"
 
-#define DALI_MAX_STORED            17      // Store broadcast and group states
+#define DALI_MAX_STORED            17          // Store broadcast and group states
 
 #define DALI_TOPIC "DALI"
 #define D_PRFX_DALI "Dali"
@@ -280,7 +289,6 @@ uint32_t DaliTarget2Address(uint32_t target) {
   }
   return DALI_BROADCAST_DP;                    // Broadcast address: 0b11111110
 }
-
 /*
 uint32_t DaliAddress2Target(uint32_t adr) {
   if (adr >= 254) {                            // 0b1111111S
@@ -292,7 +300,6 @@ uint32_t DaliAddress2Target(uint32_t adr) {
   return (adr >> 1) +1;                        // 0b0000000S .. 0b0111111S Short address (1 .. 64)
 }
 */
-
 /*-------------------------------------------------------------------------------------------*/
 
 uint32_t DaliSaveState(uint32_t adr, uint32_t cmd) {
@@ -505,15 +512,15 @@ void DaliSendData(uint32_t adr, uint32_t cmd) {
     }
     uint32_t send_twice_extended_start;
     uint32_t send_twice_extended_end;
-    if (4 == Dali->device_type) {
+    if (DALI_205_DEVICE_TYPE == Dali->device_type) {
       send_twice_extended_start = DALI_205_REFERENCE_SYSTEM_POWER;
       send_twice_extended_end = DALI_205_RESERVED237;
     }
-    else if (6 == Dali->device_type) {
+    else if (DALI_207_DEVICE_TYPE == Dali->device_type) {
       send_twice_extended_start = DALI_207_REFERENCE_SYSTEM_POWER;
       send_twice_extended_end = DALI_207_RESERVED236;
     }
-    else if (8 == Dali->device_type) {
+    else if (DALI_209_DEVICE_TYPE == Dali->device_type) {
       send_twice_extended_start = DALI_209_SET_TEMPORARY_X_COORDINATE;
       send_twice_extended_end = DALI_209_START_AUTO_CALIBRATION;
     }
@@ -626,28 +633,38 @@ uint32_t DaliQueryRGBWAF(uint32_t adr) {
   uint32_t rgbwaf_channels = 0;
 
   adr |= DALI_SELECTOR_BIT;                    // Enable Selector bit
-  int result = DaliSendWaitResponse(adr, DALI_102_QUERY_DEVICE_TYPE);
+  int dt = DaliSendWaitResponse(adr, DALI_102_QUERY_DEVICE_TYPE);
   // If the device does not implement any part 2xx device type then the response will be 254;
   // If the device implements one part 2xx device type then the response will be the device type number;
   // If the device implements multiple part 2xx device types then the response will be MASK (0xff).
   // In all other cases returns NO (no response).
-  while ((result >= 0) && (result != 8) && (result != 254)) {
-    result = DaliSendWaitResponse(adr, DALI_102_QUERY_NEXT_DEVICE_TYPE);
-    // DALI2: If directly preceded by DALI_102_QUERY_DEVICE_TYPE and more than one device type is supported, returns the first and lowest device type number.
-    // DALI2: If directly preceded by DALI_102_QUERY_NEXT_DEVICE_TYPE and not all device types have been reported, returns the next lowest device type number.
-    // DALI2: If directly preceded by DALI_102_QUERY_NEXT_DEVICE_TYPE and all device types have been reported, returns 254.
-    // In all other cases returns NO (no response).
-    if (result < 0) {
-      if (DaliQueryExtendedVersionNumber(adr, 8) >= 0) {  // Colour device
-        result = 8;
+  if (255 == dt) {                             // DALI-2
+    int next_dt;
+    do {
+      delay(DALI_TIMEOUT);
+      next_dt = DaliSendWaitResponse(adr, DALI_102_QUERY_NEXT_DEVICE_TYPE);
+      // DALI2: If directly preceded by DALI_102_QUERY_DEVICE_TYPE and more than one device type is supported, returns the first and lowest device type number.
+      // DALI2: If directly preceded by DALI_102_QUERY_NEXT_DEVICE_TYPE and not all device types have been reported, returns the next lowest device type number.
+      // DALI2: If directly preceded by DALI_102_QUERY_NEXT_DEVICE_TYPE and all device types have been reported, returns 254.
+      // In all other cases returns NO (no response).
+      if (DALI_209_DEVICE_TYPE == next_dt) {
+        dt = DALI_209_DEVICE_TYPE;
       }
+    } while ((next_dt >= 0) && (next_dt != 254));
+  }
+  if (dt < 0) {                                // DALI version-1
+    delay(DALI_TIMEOUT);
+    if (DaliQueryExtendedVersionNumber(adr, DALI_209_DEVICE_TYPE) >= 0) {  // Colour device
+      dt = DALI_209_DEVICE_TYPE;
     }
   }
-  if (8 == result) {
-    DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
-    result = DaliSendWaitResponse(adr, DALI_209_QUERY_COLOUR_TYPE_FEATURES);
-    if (result >= 0) { 
-      rgbwaf_channels = (result >> 5) & 0x07;  // RGBWAF channels in bits 5..7
+  if (DALI_209_DEVICE_TYPE == dt) {
+    delay(DALI_TIMEOUT);
+    DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
+    delay(DALI_TIMEOUT);
+    int colour_type = DaliSendWaitResponse(adr, DALI_209_QUERY_COLOUR_TYPE_FEATURES);
+    if (colour_type >= 0) { 
+      rgbwaf_channels = (colour_type >> 5) & 0x07;  // RGBWAF channels in bits 5..7
     }
   }
   return rgbwaf_channels;
@@ -658,9 +675,11 @@ uint32_t DaliQueryRGBWAF(uint32_t adr) {
 
 uint32_t DaliGearPresent(void) {
   uint32_t count = 0;
-  for (uint32_t sa = 0; sa < Dali->max_short_address; sa++) {  // Scanning 64 addresses takes about 2500 ms
-    if (DaliSendWaitResponse((sa << 1) | DALI_SELECTOR_BIT, DALI_102_QUERY_CONTROL_GEAR_PRESENT, 20) >= 0) {
+  for (uint32_t address = 0; address < Dali->max_short_address; address++) {  // Scanning 64 addresses takes about 2500 ms
+    uint32_t short_address = address << 1;
+    if (DaliSendWaitResponse(short_address | DALI_SELECTOR_BIT, DALI_102_QUERY_CONTROL_GEAR_PRESENT, 20) >= 0) {
       count++;
+      AddLog(LOG_LEVEL_DEBUG, PSTR("DLI: Device %d at %d, short address %d"), count, address, short_address);
     }
   }
   return count;
@@ -757,7 +776,7 @@ void DaliProgramShortAddress(uint8_t shortadr) {
 
 /*-------------------------------------------------------------------------------------------*/
 
-uint32_t DaliCommission(uint8_t init_arg) {
+uint32_t DaliCommission(uint32_t init_arg, uint32_t max_count) {
   // Based on Shelly DALI Dimmer Gen3 received frames
   // init_arg=11111111 : all without short address
   // init_arg=00000000 : all 
@@ -795,6 +814,8 @@ uint32_t DaliCommission(uint8_t init_arg) {
     delay(100);
     OsWatchLoop();                             // Feed blocked-loop watchdog
     DaliSendData((sa << 1) | DALI_SELECTOR_BIT, DALI_102_OFF); // Turns OFF latest short address light
+
+    if (cnt >= max_count) { break; }
   }
 
   delay(100);
@@ -893,32 +914,55 @@ bool DaliSetChannels(void) {
       uint8_t *cur_col = (uint8_t*)XdrvMailbox.data;
       // cur_col[0] = Red, cur_col[1] = Green, cur_col[2] = Blue, cur_col[3] = Warm = Amber, cur_col[4] = Cold = White
       for (uint32_t i = 0; i < 5; i++) {
-        if (255 == cur_col[i]) { cur_col[1] = 254; }  // Max Dali value
+        if (255 == cur_col[i]) { cur_col[i] = 254; }  // Max Dali value
       }
       uint32_t adr = DaliTarget2Address(Dali->Settings.target);
 
 #ifdef DALI_LIGHT_COLOR_SUPPORT
-      if (Dali->target_rgbwaf > 0) {           // Colour control
+      uint32_t channels = Dali->Settings.light_type -8;
+      if ((Dali->target_rgbwaf > 0) && (channels > 1)) {  // Colour control
         adr |= DALI_SELECTOR_BIT;              // Enable Selector bit
+/*
+        // This is too slow - 800ms for 5 channels
         if (!DaliSetDTR(0, adr, 0x7F)) { return true; }  // Linked Channel control
-        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
         DaliSendData(adr, DALI_209_SET_TEMPORARY_RGBWAF_CONTROL);
 
+        uint32_t channels = Dali->Settings.light_type -8;
         if (!DaliSetDTR(0, adr, cur_col[0])) { return true; }  // DALI Red
         if (!DaliSetDTR(1, adr, cur_col[1])) { return true; }  // DALI Green
         if (!DaliSetDTR(2, adr, cur_col[2])) { return true; }  // DALI Blue
-        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
         DaliSendData(adr, DALI_209_SET_TEMPORARY_RGB_DIMLEVEL);
 
-        if (Dali->target_rgbwaf > 3) {
+        if (channels > 3) {
           if (!DaliSetDTR(0, adr, cur_col[4])) { return true; }  // DALI While
           if (!DaliSetDTR(1, adr, cur_col[3])) { return true; }  // DALI Amber
           if (!DaliSetDTR(2, adr, 255)) { return true; }         // DALI Freecolour - no change
-          DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+          DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
+          DaliSendData(adr, DALI_209_SET_TEMPORARY_WAF_DIMLEVEL);
+        }
+*/
+        // This is fastest - 330ms for 3 channels
+        DaliSendData(DALI_102_SET_DTR0, 0x7F);           // Linked Channel control
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
+        DaliSendData(adr, DALI_209_SET_TEMPORARY_RGBWAF_CONTROL);
+
+        DaliSendData(DALI_102_SET_DTR0, cur_col[0]);     // DALI Red
+        DaliSendData(DALI_102_SET_DTR1, cur_col[1]);     // DALI Green
+        DaliSendData(DALI_102_SET_DTR2, cur_col[2]);     // DALI Blue
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
+        DaliSendData(adr, DALI_209_SET_TEMPORARY_RGB_DIMLEVEL);
+
+        if (channels > 3) {
+          DaliSendData(DALI_102_SET_DTR0, cur_col[4]);   // DALI White
+          DaliSendData(DALI_102_SET_DTR1, cur_col[3]);   // DALI Amber
+          DaliSendData(DALI_102_SET_DTR2, 255);          // DALI Freecolour - no change
+          DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
           DaliSendData(adr, DALI_209_SET_TEMPORARY_WAF_DIMLEVEL);
         }
 
-        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+        DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
         DaliSendData(adr, DALI_209_ACTIVATE);
         return true;
       }
@@ -1001,7 +1045,7 @@ bool DaliInit(uint32_t function) {
   TasmotaGlobal.light_type = LT_SERIAL1;       // Single channel
 #ifdef DALI_LIGHT_COLOR_SUPPORT
   Dali->target_rgbwaf = DaliQueryRGBWAF(DaliTarget2Address(Dali->Settings.target));
-  if (Dali->target_rgbwaf > 0) {
+  if (Dali->target_rgbwaf > 1) {
     TasmotaGlobal.light_type = Dali->Settings.light_type;
   }
 #endif  // DALI_LIGHT_COLOR_SUPPORT
@@ -1249,7 +1293,7 @@ void CmndDaliSend(void) {
   AddLog(LOG_LEVEL_DEBUG, PSTR("DLI: index %d, params %d, values %d,%d,%d,%d,%d"), XdrvMailbox.index, params, values[0], values[1], values[2], values[3], values[4]);
 #endif  // DALI_DEBUG
 
-  if (6 == XdrvMailbox.index) {  // DaliSend6 - DT6 = 207 = Extended LED commands 224...236
+  if (DALI_207_DEVICE_TYPE == XdrvMailbox.index) {  // DaliSend6 - DT6 = 207 = Extended LED commands 224...236
     /*
     params    0                                               1                                2
     DaliSend6 <broadcast>|<device>|<group> |<special_command>,<command>|<special_command_data>,<dtr0_data>
@@ -1263,13 +1307,13 @@ void CmndDaliSend(void) {
         // DaliSend6 <broadcast>|<device>|<group>,<command>,<dtr0>
         if (!DaliSetDTR(0, adr, values[2])) { return; }
       }
-      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 6);  // Enable Extended command
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_207_DEVICE_TYPE);  // Enable Extended command
       DaliSendData(adr, values[1]);
       ResponseCmndDone();
       return;
     }
   }
-  if (8 == XdrvMailbox.index) {  // DaliSend8 - DT8 = 209 = Extended colour commands 224...246
+  if (DALI_209_DEVICE_TYPE == XdrvMailbox.index) {  // DaliSend8 - DT8 = 209 = Extended colour commands 224...246
     /*
     params    0                                               1                                2                                     3                       4
     DaliSend8 <broadcast>|<device>|<group> |<special_command>,<command>|<special_command_data>,<dtr0_data>|<dtr0_1_data>|<dtr2_data>,<dtr1_data>|<dtr2_data>,<dtr2_data>
@@ -1314,7 +1358,7 @@ void CmndDaliSend(void) {
         if (!DaliSetDTR(1, adr, values[3])) { return; }
         if (!DaliSetDTR(2, adr, values[4])) { return; }
       }
-      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
       DaliSendData(adr, values[1]);
       ResponseCmndDone();
       return;
@@ -1328,15 +1372,15 @@ void CmndDaliSend(void) {
   DaliSend <broadcast>|<device>|<group>,<command>
   DaliSend <broadcast>|<device>|<group>,<command>,<dtr0>
   */
-  if (2 == params) {                                 // Prepare for default Extended command DT6 - LEDs
+  if (2 == params) {                           // Prepare for default Extended command DT6 - LEDs
     if ((values[1] >= 224) && (values[1] <= 255)) {  // Extended command
       values[2] = values[1];
       values[1] = values[0];
-      values[0] = 6;                                 // Default to DT6 - LEDs
+      values[0] = DALI_207_DEVICE_TYPE;        // Default to DT6 - LEDs
       params = 3;
     }
   }
-  if (3 == params) {                                 // Set extended command mode
+  if (3 == params) {                           // Set extended command mode
     DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, values[0]);  // Enable Extended command
     values[0] = values[1];
     values[1] = values[2];
@@ -1367,22 +1411,22 @@ void CmndDaliQuery(void) {
   uint32_t values[3] = { 0 };
   uint32_t params = ParseParameters(3, values);
 
-  if (6 == XdrvMailbox.index) {  // DaliQuery6 - DT6 = 207 = Extended LED commands 224...236
+  if (DALI_207_DEVICE_TYPE == XdrvMailbox.index) {  // DaliQuery6 - DT6 = 207 = Extended LED commands 224...236
     if ((params >= 2) && (values[1] >= 224) && (values[1] <= 255)) {  // DT6 extended command
       uint32_t adr = values[0] | DALI_SELECTOR_BIT;
-      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 6);  // Enable Extended command
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_207_DEVICE_TYPE);  // Enable Extended command
       int result = DaliSendWaitResponse(adr, values[1]);
       ResponseCmndNumber(result);
       return;
     }
   }
-  if (8 == XdrvMailbox.index) {  // DaliQuery8 - DT8 = 209 = Extended colour commands 224...246
+  if (DALI_209_DEVICE_TYPE == XdrvMailbox.index) {  // DaliQuery8 - DT8 = 209 = Extended colour commands 224...246
     if ((params >= 2) && (values[1] >= 224) && (values[1] <= 255)) {  // DT8 extended command
       uint32_t adr = values[0] | DALI_SELECTOR_BIT;
       if (DALI_209_QUERY_COLOUR_VALUE == values[1]) {
         if (!DaliSetDTR(0, adr, values[2])) { return; }
       }
-      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, 8);  // Enable Extended command
+      DaliSendData(DALI_102_ENABLE_DEVICE_TYPE_X, DALI_209_DEVICE_TYPE);  // Enable Extended command
       int result = DaliSendWaitResponse(adr, values[1]);
       if (DALI_209_QUERY_COLOUR_VALUE == values[1]) {
         if (result >= 0) {
@@ -1401,7 +1445,7 @@ void CmndDaliQuery(void) {
     if ((values[1] >= 224) && (values[1] <= 255)) {  // Extended command
       values[2] = values[1];
       values[1] = values[0];
-      values[0] = 6;                                 // Default to DT6 - LEDs
+      values[0] = DALI_207_DEVICE_TYPE;        // Default to DT6 - LEDs
       params = 3;
     }
   }
@@ -1424,12 +1468,15 @@ void CmndDaliScan(void) {
   // Scan short addresses
   // DaliScan 1     - Reset and commission short addresses
   // DaliScan 2     - Commission unassigned short addresses
-  if ((XdrvMailbox.payload >= 1) && (XdrvMailbox.payload <= 2)) {
+  // DaliScan x,5   - Commission up to 5 short addresses
+  uint32_t values[2] = { 0 };
+  uint32_t params = ParseParameters(2, values);
+  if ((values[0] >= 1) && (values[0] <= 2)) {
     uint32_t init_arg = 0x00;                  // Commission all
-    if (2 == XdrvMailbox.payload) {
+    if (2 == values[0]) {
       init_arg = 0xFF;                         // Commission all without short addresses
     }
-    int result = DaliCommission(init_arg);
+    int result = DaliCommission(init_arg, (0 == values[1]) ? 64 : values[1]);
     ResponseCmndNumber(result);
   }
 }

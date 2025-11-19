@@ -388,6 +388,8 @@
  * Standard device like fluorescent lamps
 \*-------------------------------------------------------------------------------------------*/
 
+#define DALI_201_DEVICE_TYPE                       0
+
 // Application extended query commands - Send as second byte
 #define DALI_201_QUERY_EXTENDED_VERSION_NUMBER     0xFF  // 255 - The version number of the extended support.
                                                          //       This command must be preceded by an appropriate DALI_102_ENABLE_DEVICE_TYPE_X command; if it is not then it will be ignored.
@@ -398,6 +400,8 @@
  * DALI Application extended commands for IEC62386 part 202 = DT1 - Send as second byte
  * Device for emergency lighting
 \*-------------------------------------------------------------------------------------------*/
+
+#define DALI_202_DEVICE_TYPE                       1
 
 // Application extended query commands - Send as second byte
 #define DALI_202_QUERY_EXTENDED_VERSION_NUMBER     0xFF  // 255 - The version number of the extended support.
@@ -410,6 +414,8 @@
  * Device for discharge lamps excluding fluorescent lamps
 \*-------------------------------------------------------------------------------------------*/
 
+#define DALI_203_DEVICE_TYPE                       2
+
 // Application extended query commands - Send as second byte
 #define DALI_203_QUERY_EXTENDED_VERSION_NUMBER     0xFF  // 255 - The version number of the extended support.
                                                          //       This command must be preceded by an appropriate DALI_102_ENABLE_DEVICE_TYPE_X command; if it is not then it will be ignored.
@@ -421,6 +427,8 @@
  * Device for low-voltage halogen lamps
 \*-------------------------------------------------------------------------------------------*/
 
+#define DALI_204_DEVICE_TYPE                       3
+
 // Application extended query commands - Send as second byte
 #define DALI_204_QUERY_EXTENDED_VERSION_NUMBER     0xFF  // 255 - The version number of the extended support.
                                                          //       This command must be preceded by an appropriate DALI_102_ENABLE_DEVICE_TYPE_X command; if it is not then it will be ignored.
@@ -431,6 +439,8 @@
  * DALI Application extended commands for IEC62386 part 205 = DT4 - Send as second byte
  * Device for dimming incandescent lamps
 \*-------------------------------------------------------------------------------------------*/
+
+#define DALI_205_DEVICE_TYPE                       4
 
 // Application extended configuration commands - Send as second byte with repeat
 #define DALI_205_REFERENCE_SYSTEM_POWER            0xE0  // 224 - Reference System Power
@@ -551,6 +561,8 @@
  * Device for converting digital signales into DC signals
 \*-------------------------------------------------------------------------------------------*/
 
+#define DALI_206_DEVICE_TYPE                       5
+
 // Application extended query commands - Send as second byte
 #define DALI_206_QUERY_EXTENDED_VERSION_NUMBER     0xFF  // 255 - The version number of the extended support.
                                                          //       This command must be preceded by an appropriate DALI_102_ENABLE_DEVICE_TYPE_X command; if it is not then it will be ignored.
@@ -575,6 +587,8 @@
  * dimmingCurve     E_DALIDimmingCurve.Standard  E_DALIDimmingCurve.Standard,                 1 byte
  *                                               E_DALIDimmingCurve.Linear
 \*-------------------------------------------------------------------------------------------*/
+
+#define DALI_207_DEVICE_TYPE                       6
 
 // Application extended configuration commands - Send as second byte with repeat
 #define DALI_207_REFERENCE_SYSTEM_POWER            0xE0  // 224 - The DALI control gear measures and stores the performance level of the system, in order to detect load increase and decrease.
@@ -664,6 +678,8 @@
  * Device for switching functions
 \*-------------------------------------------------------------------------------------------*/
 
+#define DALI_208_DEVICE_TYPE                       7
+
 // Application extended query commands - Send as second byte
 #define DALI_208_QUERY_EXTENDED_VERSION_NUMBER     0xFF  // 255 - The version number of the extended support.
                                                          //       This command must be preceded by an appropriate DALI_102_ENABLE_DEVICE_TYPE_X command; if it is not then it will be ignored.
@@ -676,6 +692,8 @@
  * Tc is expressed in MIREK and can vary from 1 Mirek (1000000 Kelvin) to 65534 Mirek (15.26 Kelvin)
  * RGBWAF - Red, Green, Blue, White, Amber, Freely selectable color
 \*-------------------------------------------------------------------------------------------*/
+
+#define DALI_209_DEVICE_TYPE                       8
 
 // Application extended control commands - Send as second byte with repeat
 #define DALI_209_SET_TEMPORARY_X_COORDINATE        0xE0  // 224 - Set temporary x-COORDINATE (Uses DTR0 (LSB) and DTR1 (MSB))
@@ -946,6 +964,8 @@
  * DALI Application extended commands for IEC62386 part 210 = DT9 - Send as second byte
  * Sequencer
 \*-------------------------------------------------------------------------------------------*/
+
+#define DALI_210_DEVICE_TYPE                       9
 
 // Application extended query commands - Send as second byte
 #define DALI_210_QUERY_EXTENDED_VERSION_NUMBER     0xFF  // 255 - The version number of the extended support.

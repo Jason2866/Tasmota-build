@@ -118,6 +118,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - ESP8266 GPIOViewer memory map if enabled with `#define GV_USE_ESPINFO`
 - HostedMCU file update using command `HostedLoad <version>|<filename>`
 - Scripter array transfer via UFS [#24060](https://github.com/arendst/Tasmota/issues/24060)
+- DALI DT8 RGBWAF color support using Tasmota light control
 - NeoPool command `NPReadLSB`, `NPReadMSB`, `NPWriteLSB`, `NWriteMSB` for directly read/write LSB/MSB of 16-bit register [#24083](https://github.com/arendst/Tasmota/issues/24083)
 - TLS enabled ECDSA by default for ESP8266 [#24009](https://github.com/arendst/Tasmota/issues/24009)
 - WS2812 and Berry animation support for reverse-order LED strip [#24138](https://github.com/arendst/Tasmota/issues/24138)

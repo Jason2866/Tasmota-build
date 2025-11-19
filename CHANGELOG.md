@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 ## [15.1.0.2]
 ### Added
 - WS2812 and Berry animation support for reverse-order LED strip (#24138)
-- DALI persistence for `DaliTarget` if filesystem is present
+- DALI persistence for `DaliTarget` and `DaliChannels` if filesystem is present
+- DALI DT8 RGBWAF color support using Tasmota light control
 
 ### Breaking Changed
 
