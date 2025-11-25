@@ -41,3 +41,6 @@ response = request.urlretrieve(URL, "tasmota32c2-safeboot.bin")
 
 URL = "https://github.com/arendst/Tasmota-firmware/raw/firmware/firmware/tasmota32/tasmota32p4-safeboot.bin"
 response = request.urlretrieve(URL, "tasmota32p4-safeboot.bin")
+
+URL = "https://github.com/arendst/Tasmota-firmware/raw/firmware/firmware/tasmota32/tasmota32p4ser-safeboot.bin"
+response = request.urlretrieve(URL, "tasmota32p4ser-safeboot.bin")
