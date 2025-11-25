@@ -81,6 +81,7 @@ jobs:
           - tasmota32c6-lvgl
           - tasmota32s2-lvgl
           - tasmota32s3-lvgl
+          - tasmota32p4-lvgl
           - tasmota32s3-qio_opi
           - tasmota32s3-opi_opi
           #- tasmota32s2-display
