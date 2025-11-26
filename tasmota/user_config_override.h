@@ -782,6 +782,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #define USE_WEBCLIENT
 #define USE_WEBCLIENT_HTTPS
 #define USE_MI_EXT_GUI
+#define CONFIG_NIMBLE_CPP_IDF 1
 #endif
 
 #undef USE_ESP32_SENSORS
@@ -2576,6 +2577,7 @@ Thermostat
   #define USE_BLE_ESP32                            // Enable new BLE driver
   #define USE_EQ3_ESP32
   #define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
+  #define CONFIG_NIMBLE_CPP_IDF 1
 
 #endif  // ESP32
 
