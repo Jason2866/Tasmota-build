@@ -7,11 +7,13 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Support for ESP32-P4 rev.3 (#24146)
 - Support for Analog Gauges (#24153)
+- Support for MakeSkyBlue Solar Charger Energy Monitor (#24151)
 
 ### Breaking Changed
 
 ### Changed
 - ESP32 Platform from 2025.11.30 to 2025.11.31, Framework (Arduino Core) from v3.1.5 to v3.1.6 and IDF from v5.3.4.251110 to v5.3.4.251110 (#24146)
+- Refactored DALI using TasmotaDali library v1.0.0 adding frame receive buffer
 
 ### Fixed
 - ESP32-P4 Hosted MCU updated to v2.6.6 solving WiFi boot issues (#24146)

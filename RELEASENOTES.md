@@ -116,6 +116,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Added
 - Support for ESP32-P4 rev.3 [#24146](https://github.com/arendst/Tasmota/issues/24118)
 - Support for Analog Gauges [#24153](https://github.com/arendst/Tasmota/issues/24153)
+- Support for MakeSkyBlue Solar Charger Energy Monitor [#24151](https://github.com/arendst/Tasmota/issues/24151)
 - Commands `DaliSend` and `DaliQuery` allow extended commands with prefix for DeviceType defaulting to DT6
 - ESP8266 GPIOViewer memory map if enabled with `#define GV_USE_ESPINFO`
 - HostedMCU file update using command `HostedLoad <version>|<filename>`
@@ -137,6 +138,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - JPEGDEC library from v1.8.3 to v1.8.4 [#24120](https://github.com/arendst/Tasmota/issues/24120)
 - GPIOViewer from v1.6.3 to v1.7.0
 - Refactored library UDisplay [#24007](https://github.com/arendst/Tasmota/issues/24007)
+- Refactored DALI using TasmotaDali library v1.0.0 adding frame receive buffer
 - Increased filesystem file name size from 48 to 50 characters
 
 ### Fixed
