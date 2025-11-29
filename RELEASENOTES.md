@@ -147,6 +147,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - TuyaMCU v1 soft lock when WIFI_SELECT / WIFI_RESET is initiated [#24063](https://github.com/arendst/Tasmota/issues/24063)
 - PCA9685 V2 driver PWMTO fading logic and overflow [#24159](https://github.com/arendst/Tasmota/issues/24159)
 - DALI protocol errors
+- Fix RGBW handling in TasmotaLED and xlgt_01_ws2812_esp32 [#24172](https://github.com/arendst/Tasmota/issues/24172)
 - TLS fix ECDSA and add `SetOption165 1` to enable ECDSA in addition to RSA [#24000](https://github.com/arendst/Tasmota/issues/24000)
 - ESP32-P4 Hosted MCU updated to v2.6.6 solving WiFi boot issues [#24146](https://github.com/arendst/Tasmota/issues/24118)
 - ESP32-Solo1 using pre-compiled Arduino libraries [#24146](https://github.com/arendst/Tasmota/issues/24118)
