@@ -965,7 +965,7 @@ bool DaliInit(uint32_t function) {
   Settings->light_correction = 0;              // Use Dali light correction
   UpdateDevicesPresent(1);
 
-  TasmotaGlobal.light_type = LT_SERIAL1;       // Single channel
+  TasmotaGlobal.light_type = LT_W;             // Single channel
 #ifdef DALI_LIGHT_COLOR_SUPPORT
   Dali->target_rgbwaf = DaliQueryRGBWAF(DaliTarget2Address(Dali->Settings.target));
   if (Dali->target_rgbwaf > 1) {
