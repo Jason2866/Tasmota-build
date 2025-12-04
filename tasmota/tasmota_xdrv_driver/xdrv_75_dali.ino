@@ -974,6 +974,11 @@ bool DaliInit(uint32_t function) {
   Dali->target_rgbwaf = DaliQueryRGBWAF(DaliTarget2Address(Dali->Settings.target));
   if (Dali->target_rgbwaf > 1) {
     TasmotaGlobal.light_type = Dali->Settings.light_type;
+    if (!Settings->flag3.pwm_multi_channels &&   // SetOption68 0 - Enable multi-channels PWM instead of Color PWM
+       (TasmotaGlobal.light_type >= LT_RGBW) &&  // RGBW or RGBCW
+       (Settings->param[P_RGB_REMAP] & 128)) {   // SetOption37 128
+      UpdateDevicesPresent(1);                   // We manage RGB and W separately, hence adding a device
+    }
   }
 #endif  // DALI_LIGHT_COLOR_SUPPORT
 
