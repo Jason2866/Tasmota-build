@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Support for Analog Gauges (#24153)
 - Support for MakeSkyBlue Solar Charger Energy Monitor (#24151)
 - Berry `tasmota.micros()` to get time in microseconds (#24192)
+- Support for AGS02MA TVOC sensor (#24109)
 
 ### Breaking Changed
 
@@ -20,7 +21,8 @@ All notable changes to this project will be documented in this file.
 - ESP32-P4 Hosted MCU updated to v2.6.6 solving WiFi boot issues (#24146)
 - ESP32-Solo1 using pre-compiled Arduino libraries (#24146)
 - PCA9685 V2 driver PWMTO fading logic and overflow (#24159)
-- Fix RGBW handling in TasmotaLED and xlgt_01_ws2812_esp32 (#24172)
+- RGBW handling in TasmotaLED and xlgt_01_ws2812_esp32 (#24172)
+- ArtNet single light color mapping using `ChannelRemap` (#24058)
 
 ### Removed
 

@@ -117,6 +117,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for ESP32-P4 rev.3 [#24146](https://github.com/arendst/Tasmota/issues/24118)
 - Support for Analog Gauges [#24153](https://github.com/arendst/Tasmota/issues/24153)
 - Support for MakeSkyBlue Solar Charger Energy Monitor [#24151](https://github.com/arendst/Tasmota/issues/24151)
+- Support for AGS02MA TVOC sensor [#24109](https://github.com/arendst/Tasmota/issues/24109)
 - Commands `DaliSend` and `DaliQuery` allow extended commands with prefix for DeviceType defaulting to DT6
 - ESP8266 GPIOViewer memory map if enabled with `#define GV_USE_ESPINFO`
 - HostedMCU file update using command `HostedLoad <version>|<filename>`
@@ -148,7 +149,8 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - TuyaMCU v1 soft lock when WIFI_SELECT / WIFI_RESET is initiated [#24063](https://github.com/arendst/Tasmota/issues/24063)
 - PCA9685 V2 driver PWMTO fading logic and overflow [#24159](https://github.com/arendst/Tasmota/issues/24159)
 - DALI protocol errors
-- Fix RGBW handling in TasmotaLED and xlgt_01_ws2812_esp32 [#24172](https://github.com/arendst/Tasmota/issues/24172)
+- RGBW handling in TasmotaLED and xlgt_01_ws2812_esp32 [#24172](https://github.com/arendst/Tasmota/issues/24172)
+- ArtNet single light color mapping using `ChannelRemap` [#24058](https://github.com/arendst/Tasmota/issues/24058)
 - TLS fix ECDSA and add `SetOption165 1` to enable ECDSA in addition to RSA [#24000](https://github.com/arendst/Tasmota/issues/24000)
 - ESP32-P4 Hosted MCU updated to v2.6.6 solving WiFi boot issues [#24146](https://github.com/arendst/Tasmota/issues/24118)
 - ESP32-Solo1 using pre-compiled Arduino libraries [#24146](https://github.com/arendst/Tasmota/issues/24118)
