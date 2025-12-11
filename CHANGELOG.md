@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - RGBW handling in TasmotaLED and xlgt_01_ws2812_esp32 (#24172)
 - ArtNet single light color mapping using `ChannelRemap` (#24058)
 - Thermostat temperature unit (#24213)
+- Display rotate regression from v15.1.0.1 (#24214)
 
 ### Removed
 
