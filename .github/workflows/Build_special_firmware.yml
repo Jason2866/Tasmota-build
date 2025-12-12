@@ -40,6 +40,8 @@ jobs:
     needs: tasmota_pull
     runs-on: ubuntu-latest
     continue-on-error: true
+    env:
+      GH_TOKEN: ${{ github.token }}
     strategy:
       matrix:
         variant:
@@ -116,7 +118,7 @@ jobs:
           mkdir -p ./firmware/firmware
           mv tasmota32* ./firmware/firmware
           ls -l ./firmware/firmware
-          COMMIT_SHA_LONG=$(curl -s "https://api.github.com/repos/arendst/tasmota/commits/development" | jq -r '.sha')
+          COMMIT_SHA_LONG=$(gh api repos/arendst/tasmota/commits/development --jq '.sha')
           COMMIT_SHA=${COMMIT_SHA_LONG::7}
           sed -i -e "s/TASMOTA_SHA_SHORT/TASMOTA_SHA_SHORT $COMMIT_SHA-/g" ./tasmota/include/tasmota_version.h
       - name: Use different tasmota_configurations.h for C2 BLE
@@ -133,10 +135,11 @@ jobs:
   Start_final_copy:
     needs: special
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.MASTER_ACCESS_TOKEN }}
     steps:
     - name: Dispatch workflow in repo Jason2866/Tasmota-specials
       run: |
-        curl -X POST https://api.github.com/repos/Jason2866/Tasmota-specials/actions/workflows/copy_firmware.yml/dispatches \
-        -H 'Accept: application/vnd.github.everest-preview+json' \
-        -u ${{ secrets.MASTER_ACCESS_TOKEN }} \
-        --data '{"ref": "copy_firmware"}'
+        gh api repos/Jason2866/Tasmota-specials/actions/workflows/copy_firmware.yml/dispatches \
+          --method POST \
+          -f ref='copy_firmware'
