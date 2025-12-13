@@ -640,7 +640,6 @@ const char HTTP_BTN_MENU_DOMOTICZ[] PROGMEM =
   "<p></p><form action='" WEB_HANDLE_DOMOTICZ "' method='get'><button>" D_CONFIGURE_DOMOTICZ "</button></form>";
 
 const char HTTP_FORM_DOMOTICZ[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_DOMOTICZ_PARAMETERS "&nbsp;</b></legend>"
   "<form method='post' action='" WEB_HANDLE_DOMOTICZ "'>"
   "<table>";
 const char HTTP_FORM_DOMOTICZ_RELAY[] PROGMEM =
@@ -668,6 +667,7 @@ void HandleDomoticzConfiguration(void) {
 
   WSContentStart_P(PSTR(D_CONFIGURE_DOMOTICZ));
   WSContentSendStyle();
+  WSContentSend_P(HTTP_FIELDSET_LEGEND, PSTR(D_DOMOTICZ_PARAMETERS));
   WSContentSend_P(HTTP_FORM_DOMOTICZ);
   for (uint32_t i = 0; i < MAX_DOMOTICZ_IDX; i++) {
     if (i < TasmotaGlobal.devices_present) {

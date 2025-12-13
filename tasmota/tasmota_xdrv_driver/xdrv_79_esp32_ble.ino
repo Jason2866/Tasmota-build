@@ -3584,7 +3584,6 @@ const char HTTP_BTN_MENU_BLE[] PROGMEM =
   "<p></p><form action='" WEB_HANDLE_BLE "' method='get'><button>" D_CONFIGURE_BLE "</button></form>";
 
 const char HTTP_FORM_BLE[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_BLE_PARAMETERS "&nbsp;</b></legend>"
   "<form method='get' action='" WEB_HANDLE_BLE "'>"
   "<p><label><input id='e0' type='checkbox'%s><b>" D_BLE_ENABLE "</b></label></p>"
   "<p><label><input id='e1' type='checkbox'%s><b>" D_BLE_ACTIVESCAN "</b></label></p>"
@@ -3593,7 +3592,7 @@ const char HTTP_FORM_BLE[] PROGMEM =
 
 const char HTTP_BLE_DEV_STYLE[] PROGMEM = "th, td { padding-left:5px; }";
 const char HTTP_BLE_DEV_START[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_BLE_DEVICES "&nbsp;</b></legend><table>"
+  "<table>"
   "<tr><th><label>mac(type)</label></th><th><label>alias</label></th><th><label>name</label></th><th><label>RSSI</label></th><th><label>Age(max)</label></th></tr>";
 const char HTTP_BLE_DEV[] PROGMEM =
   "<tr><td><label>%s(%d)</label></td><td><label>%s</label></td><td><label>%s</label></td><td><label>%d</label></td><td><label>%d(%d)</label></td></tr>";
@@ -3644,6 +3643,7 @@ void HandleBleConfiguration(void)
   WSContentStart_P(PSTR(D_CONFIGURE_BLE));
   WSContentSendStyle_P(HTTP_BLE_DEV_STYLE);
   //WSContentSendStyle();
+  WSContentSend_P(HTTP_FIELDSET_LEGEND, PSTR(D_BLE_PARAMETERS));
   WSContentSend_P(HTTP_FORM_BLE,
     (Settings->flag5.mi32_enable) ? " checked" : "",
     (BLEScanActiveMode) ? " checked" : ""
@@ -3655,6 +3655,7 @@ void HandleBleConfiguration(void)
     //TasAutoMutex localmutex(&BLEOperationsRecursiveMutex, "BLEConf");
     int number = seenDevices.size();
     if (number){
+      WSContentSend_P(HTTP_FIELDSET_LEGEND, PSTR(D_BLE_DEVICES));
       WSContentSend_P(HTTP_BLE_DEV_START);
       uint64_t now = esp_timer_get_time();
       now = now/1000L;

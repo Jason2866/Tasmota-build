@@ -10048,7 +10048,6 @@ const char HTTP_BTN_MENU_RULES[] PROGMEM =
   "<p></p><form action='" WEB_HANDLE_SCRIPT "' method='get'><button>" D_CONFIGURE_SCRIPT "</button></form>";
 
 const char HTTP_FORM_SCRIPT[] PROGMEM =
-    "<fieldset><legend><b>&nbsp;" D_SCRIPT "&nbsp;</b></legend>"
     "<form method='post' action='" WEB_HANDLE_SCRIPT "'>";
 
 const char HTTP_FORM_SCRIPT1[] PROGMEM =
@@ -10456,6 +10455,7 @@ void HandleScriptConfiguration(void) {
 
     WSContentStart_P(PSTR(D_CONFIGURE_SCRIPT));
     WSContentSendStyle();
+    WSContentSend_P(HTTP_FIELDSET_LEGEND, PSTR(D_SCRIPT));
     WSContentSend_P(HTTP_FORM_SCRIPT);
 
 #ifdef xSCRIPT_STRIP_COMMENTS

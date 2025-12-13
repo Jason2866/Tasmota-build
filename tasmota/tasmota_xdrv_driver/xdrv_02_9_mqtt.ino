@@ -2055,7 +2055,6 @@ const char HTTP_BTN_MENU_MQTT[] PROGMEM =
   "<p></p><form action='" WEB_HANDLE_MQTT "' method='get'><button>" D_CONFIGURE_MQTT "</button></form>";
 
 const char HTTP_FORM_MQTT1[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_MQTT_PARAMETERS "&nbsp;</b></legend>"
   "<form method='get' action='" WEB_HANDLE_MQTT "'>"
   "<p><b>" D_HOST "</b> (" MQTT_HOST ")<br><input id='mh' placeholder=\"" MQTT_HOST "\" value=\"%s\"></p>"
   "<p><b>" D_PORT "</b> (" STR(MQTT_PORT) ")<br><input id='ml' placeholder='" STR(MQTT_PORT) "' value='%d'></p>"
@@ -2085,6 +2084,7 @@ void HandleMqttConfiguration(void)
 
   WSContentStart_P(PSTR(D_CONFIGURE_MQTT));
   WSContentSendStyle();
+  WSContentSend_P(HTTP_FIELDSET_LEGEND, PSTR(D_MQTT_PARAMETERS));
   WSContentSend_P(HTTP_FORM_MQTT1,
     SettingsTextEscaped(SET_MQTT_HOST).c_str(),
     Settings->mqtt_port,
