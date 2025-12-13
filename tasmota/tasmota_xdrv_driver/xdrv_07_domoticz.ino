@@ -636,9 +636,6 @@ void CmndDomoticzSend(void) {
 
 #define WEB_HANDLE_DOMOTICZ "dm"
 
-const char HTTP_BTN_MENU_DOMOTICZ[] PROGMEM =
-  "<p></p><form action='" WEB_HANDLE_DOMOTICZ "' method='get'><button>" D_CONFIGURE_DOMOTICZ "</button></form>";
-
 const char HTTP_FORM_DOMOTICZ[] PROGMEM =
   "<form method='post' action='" WEB_HANDLE_DOMOTICZ "'>"
   "<table>";
@@ -739,7 +736,7 @@ bool Xdrv07(uint32_t function) {
         break;
 #ifdef USE_WEBSERVER
       case FUNC_WEB_ADD_BUTTON:
-        WSContentSend_P(HTTP_BTN_MENU_DOMOTICZ);
+        WSContentSend_P(HTTP_FORM_BUTTON, PSTR(WEB_HANDLE_DOMOTICZ), PSTR(D_CONFIGURE_DOMOTICZ));
         break;
       case FUNC_WEB_ADD_HANDLER:
         WebServer_on(PSTR("/" WEB_HANDLE_DOMOTICZ), HandleDomoticzConfiguration);

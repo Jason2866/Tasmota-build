@@ -3580,11 +3580,10 @@ std::string BLETriggerResponse(generic_sensor_t *toSend){
 
 #define WEB_HANDLE_BLE "ble"
 
-const char HTTP_BTN_MENU_BLE[] PROGMEM =
-  "<p></p><form action='" WEB_HANDLE_BLE "' method='get'><button>" D_CONFIGURE_BLE "</button></form>";
+//const char HTTP_BTN_MENU_BLE[] PROGMEM =
+//  "<p></p><form action='" WEB_HANDLE_BLE "' method='get'><button>" D_CONFIGURE_BLE "</button></form>";
 
 const char HTTP_FORM_BLE[] PROGMEM =
-  "<form method='get' action='" WEB_HANDLE_BLE "'>"
   "<p><label><input id='e0' type='checkbox'%s><b>" D_BLE_ENABLE "</b></label></p>"
   "<p><label><input id='e1' type='checkbox'%s><b>" D_BLE_ACTIVESCAN "</b></label></p>"
   "<p>" D_BLE_REMARK "</p>";
@@ -3644,6 +3643,7 @@ void HandleBleConfiguration(void)
   WSContentSendStyle_P(HTTP_BLE_DEV_STYLE);
   //WSContentSendStyle();
   WSContentSend_P(HTTP_FIELDSET_LEGEND, PSTR(D_BLE_PARAMETERS));
+  WSContentSend_P(HTTP_FORM_GET_ACTION, PSTR(WEB_HANDLE_BLE));
   WSContentSend_P(HTTP_FORM_BLE,
     (Settings->flag5.mi32_enable) ? " checked" : "",
     (BLEScanActiveMode) ? " checked" : ""
@@ -3751,7 +3751,8 @@ bool Xdrv79(uint32_t function)
 */
 #ifdef USE_WEBSERVER
     case FUNC_WEB_ADD_BUTTON:
-      WSContentSend_P(BLE_ESP32::HTTP_BTN_MENU_BLE);
+//      WSContentSend_P(BLE_ESP32::HTTP_BTN_MENU_BLE);
+      WSContentSend_P(HTTP_FORM_BUTTON, PSTR(WEB_HANDLE_BLE), PSTR(D_CONFIGURE_BLE));
       break;
     case FUNC_WEB_ADD_HANDLER:
       WebServer_on(PSTR("/" WEB_HANDLE_BLE), BLE_ESP32::HandleBleConfiguration);

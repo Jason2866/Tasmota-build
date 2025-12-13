@@ -618,9 +618,6 @@ void HxShow(bool json) {
 const char HTTP_BTN_MENU_MAIN_HX711[] PROGMEM =
   "<p></p><form action='" WEB_HANDLE_HX711 "' method='get'><button name='reset'>" D_RESET_HX711 "</button></form>";
 
-const char HTTP_BTN_MENU_HX711[] PROGMEM =
-  "<p></p><form action='" WEB_HANDLE_HX711 "' method='get'><button>" D_CONFIGURE_HX711 "</button></form>";
-
 const char HTTP_FORM_HX711a[] PROGMEM =
   "<form method='post' action='" WEB_HANDLE_HX711 "'>"
   "<p><b>" D_REFERENCE_WEIGHT "</b> (" D_UNIT_KILOGRAM ")<br><input type='number' step='0.001' id='p1' placeholder='0' value='%s'></p>"
@@ -720,7 +717,7 @@ bool Xsns34(uint32_t function) {
         }
         break;
       case FUNC_WEB_ADD_BUTTON:
-        WSContentSend_P(HTTP_BTN_MENU_HX711);
+        WSContentSend_P(HTTP_FORM_BUTTON, PSTR(WEB_HANDLE_HX711), PSTR(D_CONFIGURE_HX711));
         break;
       case FUNC_WEB_ADD_HANDLER:
         WebServer_on(PSTR("/" WEB_HANDLE_HX711), HandleHxAction);
