@@ -9,8 +9,11 @@ All notable changes to this project will be documented in this file.
 ### Breaking Changed
 
 ### Changed
+- Vid6608 library from v1.0.2 to v1.0.3 (#24218)
 
 ### Fixed
+- DALI watchdog exception
+- TuyaMCU v1 exception 28 regression from v15.1.0.1 reverted PR24063 (#24220)
 
 ### Removed
 
