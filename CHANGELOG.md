@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - DALI watchdog exception
 - TuyaMCU v1 exception 28 regression from v15.1.0.1 reverted PR24063 (#24220)
+- ESP8266 TasmotaSerial flush receive buffer on executing `TasmotaSerial.flush();`
 
 ### Removed
 
