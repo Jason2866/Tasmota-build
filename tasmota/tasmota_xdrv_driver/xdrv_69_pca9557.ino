@@ -1,7 +1,7 @@
 /*
   xdrv_69_pca9557.ino - PCA9557 or TCA9554 GPIO Expander support for Tasmota
 
-  SPDX-FileCopyrightText: 2023 Theo Arends
+  SPDX-FileCopyrightText: 2023 @cctweaker and Theo Arends
 
   SPDX-License-Identifier: GPL-3.0-only
 */
@@ -390,31 +390,35 @@ void PCA9557ModuleInit(void) {
     return;
   }
 
+  uint8_t pca9557_address = PCA9557_ADDR_START;
+  while ((Pca9557.max_devices < PCA9557_MAX_DEVICES) && (pca9557_address < PCA9557_ADDR_END)) {
+    Pca9557.chip = Pca9557.max_devices;
+    if (I2cSetDevice(pca9557_address)) {
+      Pca9557.device[Pca9557.chip].address = pca9557_address;
 
-   uint8_t pca9557_address = PCA9557_ADDR_START;
-    while ((Pca9557.max_devices < PCA9557_MAX_DEVICES) && (pca9557_address < PCA9557_ADDR_END)) {
-      Pca9557.chip = Pca9557.max_devices;
-      if (I2cSetDevice(pca9557_address)) {
-        Pca9557.device[Pca9557.chip].address = pca9557_address;
-
-        uint8_t buffer;
-        if (PCA9557ValidRead(PCA9557_R2, &buffer)) {
-          I2cSetActiveFound(pca9557_address, PCA9557_NAME);
-          Pca9557.device[Pca9557.chip].pins = 8;
-          PCA9557Write(PCA9557_R2, 0b00000000);     // disable polarity inversion
-          Pca9557.max_devices++;
-
-          Pca9557.max_pins += Pca9557.device[Pca9557.chip].pins;
-          pins_needed -= Pca9557.device[Pca9557.chip].pins;
+      uint8_t buffer;
+      if (PCA9557ValidRead(PCA9557_R2, &buffer)) {
+        I2cSetActiveFound(pca9557_address, PCA9557_NAME);
+        Pca9557.device[Pca9557.chip].pins = 8;
+#ifdef USE_TCA9554
+        if (ResetReasonPowerOn()) {               // Fix power on relay toggle
+          PCA9557Write(PCA9557_R1, 0x00);         // Output state (TCA9554 power on is 0xFF, PCA9557 is 0x00)
+//          PCA9557Write(PCA9557_R3, 0x00);       // Config direction as output
         }
-      }
-      if (pins_needed) {
-        pca9557_address++;
-      } else {
-        pca9557_address = PCA9557_ADDR_END;
+#endif  // USE_TCA9554
+        PCA9557Write(PCA9557_R2, 0b00000000);     // Disable polarity inversion
+        Pca9557.max_devices++;
+
+        Pca9557.max_pins += Pca9557.device[Pca9557.chip].pins;
+        pins_needed -= Pca9557.device[Pca9557.chip].pins;
       }
     }
-
+    if (pins_needed) {
+      pca9557_address++;
+    } else {
+      pca9557_address = PCA9557_ADDR_END;
+    }
+  }
 
   if (!Pca9557.max_devices) { return; }
 
@@ -461,10 +465,6 @@ void PCA9557ServiceInput(void) {
     }
     pin_offset += Pca9557.device[Pca9557.chip].pins;
   }
-}
-
-void PCA9557Init(void) {
-  PCA9557Write(PCA9557_R2, 0b00000000);     // disable polarity inversion
 }
 
 void PCA9557Power(void) {
@@ -543,9 +543,6 @@ bool Xdrv69(uint32_t function) {
         break;
       case FUNC_SET_POWER:
         PCA9557Power();
-        break;
-      case FUNC_INIT:
-        PCA9557Init();
         break;
       case FUNC_ADD_BUTTON:
         result = PCA9557AddButton();
