@@ -112,11 +112,13 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 [Complete list](BUILDS.md) of available feature and sensors.
 
-## Changelog v15.2.0.1
+## Changelog v15.2.0.2
 ### Added
 - Support for TCA9554 8-bit I/O expander mutually exclusive with PCA9557
 
 ### Changed
+- ESP8266 platform update from 2025.10.00 to 2025.12.00 [#24254](https://github.com/arendst/Tasmota/issues/24254)
+- ESP32 Platform from 2025.12.30 to 2025.12.31, Framework (Arduino Core) from v3.1.7 to v3.1.8 and IDF from v5.3.4.251205 to v5.3.4.251223 [#24254](https://github.com/arendst/Tasmota/issues/24254)
 - Vid6608 library from v1.0.2 to v1.0.3 [#24218](https://github.com/arendst/Tasmota/issues/24218)
 - IRremoteESP8266 library from v2.8.6 to v2.8.6-ca474a6 [#24226](https://github.com/arendst/Tasmota/issues/24226)
 - Update Zigbee WebUI [#24224](https://github.com/arendst/Tasmota/issues/24224)
@@ -126,6 +128,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - ESP32-P4 unique MQTT Client based on hosted MCU MAC address
 - DALI watchdog exception
 - TuyaMCU v1 exception 28 regression from v15.1.0.1 reverted PR24063 [#24220](https://github.com/arendst/Tasmota/issues/24220)
+- ESP32 BLE not starting [#24240](https://github.com/arendst/Tasmota/issues/24240)
 
 ### Removed
 - Berry `animate` to be replaced with `animation` framework [#24241](https://github.com/arendst/Tasmota/issues/24241)

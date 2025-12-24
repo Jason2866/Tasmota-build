@@ -3,11 +3,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
+## [15.2.0.2]
+### Added
+
+### Breaking Changed
+
+### Changed
+- ESP8266 platform update from 2025.10.00 to 2025.12.00 (#24254)
+- ESP32 Platform from 2025.12.30 to 2025.12.31, Framework (Arduino Core) from v3.1.7 to v3.1.8 and IDF from v5.3.4.251205 to v5.3.4.251223 (#24254)
+
+### Fixed
+- ESP32 BLE not starting (#24240)
+
+### Removed
+
 ## [15.2.0.1]
 ### Added
 - Support for TCA9554 8-bit I/O expander mutually exclusive with PCA9557
-
-### Breaking Changed
 
 ### Changed
 - Vid6608 library from v1.0.2 to v1.0.3 (#24218)
