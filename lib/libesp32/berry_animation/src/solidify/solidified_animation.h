@@ -314,7 +314,7 @@ static const bvalue be_ktab_class_RichPaletteAnimation[13] = {
   /* K5   */  be_nested_str_weak(color),
   /* K6   */  be_nested_str_weak(start),
   /* K7   */  be_nested_str_weak(on_param_changed),
-  /* K8   */  be_nested_str_weak(palette),
+  /* K8   */  be_nested_str_weak(colors),
   /* K9   */  be_nested_str_weak(cycle_period),
   /* K10  */  be_nested_str_weak(transition_type),
   /* K11  */  be_nested_str_weak(brightness),
@@ -463,10 +463,10 @@ be_local_class(RichPaletteAnimation,
         { be_const_key_weak(PARAMS, -1), be_const_simple_instance(be_nested_simple_instance(&be_class_map, {
         be_const_map( *     be_nested_map(4,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_const_key_weak(palette, -1), be_const_bytes_instance(0C0605) },
         { be_const_key_weak(transition_type, -1), be_const_bytes_instance(1400050200010005) },
+        { be_const_key_weak(colors, -1), be_const_bytes_instance(0C0605) },
         { be_const_key_weak(brightness, -1), be_const_bytes_instance(07000001FF0001FF00) },
-        { be_const_key_weak(cycle_period, 1), be_const_bytes_instance(050000018813) },
+        { be_const_key_weak(cycle_period, 0), be_const_bytes_instance(050000018813) },
     }))    ) } )) },
         { be_const_key_weak(color_provider, -1), be_const_var(0) },
     })),
@@ -524,7 +524,7 @@ be_local_closure(noise_rainbow,   /* name */
     /* K0   */  be_nested_str_weak(animation),
     /* K1   */  be_nested_str_weak(noise_animation),
     /* K2   */  be_nested_str_weak(rich_palette),
-    /* K3   */  be_nested_str_weak(palette),
+    /* K3   */  be_nested_str_weak(colors),
     /* K4   */  be_nested_str_weak(PALETTE_RAINBOW),
     /* K5   */  be_nested_str_weak(cycle_period),
     /* K6   */  be_nested_str_weak(transition_type),
@@ -1766,7 +1766,7 @@ static const bvalue be_ktab_class_FireAnimation[47] = {
   /* K36  */  be_const_int(3),
   /* K37  */  be_nested_str_weak(animation),
   /* K38  */  be_nested_str_weak(rich_palette),
-  /* K39  */  be_nested_str_weak(palette),
+  /* K39  */  be_nested_str_weak(colors),
   /* K40  */  be_nested_str_weak(PALETTE_FIRE),
   /* K41  */  be_nested_str_weak(cycle_period),
   /* K42  */  be_nested_str_weak(transition_type),
@@ -2393,7 +2393,7 @@ static const bvalue be_ktab_class_RichPaletteColorProvider[58] = {
   /* K18  */  be_nested_str_weak(_brightness),
   /* K19  */  be_nested_str_weak(member),
   /* K20  */  be_nested_str_weak(brightness),
-  /* K21  */  be_nested_str_weak(palette),
+  /* K21  */  be_nested_str_weak(colors),
   /* K22  */  be_nested_str_weak(_DEFAULT_PALETTE),
   /* K23  */  be_nested_str_weak(background_X3Alinear_X2Dgradient_X28to_X20right_X2C_X20_X23000000_X29_X3B),
   /* K24  */  be_nested_str_weak(_parse_palette),
@@ -3598,7 +3598,7 @@ be_local_class(RichPaletteColorProvider,
     ( (struct bmapnode*) &(const bmapnode[]) {
         { be_const_key_weak(cycle_period, 1), be_const_bytes_instance(050000018813) },
         { be_const_key_weak(transition_type, -1), be_const_bytes_instance(1400010200010005) },
-        { be_const_key_weak(palette, -1), be_const_bytes_instance(0C0602) },
+        { be_const_key_weak(colors, -1), be_const_bytes_instance(0C0602) },
     }))    ) } )) },
         { be_const_key_weak(_slots_arr, -1), be_const_var(0) },
         { be_const_key_weak(_DEFAULT_PALETTE, 0), be_const_bytes_instance(00FF000024FFA50049FFFF006E00FF00920000FFB74B0082DBEE82EEFFFF0000) },
@@ -3735,7 +3735,7 @@ static const bvalue be_ktab_class_ColorCycleColorProvider[27] = {
   /* K10  */  be_nested_str_weak(ColorCycleColorProvider_X28palette_size_X3D_X25s_X2C_X20cycle_period_X3D_X25s_X2C_X20mode_X3D_X25s_X2C_X20current_index_X3D_X25s_X29),
   /* K11  */  be_nested_str_weak(manual),
   /* K12  */  be_nested_str_weak(auto),
-  /* K13  */  be_nested_str_weak(palette),
+  /* K13  */  be_nested_str_weak(colors),
   /* K14  */  be_nested_str_weak(on_param_changed),
   /* K15  */  be_nested_str_weak(palette_size),
   /* K16  */  be_nested_str_weak(values),
@@ -3744,9 +3744,9 @@ static const bvalue be_ktab_class_ColorCycleColorProvider[27] = {
   /* K19  */  be_nested_str_weak(next),
   /* K20  */  be_nested_str_weak(_adjust_index),
   /* K21  */  be_nested_str_weak(member),
-  /* K22  */  be_nested_str_weak(init),
-  /* K23  */  be_nested_str_weak(animation),
-  /* K24  */  be_nested_str_weak(PALETTE_RAINBOW),
+  /* K22  */  be_nested_str_weak(animation),
+  /* K23  */  be_nested_str_weak(PALETTE_RAINBOW),
+  /* K24  */  be_nested_str_weak(init),
   /* K25  */  be_nested_str_weak(get),
   /* K26  */  be_const_int(-16777216),
 };
@@ -4003,21 +4003,28 @@ be_local_closure(class_ColorCycleColorProvider_member,   /* name */
     &be_ktab_class_ColorCycleColorProvider,     /* shared constants */
     be_str_weak(member),
     &be_const_str_solidified,
-    ( &(const binstruction[14]) {  /* code */
+    ( &(const binstruction[21]) {  /* code */
       0x1C08030F,  //  0000  EQ	R2	R1	K15
       0x780A0003,  //  0001  JMPF	R2	#0006
       0x8C080101,  //  0002  GETMET	R2	R0	K1
       0x7C080200,  //  0003  CALL	R2	1
       0x80040400,  //  0004  RET	1	R2
-      0x70020006,  //  0005  JMP		#000D
+      0x7002000D,  //  0005  JMP		#0014
       0x60080003,  //  0006  GETGBL	R2	G3
       0x5C0C0000,  //  0007  MOVE	R3	R0
       0x7C080200,  //  0008  CALL	R2	1
       0x8C080515,  //  0009  GETMET	R2	R2	K21
       0x5C100200,  //  000A  MOVE	R4	R1
       0x7C080400,  //  000B  CALL	R2	2
-      0x80040400,  //  000C  RET	1	R2
-      0x80000000,  //  000D  RET	0
+      0x1C0C030D,  //  000C  EQ	R3	R1	K13
+      0x780E0004,  //  000D  JMPF	R3	#0013
+      0x4C0C0000,  //  000E  LDNIL	R3
+      0x1C0C0403,  //  000F  EQ	R3	R2	R3
+      0x780E0001,  //  0010  JMPF	R3	#0013
+      0xB80E2C00,  //  0011  GETNGBL	R3	K22
+      0x88080717,  //  0012  GETMBR	R2	R3	K23
+      0x80040400,  //  0013  RET	1	R2
+      0x80000000,  //  0014  RET	0
     })
   )
 );
@@ -4116,22 +4123,19 @@ be_local_closure(class_ColorCycleColorProvider_init,   /* name */
     &be_ktab_class_ColorCycleColorProvider,     /* shared constants */
     be_str_weak(init),
     &be_const_str_solidified,
-    ( &(const binstruction[15]) {  /* code */
+    ( &(const binstruction[12]) {  /* code */
       0x60080003,  //  0000  GETGBL	R2	G3
       0x5C0C0000,  //  0001  MOVE	R3	R0
       0x7C080200,  //  0002  CALL	R2	1
-      0x8C080516,  //  0003  GETMET	R2	R2	K22
+      0x8C080518,  //  0003  GETMET	R2	R2	K24
       0x5C100200,  //  0004  MOVE	R4	R1
       0x7C080400,  //  0005  CALL	R2	2
-      0xB80A2E00,  //  0006  GETNGBL	R2	K23
-      0x88080518,  //  0007  GETMBR	R2	R2	K24
-      0x90021A02,  //  0008  SETMBR	R0	K13	R2
-      0x90020903,  //  0009  SETMBR	R0	K4	K3
-      0x88080110,  //  000A  GETMBR	R2	R0	K16
-      0x8C0C0101,  //  000B  GETMET	R3	R0	K1
-      0x7C0C0200,  //  000C  CALL	R3	1
-      0x980A1E03,  //  000D  SETIDX	R2	K15	R3
-      0x80000000,  //  000E  RET	0
+      0x90020903,  //  0006  SETMBR	R0	K4	K3
+      0x88080110,  //  0007  GETMBR	R2	R0	K16
+      0x8C0C0101,  //  0008  GETMET	R3	R0	K1
+      0x7C0C0200,  //  0009  CALL	R3	1
+      0x980A1E03,  //  000A  SETIDX	R2	K15	R3
+      0x80000000,  //  000B  RET	0
     })
   )
 );
@@ -4201,9 +4205,9 @@ be_local_class(ColorCycleColorProvider,
         { be_const_key_weak(PARAMS, -1), be_const_simple_instance(be_nested_simple_instance(&be_class_map, {
         be_const_map( *     be_nested_map(4,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_const_key_weak(palette, 2), be_const_bytes_instance(0C0602) },
+        { be_const_key_weak(next, 2), be_const_bytes_instance(040000) },
+        { be_const_key_weak(colors, -1), be_const_bytes_instance(0C0602) },
         { be_const_key_weak(palette_size, -1), be_const_bytes_instance(0C000300) },
-        { be_const_key_weak(next, 1), be_const_bytes_instance(040000) },
         { be_const_key_weak(cycle_period, -1), be_const_bytes_instance(050000018813) },
     }))    ) } )) },
         { be_const_key_weak(init, -1), be_const_closure(class_ColorCycleColorProvider_init_closure) },
@@ -7837,7 +7841,7 @@ static const bvalue be_ktab_class_NoiseAnimation[49] = {
   /* K10  */  be_nested_str_weak(color),
   /* K11  */  be_nested_str_weak(animation),
   /* K12  */  be_nested_str_weak(rich_palette),
-  /* K13  */  be_nested_str_weak(palette),
+  /* K13  */  be_nested_str_weak(colors),
   /* K14  */  be_nested_str_weak(PALETTE_RAINBOW),
   /* K15  */  be_nested_str_weak(cycle_period),
   /* K16  */  be_nested_str_weak(transition_type),
@@ -10604,7 +10608,7 @@ be_local_closure(wave_rainbow_sine,   /* name */
     /* K0   */  be_nested_str_weak(animation),
     /* K1   */  be_nested_str_weak(wave_animation),
     /* K2   */  be_nested_str_weak(rich_palette),
-    /* K3   */  be_nested_str_weak(palette),
+    /* K3   */  be_nested_str_weak(colors),
     /* K4   */  be_nested_str_weak(PALETTE_RAINBOW),
     /* K5   */  be_nested_str_weak(cycle_period),
     /* K6   */  be_nested_str_weak(transition_type),
@@ -17950,7 +17954,7 @@ be_local_closure(noise_fractal,   /* name */
     /* K0   */  be_nested_str_weak(animation),
     /* K1   */  be_nested_str_weak(noise_animation),
     /* K2   */  be_nested_str_weak(rich_palette),
-    /* K3   */  be_nested_str_weak(palette),
+    /* K3   */  be_nested_str_weak(colors),
     /* K4   */  be_nested_str_weak(PALETTE_RAINBOW),
     /* K5   */  be_nested_str_weak(cycle_period),
     /* K6   */  be_nested_str_weak(transition_type),

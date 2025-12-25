@@ -20,7 +20,7 @@ class ColorCycleColorProvider : animation.color_provider
   
   # Parameter definitions
   static var PARAMS = animation.enc_params({
-    "palette": {"type": "bytes", "default":nil},
+    "colors": {"type": "bytes", "default":nil},
     "cycle_period": {"min": 0, "default": 5000},  # 0 = manual only, >0 = auto cycle time in ms
     "next": {"default": 0},  # Write `<n>` to move to next <n> colors
     "palette_size": {"type": "int", "default": 3}  # Read-only: number of colors in palette
@@ -31,9 +31,6 @@ class ColorCycleColorProvider : animation.color_provider
   # @param engine: AnimationEngine - Reference to the animation engine (required)
   def init(engine)
     super(self).init(engine)  # Initialize parameter system
-
-    # Set the default palette
-    self.palette = animation.PALETTE_RAINBOW
     
     # Initialize non-parameter instance variables
     self.current_index = 0      # Start at first color
@@ -45,7 +42,7 @@ class ColorCycleColorProvider : animation.color_provider
   # Get color at a specific index from bytes palette
   # We force alpha channel to 0xFF to force opaque colors
   def _get_color_at_index(idx)
-    var palette_bytes = self.palette
+    var palette_bytes = self.colors
     var palette_size = size(palette_bytes) / 4  # Each color is 4 bytes (AARRGGBB)
     
     if (palette_size == 0) || (idx >= palette_size) || (idx < 0)
@@ -60,7 +57,7 @@ class ColorCycleColorProvider : animation.color_provider
   
   # Get the number of colors in the palette
   def _get_palette_size()
-    return size(self.palette) / 4  # Each color is 4 bytes
+    return size(self.colors) / 4  # Each color is 4 bytes
   end
   
   # Virtual member access - implements the virtual "palette_size" attribute
@@ -71,7 +68,12 @@ class ColorCycleColorProvider : animation.color_provider
     if name == "palette_size"
       return self._get_palette_size()
     else
-      return super(self).member(name)
+      var val = super(self).member(name)
+      # If 'palette' is 'nil', default to 'animation.PALETTE_RAINBOW'
+      if name == "colors" && val == nil
+        val = animation.PALETTE_RAINBOW
+      end
+      return val
     end
   end
 
