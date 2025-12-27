@@ -29,8 +29,8 @@ Create smooth color transitions:
 ```berry
 # Use predefined rainbow palette
 animation rainbow_cycle = rich_palette(
-  palette=PALETTE_RAINBOW
-  cycle_period=5s
+  colors=PALETTE_RAINBOW
+  period=5s
   transition_type=1
 )
 
@@ -53,8 +53,8 @@ palette sunset = [
 
 # Create palette animation
 animation sunset_glow = rich_palette(
-  palette=sunset
-  cycle_period=8s
+  colors=sunset
+  period=8s
   transition_type=1
 )
 
@@ -138,32 +138,13 @@ run breathing
 ### Fire Effect
 ```berry
 animation fire = rich_palette(
-  palette=PALETTE_FIRE
-  cycle_period=2s
+  colors=PALETTE_FIRE
+  period=2s
   transition_type=1
 )
 
 run fire
 ```
-
-### Ocean Waves
-```berry
-animation ocean = rich_palette(
-  palette=PALETTE_OCEAN
-  cycle_period=6s
-  transition_type=1
-)
-
-run ocean
-```
-
-## Tips for Success
-
-1. **Start Simple** - Begin with solid colors and basic effects
-2. **Use Predefined Palettes** - Try PALETTE_RAINBOW, PALETTE_FIRE, PALETTE_OCEAN
-3. **Test Incrementally** - Add one animation at a time
-4. **Use Named Colors** - red, blue, green, white, etc.
-5. **Start with Longer Periods** - 3-5 seconds, then adjust as needed
 
 ## Loading DSL Files
 
@@ -189,7 +170,7 @@ template animation shutter_effect {
   param duration type time min 0 max 3600 default 5 nillable false
   
   set strip_len = strip_length()
-  color col = color_cycle(palette=colors, cycle_period=0)
+  color col = color_cycle(colors=colors, period=0)
   
   animation shutter = beacon_animation(
     color = col
@@ -266,11 +247,11 @@ run gold_twinkles
 
 ## Next Steps
 
-- **[DSL Reference](DSL_REFERENCE.md)** - Complete DSL syntax and features
-- **[User Functions](USER_FUNCTIONS.md)** - Create custom animation functions
-- **[Examples](EXAMPLES.md)** - More complex animation examples
-- **[Animation Class Hierarchy](ANIMATION_CLASS_HIERARCHY.md)** - All available animations and parameters
-- **[Oscillation Patterns](OSCILLATION_PATTERNS.md)** - Dynamic value patterns
-- **[Troubleshooting](TROUBLESHOOTING.md)** - Common issues and solutions
+- **[DSL Reference](Dsl_Reference.md)** - Complete DSL syntax and features
+- **[User Functions](User_Functions.md)** - Create custom animation functions
+- **[Examples](Examples.md)** - More complex animation examples
+- **[Animation Class Hierarchy](Animation_Class_Hierarchy.md)** - All available animations and parameters
+- **[Oscillation Patterns](Oscillation_Patterns.md)** - Dynamic value patterns
+- **[Troubleshooting](Troubleshooting.md)** - Common issues and solutions
 
 Happy animating! 🎨✨

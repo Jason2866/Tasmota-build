@@ -54,7 +54,7 @@ palette fire_colors = [
   (255, 0xFFFF00)   # Yellow
 ]
 
-animation fire_effect = palette_animation(palette=fire_colors, period=2s, intensity=255)
+animation fire_effect = palette_animation(colors=fire_colors, period=2s, intensity=255)
 run fire_effect
 ```
 
@@ -131,7 +131,7 @@ set cosine_val = cosine_osc(min_value=0, max_value=27, duration=5s)
 
 # Create color cycle
 palette eye_palette = [red, yellow, green, violet]
-color eye_color = color_cycle(palette=eye_palette, cycle_period=0)
+color eye_color = color_cycle(colors=eye_palette, period=0)
 
 # Create beacon animation
 animation red_eye = beacon_animation(
@@ -290,7 +290,7 @@ run nested_pattern
 set triangle_pos = triangle(min_value=0, max_value=29, period=3s)
 set cosine_pos = cosine_osc(min_value=0, max_value=29, period=3s)
 
-color eye_color = color_cycle(palette=[red, yellow, green, blue], cycle_period=0)
+color eye_color = color_cycle(colors=[red, yellow, green, blue], period=0)
 animation moving_eye = beacon_animation(
   color=eye_color
   pos=triangle_pos
@@ -445,15 +445,15 @@ template breathing_rainbow {
   param base_brightness
   
   # Create rainbow palette
-  palette rainbow = [
+  colors rainbow = [
     (0, red), (42, orange), (85, yellow)
     (128, green), (170, blue), (213, purple), (255, red)
   ]
   
   # Create cycling rainbow color
   color rainbow_cycle = color_cycle(
-    palette=rainbow
-    cycle_period=cycle_time
+    colors=rainbow
+    period=cycle_time
   )
   
   # Create breathing animation with rainbow colors
@@ -472,8 +472,8 @@ breathing_rainbow(5s, 2s, 200)
 
 ## Next Steps
 
-- **[DSL Reference](DSL_REFERENCE.md)** - Complete language syntax
-- **[Troubleshooting](TROUBLESHOOTING.md)** - Common issues and solutions
-- **[Animation Development](ANIMATION_DEVELOPMENT.md)** - Creating custom animations
+- **[DSL Reference](Dsl_Reference.md)** - Complete language syntax
+- **[Troubleshooting](Troubleshooting.md)** - Common issues and solutions
+- **[Animation Development](Animation_Development.md)** - Creating custom animations
 
 Start with these examples and build your own amazing LED animations! 🎨✨

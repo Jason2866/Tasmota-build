@@ -2,7 +2,7 @@
 
 This document provides a comprehensive reference for the Animation DSL syntax, keywords, and grammar. It focuses purely on the language specification without implementation details.
 
-For detailed information about the DSL transpiler's internal architecture and processing flow, see [TRANSPILER_ARCHITECTURE.md](TRANSPILER_ARCHITECTURE.md).
+For detailed information about the DSL transpiler's internal architecture and processing flow, see [Transpiler_Architecture.md](Transpiler_Architecture.md).
 
 ## Language Overview
 
@@ -722,7 +722,7 @@ animation.opacity = abs(rand_demo() - 128) + 64
 ```
 
 **Available User Functions:**
-The following user functions are available by default (see [User Functions Guide](USER_FUNCTIONS.md) for details):
+The following user functions are available by default (see [User Functions Guide](User_Functions.md) for details):
 
 | Function | Parameters | Description |
 |----------|------------|-------------|
@@ -1673,7 +1673,7 @@ This applies to:
 - Parameter validation at compile time
 - Execution statements
 - **Template animations**: Reusable animation classes with parameters extending `engine_proxy`
-- User-defined functions (with engine-first parameter pattern) - see **[User Functions Guide](USER_FUNCTIONS.md)**
+- User-defined functions (with engine-first parameter pattern) - see **[User Functions Guide](User_Functions.md)**
 - **External function declarations**: `extern` keyword to declare Berry functions defined in `berry` blocks for DSL use
 - **User functions in computed parameters**: User functions can be used in arithmetic expressions alongside mathematical functions
 - **Flexible parameter syntax**: Commas optional when parameters are on separate lines

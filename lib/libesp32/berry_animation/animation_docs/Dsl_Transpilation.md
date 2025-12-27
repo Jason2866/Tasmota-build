@@ -38,7 +38,7 @@ import animation_dsl  # DSL compiler and runtime (required for DSL)
 
 ## Transpiler Architecture
 
-For detailed information about the DSL transpiler's internal architecture, including the core processing flow and expression processing chain, see [TRANSPILER_ARCHITECTURE.md](TRANSPILER_ARCHITECTURE.md).
+For detailed information about the DSL transpiler's internal architecture, including the core processing flow and expression processing chain, see [Transpiler_Architecture.md](Transpiler_Architecture.md).
 
 ## DSL API Functions
 
@@ -321,7 +321,7 @@ template animation shutter_effect {
   param duration type time min 0 max 3600 default 5 nillable false
   
   set strip_len = strip_length()
-  color col = color_cycle(palette=colors, cycle_period=0)
+  color col = color_cycle(colors=colors, period=0)
   
   animation shutter = beacon_animation(
     color = col
@@ -351,8 +351,8 @@ class shutter_effect_animation : animation.engine_proxy
     
     var strip_len_ = animation.strip_length(engine)
     var col_ = animation.color_cycle(engine)
-    col_.palette = animation.create_closure_value(engine, def (engine) return self.colors end)
-    col_.cycle_period = 0
+    col_.colors = animation.create_closure_value(engine, def (engine) return self.colors end)
+    col_.period = 0
     
     var shutter_ = animation.beacon_animation(engine)
     shutter_.color = col_
@@ -444,7 +444,7 @@ run gold_twinkle
 
 **Important**: The DSL transpiler automatically passes `engine` as the first argument to all user functions. Your function signature must include `engine` as the first parameter, but DSL users don't need to provide it when calling the function.
 
-For comprehensive examples and best practices, see the **[User Functions Guide](USER_FUNCTIONS.md)**.
+For comprehensive examples and best practices, see the **[User Functions Guide](User_Functions.md)**.
 
 ### Event System
 

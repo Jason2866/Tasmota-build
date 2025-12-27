@@ -4,7 +4,7 @@ Guide for developers creating custom animation classes in the Berry Animation Fr
 
 ## Overview
 
-**Note**: This guide is for developers who want to extend the framework by creating new animation classes. For using existing animations, see the [DSL Reference](DSL_REFERENCE.md) which provides a declarative way to create animations without programming.
+**Note**: This guide is for developers who want to extend the framework by creating new animation classes. For using existing animations, see the [DSL Reference](Dsl_Reference.md) which provides a declarative way to create animations without programming.
 
 The Berry Animation Framework uses a unified architecture where all visual elements inherit from the base `Animation` class. This guide explains how to create custom animation classes that integrate seamlessly with the framework's parameter system, value providers, and rendering pipeline.
 

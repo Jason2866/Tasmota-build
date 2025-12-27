@@ -2,7 +2,7 @@
 
 Common issues and solutions for the Tasmota Berry Animation Framework.
 
-**Note**: This guide focuses on DSL usage, which is the recommended way to create animations. For programmatic API issues, see the [Animation Development Guide](ANIMATION_DEVELOPMENT.md).
+**Note**: This guide focuses on DSL usage, which is the recommended way to create animations. For programmatic API issues, see the [Animation Development Guide](Animation_Development.md).
 
 ## Installation Issues
 
@@ -252,7 +252,7 @@ end
    animation pulse_anim = pulsating_animation(color=red, invalid_param=123)
    # Error: "Parameter 'invalid_param' is not valid for pulsating_animation"
    
-   # Correct - use valid parameters (see DSL_REFERENCE.md for complete list)
+   # Correct - use valid parameters (see Dsl_Reference.md for complete list)
    animation pulse_anim = pulsating_animation(color=red, period=2s)
    ```
 
