@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - ESP32 BLE not starting (#24240)
 - GDK101 power on detection (#24242)
+- Udisplay backlight with SPI displays (#24277)
+- ESP8266 KNX unwanted reply (#24267)
 
 ### Removed
 

@@ -127,8 +127,10 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ### Fixed
 - ESP8266 TasmotaSerial flush receive buffer on executing `TasmotaSerial.flush();`
+- ESP8266 KNX unwanted reply [#24267](https://github.com/arendst/Tasmota/issues/24267)
 - ESP32-P4 unique MQTT Client based on hosted MCU MAC address
 - GDK101 power on detection [#24242](https://github.com/arendst/Tasmota/issues/24242)
+- Udisplay backlight with SPI displays [#24277](https://github.com/arendst/Tasmota/issues/24277)
 - DALI watchdog exception
 - TuyaMCU v1 exception 28 regression from v15.1.0.1 reverted PR24063 [#24220](https://github.com/arendst/Tasmota/issues/24220)
 - ESP32 BLE not starting [#24240](https://github.com/arendst/Tasmota/issues/24240)
