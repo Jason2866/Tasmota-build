@@ -123,6 +123,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Vid6608 library from v1.0.2 to v1.0.3 [#24218](https://github.com/arendst/Tasmota/issues/24218)
 - IRremoteESP8266 library from v2.8.6 to v2.8.6-ca474a6 [#24226](https://github.com/arendst/Tasmota/issues/24226)
 - Refactor Adafruit Seesaw soil driver [#24270](https://github.com/arendst/Tasmota/issues/24270)
+- LM75AD output when no valid reading received from 0 to null [#24263](https://github.com/arendst/Tasmota/issues/24263)
 - Update Zigbee WebUI [#24224](https://github.com/arendst/Tasmota/issues/24224)
 
 ### Fixed

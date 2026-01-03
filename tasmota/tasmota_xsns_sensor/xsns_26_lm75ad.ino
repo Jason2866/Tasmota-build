@@ -68,15 +68,17 @@ void LM75ADDetect(void) {
 }
 
 float LM75ADGetTemp(void) {
-  int16_t sign = 1;
-
-  uint16_t t = I2cRead16(lm75ad_address, LM75_TEMP_REGISTER, lm75ad_bus);
-  if (t & 0x8000) { // we are getting a negative temperature value
-    t = (~t) +0x20;
-    sign = -1;
+  uint16_t t;
+  if (I2cValidRead16(&t, lm75ad_address, LM75_TEMP_REGISTER, lm75ad_bus)) {
+    int16_t sign = 1;
+    if (t & 0x8000) { // We are getting a negative temperature value
+      t = (~t) +0x20;
+      sign = -1;
+    }
+    t = t >> 5; // Shift value into place (5 LSB not used)
+    return ConvertTemp(sign * t * 0.125f);
   }
-  t = t >> 5; // shift value into place (5 LSB not used)
-  return ConvertTemp(sign * t * 0.125f);
+  return NAN;  // Will be changed to "null" by ext_vsprintf_P()
 }
 
 void LM75ADShow(bool json) {
