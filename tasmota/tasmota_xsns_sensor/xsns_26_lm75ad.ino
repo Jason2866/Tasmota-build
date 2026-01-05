@@ -83,42 +83,34 @@ float LM75ADGetTemp(uint32_t sensor) {
 }
 
 void LM75ADShow(bool json) {
+  bool dual_bus_use = (Lm75.bus[0] != Lm75.bus[Lm75.count -1]);
   for (uint32_t sensor = 0; sensor < Lm75.count; sensor++) {
+    // Takes 2ms / LM75
     float t = LM75ADGetTemp(sensor);
-//    if (!isnan(t)) {
-      char name[16];
-      // LM75AD
-      strlcpy(name, "LM75AD", sizeof(name));
-      if (Lm75.count > 1) {
-        // LM75AD-49
-        snprintf_P(name, sizeof(name), PSTR("%s%c%02X"), name, IndexSeparator(), Lm75.address[sensor]);
-#ifdef USE_I2C_BUS2
-        if (TasmotaGlobal.i2c_enabled[1]) {  // Second bus enabled
-          uint8_t bus = Lm75.bus[0];
-          for (uint32_t i = 1; i < Lm75.count; i++) {
-            if (bus != Lm75.bus[i]) {        // Different busses
-              // LM75AD-49-1
-              snprintf_P(name, sizeof(name), PSTR("%s%c%d"), name, IndexSeparator(), Lm75.bus[sensor] +1);
-              break;
-            }
-          }
-        }
-#endif  // USE_I2C_BUS2
-      }
 
-      if (json) {
-        ResponseAppend_P(JSON_SNS_F_TEMP, name, Settings->flag2.temperature_resolution, &t);
+    char name[16];
+    strlcpy(name, "LM75AD", sizeof(name));                                                             // LM75AD
+    if (Lm75.count > 1) {
+      snprintf_P(name, sizeof(name), PSTR("%s%c%02X"), name, IndexSeparator(), Lm75.address[sensor]);  // LM75AD-49
+#ifdef USE_I2C_BUS2
+      if (TasmotaGlobal.i2c_enabled[1] && dual_bus_use) {  // Different busses
+        snprintf_P(name, sizeof(name), PSTR("%s%c%d"), name, IndexSeparator(), Lm75.bus[sensor] +1);   // LM75AD-49-1
+      }
+#endif  // USE_I2C_BUS2
+    }
+
+    if (json) {
+      ResponseAppend_P(JSON_SNS_F_TEMP, name, Settings->flag2.temperature_resolution, &t);
 #ifdef USE_DOMOTICZ
-        if ((0 == TasmotaGlobal.tele_period) && (0 == sensor)) {
-          DomoticzFloatSensor(DZ_TEMP, t);
-        }
+      if ((0 == TasmotaGlobal.tele_period) && (0 == sensor)) {
+        DomoticzFloatSensor(DZ_TEMP, t);
+      }
 #endif  // USE_DOMOTICZ
 #ifdef USE_WEBSERVER
-      } else {
-        WSContentSend_Temp(name, t);
+    } else {
+      WSContentSend_Temp(name, t);
 #endif  // USE_WEBSERVER
-      }
-//    }
+    }
   }
 }
 
