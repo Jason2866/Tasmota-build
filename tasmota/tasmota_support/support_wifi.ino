@@ -1352,17 +1352,19 @@ void WiFiSetTXpowerBasedOnRssi(void) {
   int threshold = WIFI_SENSITIVITY_n;
   int phy_mode = WiFiHelper::getPhyMode();
   switch (phy_mode) {
-    case 1:                  // 11b (WIFI_PHY_MODE_11B)
+    case 1:                  // 1: 11b (WIFI_PHY_MODE_11B)
       threshold = WIFI_SENSITIVITY_11b;
       if (max_tx_pwr > MAX_TX_PWR_DBM_11b) max_tx_pwr = MAX_TX_PWR_DBM_11b;
       break;
-    case 2:                  // 11bg (WIFI_PHY_MODE_11G)
+    case 2:                  // 2: 11bg (WIFI_PHY_MODE_11G)
       threshold = WIFI_SENSITIVITY_54g;
       if (max_tx_pwr > MAX_TX_PWR_DBM_54g) max_tx_pwr = MAX_TX_PWR_DBM_54g;
       break;
-    case 3:                  // 11bgn (WIFI_PHY_MODE_HT20 = WIFI_PHY_MODE_11N)
-    case 4:                  // 11bgn (WIFI_PHY_MODE_HT40)
-    case 5:                  // 11ax  (WIFI_PHY_MODE_HE20)
+    default:                 // 3: 11bgn (WIFI_PHY_MODE_11A)
+                             // 4: 11n   (WIFI_PHY_MODE_HT20)
+                             // 5: 11n   (WIFI_PHY_MODE_HT40)
+                             // 6: 11ax  (WIFI_PHY_MODE_HE20)
+                             // 7: 11ax  (WIFI_PHY_MODE_VHT20)
       threshold = WIFI_SENSITIVITY_n;
       if (max_tx_pwr > MAX_TX_PWR_DBM_n) max_tx_pwr = MAX_TX_PWR_DBM_n;
       break;
