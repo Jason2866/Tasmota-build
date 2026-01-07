@@ -329,13 +329,9 @@ void WifiBegin(uint8_t flag, uint8_t channel) {
 
   WiFiSetSleepMode();
   WifiSetOutputPower();
-//  if (WiFiHelper::getPhyMode() != WIFI_PHY_MODE_11N) { WiFiHelper::setPhyMode(WIFI_PHY_MODE_11N); }  // B/G/N
-//  if (WiFiHelper::getPhyMode() != WIFI_PHY_MODE_11G) { WiFiHelper::setPhyMode(WIFI_PHY_MODE_11G); }  // B/G
 #ifdef ESP32
-  if (Wifi.phy_mode) {
-    WiFiHelper::setPhyMode(WiFiPhyMode_t(Wifi.phy_mode));  // 1-B/2-BG/3-BGN/4-BGNAX
-  }
-#endif
+  WiFiHelper::setPhyMode(WiFiPhyMode_t((Wifi.phy_mode > 0) ? Wifi.phy_mode : 4));  // 1-B/2-BG/3-BGN/4-BGNAX
+#endif  // ESP32
   WiFi.setAutoReconnect(true);
   switch (flag) {
   case 0:  // AP1
