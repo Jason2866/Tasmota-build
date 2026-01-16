@@ -88,7 +88,12 @@ class lorawan_settings
     var arg = 'LoRaWanNode'
     var enables = string.split(tasmota.cmd(arg, true).find(arg), ',') # [1,!2,!3,!4,5,6]
     var maxnode = enables.size()
-    var maxnodes = tasmota.cmd('_LoRaWan',true)['LoRaWan']['MaxNodes']
+    var maxnodes
+    try
+      maxnodes = tasmota.cmd('_LoRaWan',true)['LoRaWan']['MaxNodes']  # Tasmota >= v15.2.0.2
+    except ..  as e, m
+      maxnodes = 16                              #- is TAS_LORAWAN_ENDNODES = 16 -#
+    end
 
     webserver.content_start("LoRaWAN")           #- title of the web page -#
     webserver.content_send_style()               #- send standard Tasmota styles -#
