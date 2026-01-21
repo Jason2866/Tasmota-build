@@ -291,6 +291,18 @@ void LoraInit(void) {
       // Need this as following `else if`s may not be present
     }
 #ifdef USE_LORA_SX127X
+    else if (PinUsed(GPIO_LORA_DI0) && PinUsed(GPIO_LORA_DI1)) {
+      // SX1276, RFM95W
+      if (LoraSx127xV2Init()) {
+        Lora->Config    = &LoraSx127xV2Config;
+        Lora->Available = &LoraSx127xV2Available;
+        Lora->Receive   = &LoraSx127xV2Receive;
+        Lora->Send      = &LoraSx127xV2Send;
+        Lora->Init      = &LoraSx127xV2Init;
+        strcpy_P(hardware, PSTR("SX127x"));
+        present = true;
+      }
+    }
     else if (PinUsed(GPIO_LORA_DI0)) {
       // SX1276, RFM95W
       if (LoraSx127xInit()) {
