@@ -336,12 +336,24 @@ void LoraInit(void) {
 #define D_CMND_LORACONFIG     "Config"
 #define D_CMND_LORACOMMAND    "Command"
 #define D_CMND_LORAOPTION     "Option"
+#define D_CMND_LORAINIT       "Init"
 
 const char kLoraCommands[] PROGMEM = "LoRa|"  // Prefix
-  D_CMND_LORASEND "|" D_CMND_LORACONFIG "|" D_CMND_LORACOMMAND "|" D_CMND_LORAOPTION;
+  D_CMND_LORASEND "|" D_CMND_LORACONFIG "|" D_CMND_LORACOMMAND "|" D_CMND_LORAOPTION
+  "|" D_CMND_LORAINIT;
 
 void (* const LoraCommand[])(void) PROGMEM = {
-  &CmndLoraSend, &CmndLoraConfig, &CmndLoraCommand, &CmndLoraOption };
+  &CmndLoraSend, &CmndLoraConfig, &CmndLoraCommand, &CmndLoraOption,
+  &CmndLoraInit };
+
+void CmndLoraInit(void) {
+  // LoraInit  - Reset and init SXxxxx chip
+  if (Lora->Init()) {
+    ResponseCmndDone();
+  } else {
+    ResponseCmndFailed();
+  }
+}
 
 void CmndLoraOption(void) {
   // LoraOption1 1 - Enable LoRaWanBridge
