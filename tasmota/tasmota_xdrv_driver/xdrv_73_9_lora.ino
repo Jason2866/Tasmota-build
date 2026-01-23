@@ -175,12 +175,12 @@ void LoraSettingsLoad(bool erase) {
 void LoraSettingsSave(void) {
   // Called from FUNC_SAVE_SETTINGS every SaveData second and at restart
 #ifdef USE_UFILESYS
+  uint32_t crc32 = GetCfgCrc32((uint8_t*)&Lora->settings +4, sizeof(LoraSettings_t) -4);  // Skip crc32
+#ifdef USE_LORAWAN_BRIDGE
   if (Lora->delay_settings_save) {       // Delay settings update when expecting cascading changes
     Lora->delay_settings_save--;
     return;
   }
-  uint32_t crc32 = GetCfgCrc32((uint8_t*)&Lora->settings +4, sizeof(LoraSettings_t) -4);  // Skip crc32
-#ifdef USE_LORAWAN_BRIDGE
   crc32 += LoraWanGetCfgCrc();
 #endif  // USE_LORAWAN_BRIDGE
   if (crc32 != Lora->settings.crc32) {

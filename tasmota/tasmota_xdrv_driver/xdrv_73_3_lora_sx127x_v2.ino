@@ -44,7 +44,7 @@ bool LoraSx127xV2Available(void) {
     Lora->received_flag = false;           // Reset receive flag as it was caused by send interrupt
 
     uint32_t time = millis();
-    int state = LoRaRadio.startReceive();  // Put module back to listen mode
+    int state = LoRaRadio7x.startReceive();  // Put module back to listen mode
     Lora->send_flag = false;
     if (state != RADIOLIB_ERR_NONE) {
       AddLog(LOG_LEVEL_DEBUG_MORE, PSTR("S6X: Rcvd (%d) restarted (%d)"), time, state);
