@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [15.2.0.4]
 ### Added
 - Dingtian `SetOption81 1` to invert input and `SetOption133 1` to invert output (#24364)
+- Improv USB CDC connected devices
 
 ### Breaking Changed
 
