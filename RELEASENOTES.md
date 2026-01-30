@@ -143,6 +143,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Display ST77xx and Parallel issues introduced after refactor UDisplay [#24368](https://github.com/arendst/Tasmota/issues/24368)
 - DALI watchdog exception
 - TuyaMCU v1 exception 28 regression from v15.1.0.1 reverted PR24063 [#24220](https://github.com/arendst/Tasmota/issues/24220)
+- ESP32 BearSSL hw accelerated SHA1 [#24397](https://github.com/arendst/Tasmota/issues/24397)
 - ESP32 BLE not starting [#24240](https://github.com/arendst/Tasmota/issues/24240)
 - Zigbee compilation warning in Berry mapping [#24333](https://github.com/arendst/Tasmota/issues/24333)
 

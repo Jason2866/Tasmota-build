@@ -179,6 +179,9 @@ void ImprovReceived(void) {
       break;
     }
     case IMPROV_GET_CURRENT_STATE: {                           // 0x02
+      // 0  1  2  3  4  5 
+      // ty le co dl cr lf
+      // 03 02 02 00 E5 0A
       ImprovSendState(RtcSettings.improv_state);
       if (IMPROV_STATE_PROVISIONED == RtcSettings.improv_state) {
         ImprovSendSetting(command);
@@ -186,6 +189,9 @@ void ImprovReceived(void) {
       break;
     }
     case IMPROV_GET_DEVICE_INFO: {                             // 0x03
+      // 0  1  2  3  4  5 
+      // ty le co dl cr lf
+      // 03 02 03 00 E6 0A
       // Tasmota Zbbridge 11.0.0.7 ESP8266EX Wemos4
       // Tasmota Sensors 11.0.0.7 ESP8266EX Wemos4
       // Tasmota DE 11.0.0.7 ESP8266EX Wemos4
@@ -205,6 +211,9 @@ void ImprovReceived(void) {
       break;
     }
     case IMPROV_GET_WIFI_NETWORKS: {                           // 0x04
+      // 0  1  2  3  4  5 
+      // ty le co dl cr lf
+      // 03 02 04 00 E7 0A
       char data[200];
       int n = WiFi.scanNetworks(false, false);                 // Wait for scan result, hide hidden
       if (n) {
