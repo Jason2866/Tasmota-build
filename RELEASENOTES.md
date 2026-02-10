@@ -149,3 +149,4 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ### Removed
 - Berry `animate` to be replaced with `animation` framework [#24241](https://github.com/arendst/Tasmota/issues/24241)
+- AlpineJS 2.8.2 - not needed anymore [#24427](https://github.com/arendst/Tasmota/issues/24427)

@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file.
 - ESP32 BearSSL hw accelerated SHA1 (#24397)
 
 ### Removed
-- AlpineJS 2.8.2 (not needed anymore)
+- AlpineJS 2.8.2 - not needed anymore (#24427)
 
 ## [15.2.0.3] 20260124
 ### Added
