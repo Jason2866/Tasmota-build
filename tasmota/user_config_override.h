@@ -3539,7 +3539,7 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "allsensors"
 
-//#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
+#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY                    // Enable Home Assistant Discovery Support (+7k code)
 
 // #define MQTT_TELE_RETAIN     0                   // Tele messages may send retain flag (0 = off, 1 = on)
