@@ -1839,10 +1839,9 @@ o888bood8P'  o88o     o8888o     o888o         o888o     o888ooooood8 o888o  o88
 #define OTA_URL                "OTA update can brick your device"  // [OtaUrl]
 
 #define USE_TASMOTA_DISCOVERY                       // Enable Home Assistant Discovery Support (+7k code)
-#ifndef ESP8266
-  #define USE_UFILESYS
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
 #endif
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
@@ -1876,7 +1875,9 @@ oo     .d8P `88b    ooo   888  `88b.   888   888              888       888   8 
 
 #define USE_TLS
 
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
+#endif
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
@@ -2185,10 +2186,9 @@ Thermostat
 #undef OTA_URL
 #define OTA_URL                " "  // [OtaUrl]
 
-#ifndef ESP8266
-  #define USE_UFILESYS
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
 #endif
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
@@ -2614,10 +2614,9 @@ Teleinfo
   #define ETH_ADDRESS       0                    // [EthAddress] 0 = PHY0 .. 31 = PHY31
   #define ETH_CLKMODE       3                    // [EthClockMode] 0 = ETH_CLOCK_GPIO0_IN, 1 = ETH_CLOCK_GPIO0_OUT, 2 = ETH_CLOCK_GPIO16_OUT, 3 = ETH_CLOCK_GPIO17_OUT
 
-#ifndef ESP8266
-  #define USE_UFILESYS
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
 #endif
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
@@ -2920,10 +2919,9 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "fullrules"
 
-#ifndef ESP8266
-  #define USE_UFILESYS
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
 #endif
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
@@ -3238,10 +3236,9 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "mega"
 
-#ifndef ESP8266
-  #define USE_UFILESYS
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
 #endif
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 
 // #define MQTT_TELE_RETAIN     0                   // Tele messages may send retain flag (0 = off, 1 = on)
@@ -3551,10 +3548,9 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "allsensors"
 
-#ifndef ESP8266
-  #define USE_UFILESYS
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
 #endif
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY                    // Enable Home Assistant Discovery Support (+7k code)
 
 // #define MQTT_TELE_RETAIN     0                   // Tele messages may send retain flag (0 = off, 1 = on)
@@ -3935,7 +3931,9 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #define USE_UFILESYS
 #define GUI_TRASH_FILE
 
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
+#endif
 #define USE_TASMOTA_DISCOVERY
 
 #define USE_KNX                                  // Enable KNX IP Protocol Support (+9.4k code, +3k7 mem)
@@ -4232,7 +4230,10 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
 #define USE_UFILESYS
 #define GUI_TRASH_FILE
 
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
+#ifndef ESP8266_4M
+  #define USE_DOMOTICZ                           // Enable Domoticz (+6k code, +0.3k mem)
+#endif
+
 #define USE_TASMOTA_DISCOVERY
 
 #define USE_KNX                                  // Enable KNX IP Protocol Support (+9.4k code, +3k7 mem)
