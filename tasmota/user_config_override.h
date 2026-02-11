@@ -1008,7 +1008,6 @@ d'""""""d888' `888'  d8P'  `Y8b   `888'   `Y8b `888'     `8 `888'     `8
 #define CODE_IMAGE_STR "zigbee"
 
 //#define USE_ARDUINO_OTA                          // Add optional support for Arduino OTA (+13k code)
-//#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 //#define USE_HOME_ASSISTANT                       // Enable Home Assistant Discovery Support (+7k code)
 
 //#define USE_MQTT_TLS                             // Use TLS for MQTT connection (+34.5k code, +7.0k mem and +4.8k additional during connection handshake)
@@ -1293,7 +1292,6 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 #define ETH_ADDRESS 1 // PHY1
 
 //#define USE_ARDUINO_OTA                          // Add optional support for Arduino OTA (+13k code)
-//#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 //#define USE_HOME_ASSISTANT                       // Enable Home Assistant Discovery Support (+7k code)
 
 //#define USE_MQTT_TLS                             // Use TLS for MQTT connection (+34.5k code, +7.0k mem and +4.8k additional during connection handshake)
@@ -1555,7 +1553,6 @@ dBBBBBP     dBP     dBBBBb    dBBBBb     dBBBP      dBBBP     dBBBBb   dBBBBBb  
 #define CODE_IMAGE_STR "gps"
 
 //#define USE_ARDUINO_OTA                          // Add optional support for Arduino OTA (+13k code)
-//#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 //#define USE_HOME_ASSISTANT                       // Enable Home Assistant Discovery Support (+7k code)
 
 //#define USE_MQTT_TLS                             // Use TLS for MQTT connection (+34.5k code, +7.0k mem and +4.8k additional during connection handshake)
@@ -1842,6 +1839,9 @@ o888bood8P'  o88o     o8888o     o888o         o888o     o888ooooood8 o888o  o88
 #define OTA_URL                "OTA update can brick your device"  // [OtaUrl]
 
 #define USE_TASMOTA_DISCOVERY                       // Enable Home Assistant Discovery Support (+7k code)
+#ifndef ESP8266
+  #define USE_UFILESYS
+#endif
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
@@ -2185,6 +2185,9 @@ Thermostat
 #undef OTA_URL
 #define OTA_URL                " "  // [OtaUrl]
 
+#ifndef ESP8266
+  #define USE_UFILESYS
+#endif
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
@@ -2611,6 +2614,9 @@ Teleinfo
   #define ETH_ADDRESS       0                    // [EthAddress] 0 = PHY0 .. 31 = PHY31
   #define ETH_CLKMODE       3                    // [EthClockMode] 0 = ETH_CLOCK_GPIO0_IN, 1 = ETH_CLOCK_GPIO0_OUT, 2 = ETH_CLOCK_GPIO16_OUT, 3 = ETH_CLOCK_GPIO17_OUT
 
+#ifndef ESP8266
+  #define USE_UFILESYS
+#endif
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
@@ -2914,7 +2920,10 @@ o888o           `YbodP'    o888ooooood8 o888ooooood8 o888o  o888o    `YbodP'    
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "fullrules"
 
-//#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
+#ifndef ESP8266
+  #define USE_UFILESYS
+#endif
+#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
   #define USE_JAVASCRIPT_ES6                     // Enable ECMAScript6 syntax using less JavaScript code bytes (fails on IE11)
@@ -3229,7 +3238,10 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "mega"
 
-//#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
+#ifndef ESP8266
+  #define USE_UFILESYS
+#endif
+#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY
 
 // #define MQTT_TELE_RETAIN     0                   // Tele messages may send retain flag (0 = off, 1 = on)
@@ -3539,6 +3551,9 @@ o8o        o888o o888ooooood8  `Y8bood8P'   o88o     o8888o
 #undef CODE_IMAGE_STR
 #define CODE_IMAGE_STR "allsensors"
 
+#ifndef ESP8266
+  #define USE_UFILESYS
+#endif
 #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
 #define USE_TASMOTA_DISCOVERY                    // Enable Home Assistant Discovery Support (+7k code)
 
