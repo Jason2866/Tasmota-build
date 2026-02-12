@@ -1305,7 +1305,7 @@ const uint16_t kGpioNiceList[] PROGMEM = {
 #endif  // USE_WEBCAM
 #ifdef USE_ETHERNET
   AGPIO(GPIO_ETH_PHY_POWER),
-  AGPIO(GPIO_ETH_PHY_MDC),
+  AGPIO(GPIO_ETH_PHY_MDC) + AGMAX(MAX_SPI),
   AGPIO(GPIO_ETH_PHY_MDIO),                      // Ethernet
 #endif  // USE_ETHERNET
 #ifdef USE_BIOPDU
