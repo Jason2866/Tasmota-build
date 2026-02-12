@@ -3,12 +3,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [15.2.0.4]
+## [15.2.0.5]
+### Added
+
+### Breaking Changed
+
+### Changed
+- ESP32 Platform from 2025.01.30 to 2026.02.30, Framework (Arduino Core) from v3.1.9 to v3.1.10 and IDF from v5.3.4.251226 to v5.3.4.260127 (#24444)
+
+### Fixed
+
+### Removed
+
+
+## [15.2.0.4] 20260212
 ### Added
 - Dingtian `SetOption81 1` to invert input and `SetOption133 1` to invert output (#24364)
 - Improv USB CDC connected devices
-
-### Breaking Changed
 
 ### Changed
 - Dingtian define `DINGTIAN_INPUTS_INVERTED` replaced by `SetOption81` (#24364)
