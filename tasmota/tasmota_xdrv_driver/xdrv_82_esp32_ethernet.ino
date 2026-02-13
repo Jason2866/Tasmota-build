@@ -281,18 +281,26 @@ void EthernetInit(void) {
     #endif //CONFIG_IDF_TARGET_ESP32P4
 #endif  // CONFIG_ETH_USE_ESP32_EMAC
   } else {
-    // ETH_SPI_SUPPORTS_CUSTOM
-    // SPISettings(ETH_PHY_SPI_FREQ_MHZ * 1000 * 1000, MSBFIRST, SPI_MODE0);  // 20MHz
-/*
-    SPI.begin(Pin(GPIO_SPI_CLK), Pin(GPIO_SPI_MISO), Pin(GPIO_SPI_MOSI), -1);
-    init_ok = (ETH.begin((eth_phy_type_t)eth_type, Settings->eth_address, eth_mdc, eth_mdio, eth_power, SPI, ETH_PHY_SPI_FREQ_MHZ));
-*/
 #if CONFIG_SOC_SPI_PERIPH_NUM > 2 
-    if ((1 == spi_bus) && TasmotaGlobal.spi_enabled2)
+    if (1 == spi_bus) {
+      if (SPI_MOSI_MISO != TasmotaGlobal.spi_enabled2) {
+#ifndef FIRMWARE_MINIMAL
+        AddLog(LOG_LEVEL_DEBUG_MORE, PSTR(D_LOG_ETH "No SPI bus2 GPIO defined"));
+#endif // FIRMWARE_MINIMAL
+        return;
+      }
       init_ok = (ETH.begin((eth_phy_type_t)eth_type, Settings->eth_address, eth_mdc, eth_mdio, eth_power, SPI3_HOST, Pin(GPIO_SPI_CLK, 1), Pin(GPIO_SPI_MISO, 1), Pin(GPIO_SPI_MOSI, 1), ETH_PHY_SPI_FREQ_MHZ));
-    else
-#endif
+    } else
+#endif  // CONFIG_SOC_SPI_PERIPH_NUM > 2
+    {
+      if (SPI_MOSI_MISO != TasmotaGlobal.spi_enabled) {
+#ifndef FIRMWARE_MINIMAL
+        AddLog(LOG_LEVEL_DEBUG_MORE, PSTR(D_LOG_ETH "No SPI bus1 GPIO defined"));
+#endif // FIRMWARE_MINIMAL
+        return;
+      }
       init_ok = (ETH.begin((eth_phy_type_t)eth_type, Settings->eth_address, eth_mdc, eth_mdio, eth_power, SPI2_HOST, Pin(GPIO_SPI_CLK), Pin(GPIO_SPI_MISO), Pin(GPIO_SPI_MOSI), ETH_PHY_SPI_FREQ_MHZ));
+    }
   }
   if (!init_ok) {
     AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_ETH "Bad EthType %i or init error"),eth_type);
