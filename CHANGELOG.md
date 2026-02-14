@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ## [15.2.0.5]
 ### Added
-- Support SPI bus2 for Ethernet and SDCard (#24433)
+- ESP32 support SPI bus2 for Ethernet and SDCard (#24433)
+- Support for RX8025T RTC (#24445)
 
 ### Breaking Changed
 
