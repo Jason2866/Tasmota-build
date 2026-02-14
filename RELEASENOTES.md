@@ -112,11 +112,12 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 [Complete list](BUILDS.md) of available feature and sensors.
 
-## Changelog v15.2.0.5
+## Changelog v15.2.0.6
 ### Added
 - Support for TCA9554 8-bit I/O expander mutually exclusive with PCA9557
 - Support for Adafruit I2C QT Rotary Encoder [#24270](https://github.com/arendst/Tasmota/issues/24270)
 - Support for RX8025T RTC [#24445](https://github.com/arendst/Tasmota/issues/24445)
+- Support for Sensirion SEN66 indoor air quality sensor [#24386](https://github.com/arendst/Tasmota/issues/24386)
 - ESP32 support SPI bus2 for Ethernet and SDCard [#24433](https://github.com/arendst/Tasmota/issues/24433)
 - Improv USB CDC connected devices
 - Dingtian `SetOption81 1` to invert input and `SetOption133 1` to invert output [#24364](https://github.com/arendst/Tasmota/issues/24364)

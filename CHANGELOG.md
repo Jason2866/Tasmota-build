@@ -3,20 +3,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [15.2.0.5]
+## [15.2.0.6]
 ### Added
-- ESP32 support SPI bus2 for Ethernet and SDCard (#24433)
-- Support for RX8025T RTC (#24445)
+- Support for Sensirion SEN66 indoor air quality sensor (#24386)
 
 ### Breaking Changed
 
 ### Changed
-- ESP32 Platform from 2025.01.30 to 2026.02.30, Framework (Arduino Core) from v3.1.9 to v3.1.10 and IDF from v5.3.4.251226 to v5.3.4.260127 (#24444)
 
 ### Fixed
 
 ### Removed
 
+## [15.2.0.5] 20260214
+### Added
+- ESP32 support SPI bus2 for Ethernet and SDCard (#24433)
+- Support for RX8025T RTC (#24445)
+
+### Changed
+- ESP32 Platform from 2025.01.30 to 2026.02.30, Framework (Arduino Core) from v3.1.9 to v3.1.10 and IDF from v5.3.4.251226 to v5.3.4.260127 (#24444)
 
 ## [15.2.0.4] 20260212
 ### Added
