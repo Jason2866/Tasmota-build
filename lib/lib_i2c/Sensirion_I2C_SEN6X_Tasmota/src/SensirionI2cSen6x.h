@@ -36,13 +36,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SENSIRIONI2CSEN66_H
-#define SENSIRIONI2CSEN66_H
+#ifndef SENSIRIONI2CSEN6X_H
+#define SENSIRIONI2CSEN6X_H
 
 #include <SensirionCore.h>
 #include <Wire.h>
 
-#define SEN66_I2C_ADDR_6B 0x6b
+#define SEN6X_I2C_ADDR_6B 0x6b
+
+#define SEN6X_UINT_INVALID 0xFFFF
+#define SEN6X_INT_INVALID 0x7FFF
 
 typedef enum {
     SEN66_START_CONTINUOUS_MEASUREMENT_CMD_ID = 0x21,
@@ -85,19 +88,19 @@ typedef union {
         uint32_t rhtError : 1;
         uint32_t gasError : 1;
         uint32_t reserved3 : 1;
-        uint32_t co22Error : 1;
-        uint32_t reserved4 : 1;
+        uint32_t co2Error : 1;
+        uint32_t hchoError : 1;
         uint32_t pmError : 1;
         uint32_t reserved5 : 1;
         uint32_t reserved6 : 8;
         uint32_t fanSpeedWarning : 1;
     };
     uint32_t value;
-} SEN66DeviceStatus;
+} SEN6XDeviceStatus;
 
-class SensirionI2cSen66 {
+class SensirionI2cSen6x {
   public:
-    SensirionI2cSen66();
+    SensirionI2cSen6x();
     /**
      * @brief Initializes the SEN66 class.
      *
@@ -121,15 +124,17 @@ class SensirionI2cSen66 {
      * @param[out] vocIndex Measured VOC Index between 0 and 500.
      * @param[out] noxIndex Measured NOx Index between 0 and 500.
      * @param[out] co2 Measured CO2 concentration in ppm.
+     * @param[out] hcho Measured formaldehyde concentration in ppb.
      *
      * @return error_code 0 on success, an error code otherwise.
      */
-    int16_t readMeasuredValues(float& massConcentrationPm1p0,
+    int16_t readMeasuredValues(uint32_t model,
+                               float& massConcentrationPm1p0,
                                float& massConcentrationPm2p5,
                                float& massConcentrationPm4p0,
                                float& massConcentrationPm10p0, float& humidity,
                                float& temperature, float& vocIndex,
-                               float& noxIndex, uint16_t& co2);
+                               float& noxIndex, uint16_t& co2, float& hcho);
 
     /**
      * @brief Read measured number concentration values and apply scaling as
@@ -228,14 +233,19 @@ class SensirionI2cSen66 {
      * @param[out] cO2 CO₂ concentration [ppm] *Note: If this value is unknown,
      * 0xFFFF is returned. During the first 5..6 seconds after power-on or
      * device reset, this value will be 0xFFFF as well.*
+     * @param[out] hCHO Value is scaled with a factor of 10: HCHO [ppm] = value
+     * / 10 *Note: If this value is unknown, 0xFFFF is returned. During the
+     * first 60 seconds after the first measurement start after power-on or
+     * device reset, this value will be 0xFFFF as well.*
      *
      * @return error_code 0 on success, an error code otherwise.
      */
     int16_t readMeasuredValuesAsIntegers(
+        uint32_t model,
         uint16_t& massConcentrationPm1p0, uint16_t& massConcentrationPm2p5,
         uint16_t& massConcentrationPm4p0, uint16_t& massConcentrationPm10p0,
         int16_t& ambientHumidity, int16_t& ambientTemperature,
-        int16_t& vOCIndex, int16_t& nOxIndex, uint16_t& cO2);
+        int16_t& vOCIndex, int16_t& nOxIndex, uint16_t& cO2, uint16_t& hCHO);
 
     /**
      * @brief readNumberConcentrationValuesAsIntegers
@@ -895,7 +905,7 @@ class SensirionI2cSen66 {
      *
      * @return error_code 0 on success, an error code otherwise.
      */
-    int16_t readDeviceStatus(SEN66DeviceStatus& deviceStatus);
+    int16_t readDeviceStatus(SEN6XDeviceStatus& deviceStatus);
 
     /**
      * @brief readAndClearDeviceStatus
@@ -909,7 +919,7 @@ class SensirionI2cSen66 {
      *
      * @return error_code 0 on success, an error code otherwise.
      */
-    int16_t readAndClearDeviceStatus(SEN66DeviceStatus& deviceStatus);
+    int16_t readAndClearDeviceStatus(SEN6XDeviceStatus& deviceStatus);
 
     /**
      * @brief deviceReset
@@ -1062,9 +1072,18 @@ class SensirionI2cSen66 {
      */
     static uint16_t signalCo2(uint16_t co2Raw);
 
+    /**
+     * @brief signalHcho
+     *
+     * @param[in] hchoRaw
+     *
+     * @return Measured formaldehyde concentration in ppb.
+     */
+    static float signalHcho(uint16_t hchoRaw);
+
   private:
     TwoWire* _i2cBus = nullptr;
     uint8_t _i2cAddress = 0;
 };
 
-#endif  // SENSIRIONI2CSEN66_H
+#endif  // SENSIRIONI2CSEN6X_H

@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [15.2.0.6]
 ### Added
-- Support for Sensirion SEN66 indoor air quality sensor (#24386)
+- Support for Sensirion SEN6x indoor air quality sensor (#24386)
 - Support for I2C FM24Cxx FRAM block read/write/format commands (#24457)
 
 ### Breaking Changed

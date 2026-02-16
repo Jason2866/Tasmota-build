@@ -117,7 +117,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for TCA9554 8-bit I/O expander mutually exclusive with PCA9557
 - Support for Adafruit I2C QT Rotary Encoder [#24270](https://github.com/arendst/Tasmota/issues/24270)
 - Support for RX8025T RTC [#24445](https://github.com/arendst/Tasmota/issues/24445)
-- Support for Sensirion SEN66 indoor air quality sensor [#24386](https://github.com/arendst/Tasmota/issues/24386)
+- Support for Sensirion SEN6x indoor air quality sensor [#24386](https://github.com/arendst/Tasmota/issues/24386)
 - Support for I2C FM24Cxx FRAM block read/write/format commands [#24457](https://github.com/arendst/Tasmota/issues/24457)
 - ESP32 support SPI bus2 for Ethernet and SDCard [#24433](https://github.com/arendst/Tasmota/issues/24433)
 - Improv USB CDC connected devices

@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <Arduino.h>
-#include <SensirionI2cSen66.h>
+#include <SensirionI2cSen6x.h>
 #include <Wire.h>
 
 // macro definitions
@@ -46,7 +46,7 @@
 #endif
 #define NO_ERROR 0
 
-SensirionI2cSen66 sensor;
+SensirionI2cSen6x sensor;
 
 static char errorMessage[64];
 static int16_t error;
@@ -58,7 +58,7 @@ void setup() {
         delay(100);
     }
     Wire.begin();
-    sensor.begin(Wire, SEN66_I2C_ADDR_6B);
+    sensor.begin(Wire, SEN6X_I2C_ADDR_6B);
 
     error = sensor.deviceReset();
     if (error != NO_ERROR) {

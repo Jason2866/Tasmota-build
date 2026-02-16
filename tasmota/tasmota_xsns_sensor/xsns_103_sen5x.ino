@@ -170,10 +170,10 @@ void SEN5XShow(bool json) {
     WSContentSend_PD(HTTP_SNS_F_ENVIRONMENTAL_CONCENTRATION, types, "4", &SEN5XDATA->massConcentrationPm4p0);
     WSContentSend_PD(HTTP_SNS_F_ENVIRONMENTAL_CONCENTRATION, types, "10", &SEN5XDATA->massConcentrationPm10p0);
     if (!isnan(SEN5XDATA->noxIndex)) {
-      WSContentSend_PD(HTTP_SNS_F_NOX, types, 0, &SEN5XDATA->noxIndex);
+      WSContentSend_PD(HTTP_SNS_F_NOX, types, &SEN5XDATA->noxIndex);
     }
     if (!isnan(SEN5XDATA->vocIndex)) {
-      WSContentSend_PD(HTTP_SNS_F_VOC, types, 0, &SEN5XDATA->vocIndex);
+      WSContentSend_PD(HTTP_SNS_F_VOC, types, &SEN5XDATA->vocIndex);
     }
     if (ahum_available) {
       WSContentSend_THD(types, temperature, humidity);
