@@ -34,6 +34,8 @@
 #define SEN6X_STATE_CLEAN_FAN_WAIT       11    // Wait at least 10s after the start of the fan before starting a measurement
 #define SEN6X_STATE_SHT_HEATER_WAIT      21    // Wait at least 20s after the activation of the heater before starting a new measurement to get coherent temperature values
 
+enum eSen6xFeatures { SEN6X_VOCNOX = 1, SEN6X_CO2 = 2, SEN6X_HCHO = 4 };
+
 SensirionI2cSen6x *sen6x = nullptr;
 
 const char mSenNames[] PROGMEM = "SEN62|SEN63C||SEN65|SEN66||SEN68|SEN69C";
@@ -53,6 +55,7 @@ struct SEN6XDATA_s {
   uint8_t state;
   uint8_t major;
   uint8_t minor;
+  uint8_t features;
   char name[8];
 } *SEN6XDATA = nullptr;
 
@@ -154,11 +157,14 @@ void Sen6xInit(void) {
     SEN6XDATA->state = SEN6X_STATE_START_MEASUREMENT;
     strlcpy(SEN6XDATA->name, (char*)product_name, sizeof(SEN6XDATA->name));
     char stemp[8];
-    SEN6XDATA->model = GetCommandCode(stemp, sizeof(stemp), SEN6XDATA->name, mSenNames) + 62;
+    uint32_t model = GetCommandCode(stemp, sizeof(stemp), SEN6XDATA->name, mSenNames);
+    SEN6XDATA->model = model +62;
+    uint8_t features[] = { 0, 2, 0, 1, 3, 0, 6, 7 };  // x x x x x hcho co2 voc
+    SEN6XDATA->features = features[model];
 
     I2cSetActiveFound(SEN6X_I2C_ADDR_6B, SEN6XDATA->name, bus);
 
-    AddLog(LOG_LEVEL_DEBUG, PSTR("S6X: %s (%d) serialnumber %s v%d.%d"), product_name, SEN6XDATA->model, serial_number, major, minor);
+    AddLog(LOG_LEVEL_DEBUG, PSTR("S6X: %s (%d-%d) serialnumber %s v%d.%d"), product_name, SEN6XDATA->model, SEN6XDATA->features, serial_number, major, minor);
     return;
   }
 }
@@ -217,7 +223,7 @@ void CmndSen6xState(void) {
 
   bool stop_measurement = false;
 
-  if (SEN6XDATA->co2 != SEN6X_UINT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_CO2) {
     Sen6xStopStartMeasurement();                                 // Stop measurement and restart after 1 second
     stop_measurement = true;
     uint16_t pressure;
@@ -231,7 +237,7 @@ void CmndSen6xState(void) {
                           altitude, pressure, calstatus);
   }
 
-  if (SEN6XDATA->vocIndex != SEN6X_INT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_VOCNOX) {
     if (!stop_measurement) {
       Sen6xStopStartMeasurement();                               // Stop measurement and restart after 1 second
       stop_measurement = true;
@@ -245,13 +251,6 @@ void CmndSen6xState(void) {
     sen6x->getVocAlgorithmTuningParameters(voc_io, voc_ltoh, voc_ltgh, voc_gmdm, voc_si, voc_gf);  // Only in idle mode (stopped measurement)
     ResponseAppend_P(PSTR(",\"VOC\":{\"IdxOffset\":%d,\"LearningTime\":{\"Offset\":%d,\"Gain\":%d},\"GatingMaxDur\":%d,\"StdInit\":%d,\"GainFctr\":%d}"),
                           voc_io, voc_ltoh, voc_ltgh, voc_gmdm, voc_si, voc_gf);
-  }
-
-  if (SEN6XDATA->noxIndex != SEN6X_INT_INVALID) {
-    if (!stop_measurement) {
-      Sen6xStopStartMeasurement();                               // Stop measurement and restart after 1 second
-      stop_measurement = true;
-    }
     int16_t nox_io;
     int16_t nox_ltoh;
     int16_t nox_ltgh;
@@ -268,7 +267,7 @@ void CmndSen6xState(void) {
 void CmndSen6xAltitude(void) {
   // Sen6xAlt    - The sensor altitude can be used for pressure compensation in the CO₂ sensor.
   // Sen6xAlt <0..3000> - meter
-  if (SEN6XDATA->co2 != SEN6X_UINT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_CO2) {
     if ((XdrvMailbox.payload >= 0) && (XdrvMailbox.payload <= 3000)) {
       Sen6xStopStartMeasurement();
       if (CmndSen6xError(sen6x->setSensorAltitude(XdrvMailbox.payload))) {
@@ -283,7 +282,7 @@ void CmndSen6xPressure(void) {
   // Sen6xPres   - Setting an ambient pressure overrides any pressure compensation
   //               based on a previously set sensor altitude.
   // Sen6xPres <700..1200> - hPa
-  if (SEN6XDATA->co2 != SEN6X_UINT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_CO2) {
     if ((XdrvMailbox.payload >= 700) && (XdrvMailbox.payload <= 1200)) {
       if (CmndSen6xError(sen6x->setAmbientPressure(XdrvMailbox.payload))) {
         return;
@@ -325,7 +324,7 @@ void CmndSen6xCo2SelfCalibration(void) {
   // Sen6xCal 0        - Turn Co2 auto self calibration OFF
   // Sen6xCal 1        - Turn Co2 auto self calibration ON
   // Sen6xCal 444      - Re-calibrate Co2 sensor with target_value, correction_value
-  if (SEN6XDATA->co2 != SEN6X_UINT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_CO2) {
     if (XdrvMailbox.payload > 350) {
       Sen6xStopStartMeasurement();
       delay(400);                        // Wait at least 1400ms
@@ -359,7 +358,7 @@ void CmndSen6xVocAlgorithmTuningParams(void) {
   // Sen6xVocTune 100,12,12,180,50,230 - Default values
   // Sen6xVocTune <index_offset>,<learning_time_offset_hours>,<learning_time_gain_hours>,<gating_max_duration_minutes>,<std_initial>,<gain_factor>
   // Sen6xVocTune <1..250>,<1..1000>,<1..1000>,<0..3000>,<10..5000>,<1..1000>
-  if (SEN6XDATA->vocIndex != SEN6X_INT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_VOCNOX) {
     int value[6] = { 0 };
     if (6 == ParseIntParameters(6, value)) {
       Sen6xStopStartMeasurement();
@@ -376,7 +375,7 @@ void CmndSen6xNoxAlgorithmTuningParams(void) {
   // Sen6xNoxTune 1,12,720,230  - Default values
   // Sen6xNoxTune <index_offset>,<learning_time_offset_hours>,<gating_max_duration_minutes>,<gain_factor>
   // Sen6xNoxTune <1..250>,<1..1000>,<0..3000>,<1..1000>
-  if (SEN6XDATA->noxIndex != SEN6X_INT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_VOCNOX) {
     int value[4] = { 0 };
     if (4 == ParseIntParameters(4, value)) {
       Sen6xStopStartMeasurement();
@@ -413,7 +412,7 @@ void CmndSen6xSHTHeater(void) {
 }
 
 void CmndSen6xVocState(void) {
-  if (SEN6XDATA->vocIndex != SEN6X_INT_INVALID) {
+  if (SEN6XDATA->features & SEN6X_VOCNOX) {
     uint8_t voc_state[12];
     if (1 == XdrvMailbox.payload) {
       // TBD - Restore voc_state after a restart/power cycle - needs filesystem
