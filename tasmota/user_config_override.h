@@ -105,6 +105,7 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 #undef USE_KEELOQ                               // Add support for controling Jarolift rollers by Keeloq algorithm
 #undef USE_SONOFF_D1                            // Add support for Sonoff D1 Dimmer
 #undef USE_THERMOSTAT                           // Add support for Thermostat (+9k code)
+#undef USE_SHELLY_PRO                           // Add support for Shelly Pro
 #undef USE_SHELLY_DIMMER                        // Add support for Shelly Dimmer (+2k2 code)
   #undef SHELLY_CMDS                            // Add command to send co-processor commands (+0k4 code)
   #undef SHELLY_FW_UPGRADE                      // Add firmware upgrade option for co-processor (+30k code, +5k mem)
