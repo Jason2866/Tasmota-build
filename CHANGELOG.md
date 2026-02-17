@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Breaking Changed
 
 ### Changed
+- ESP8266 platform update from 2026.01.00 to 2026.02.00 (#24460)
 
 ### Fixed
 

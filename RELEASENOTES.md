@@ -126,7 +126,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry `path.listdir("file.tapp#")` to list directory inside '.tapp' archives [#24367](https://github.com/arendst/Tasmota/issues/24367)
 
 ### Changed
-- ESP8266 platform update from 2025.10.00 to 2026.01.00 [#24354](https://github.com/arendst/Tasmota/issues/24354)
+- ESP8266 platform update from 2025.10.00 to 2026.02.00 [#24460](https://github.com/arendst/Tasmota/issues/24460)
 - ESP32 Platform from 2025.12.30 to 2026.02.30, Framework (Arduino Core) from v3.1.7 to v3.1.10 and IDF from v5.3.4.251205 to v5.3.4.260127 [#24444](https://github.com/arendst/Tasmota/issues/24444)
 - Vid6608 library from v1.0.2 to v1.0.3 [#24218](https://github.com/arendst/Tasmota/issues/24218)
 - IRremoteESP8266 library from v2.8.6 to v2.8.6-ca474a6 [#24226](https://github.com/arendst/Tasmota/issues/24226)
