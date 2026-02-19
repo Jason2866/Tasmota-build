@@ -62,27 +62,27 @@ struct SEN6XDATA_s {
 /********************************************************************************************/
 
 float Sen6xUInt16(uint16_t value) {
-    return (value == SEN6X_UINT_INVALID) ? NAN : value;
+ return (value == SEN6X_UINT_INVALID) ? NAN : value;
 }
 
 float Sen6xUInt16Div10(uint16_t value) {
-    return (value == SEN6X_UINT_INVALID) ? NAN : value / 10.0f;
+ return (value == SEN6X_UINT_INVALID) ? NAN : value / 10.0f;
 }
 
 float Sen6xInt16Div10(int16_t value) {
-    return (value == SEN6X_INT_INVALID) ? NAN : value / 10.0f;
+  return (value == SEN6X_INT_INVALID) ? NAN : value / 10.0f;
 }
 
 float Sen6xTemperature(int16_t temperatureRaw) {
-    float temperature = 0.0;
-    temperature = temperatureRaw / 200.0;
-    return temperature;
+  float temperature = 0.0;
+  temperature = temperatureRaw / 200.0;
+  return temperature;
 }
 
 float Sen6xHumidity(int16_t humidityRaw) {
-    float humidity = 0.0;
-    humidity = humidityRaw / 100.0;
-    return humidity;
+  float humidity = 0.0;
+  humidity = humidityRaw / 100.0;
+  return humidity;
 }
 
 /********************************************************************************************/
@@ -447,16 +447,9 @@ void Sen6xShow(bool json) {
   float ambientTemperature = Sen6xTemperature(SEN6XDATA->temperature);
   float vocIndex = Sen6xInt16Div10(SEN6XDATA->vocIndex);
   float noxIndex = Sen6xInt16Div10(SEN6XDATA->noxIndex);
-
-  float temperature = 0;
-  float humidity = 0;
-  float abs_humidity = 0;
-  bool ahum_available = (!isnan(ambientTemperature) && !isnan(ambientHumidity) && (ambientHumidity > 0));
-  if (ahum_available) {
-    temperature = ConvertTemp(ambientTemperature);
-    humidity = ConvertHumidity(ambientHumidity);
-    abs_humidity = CalcTempHumToAbsHum(ambientTemperature, ambientHumidity);
-  }
+  float temperature = ConvertTemp(ambientTemperature);
+  float humidity = ConvertHumidity(ambientHumidity);
+  float abs_humidity = CalcTempHumToAbsHum(ambientTemperature, ambientHumidity);
 
 #ifdef USE_LIGHT
   LightSetSignal(CO2_LOW, CO2_HIGH, co2);  // SetOption18 - Pair light signal with CO2 sensor
@@ -475,12 +468,9 @@ void Sen6xShow(bool json) {
     if (SEN6XDATA->features & SEN6X_VOCNOX) {
       ResponseAppend_P(PSTR(",\"NOx\":%0_f,\"VOC\":%0_f"), &noxIndex, &vocIndex);
     }
-    if (ahum_available) {
-      ResponseAppend_P(PSTR(","));
-      ResponseAppendTHD(temperature, humidity);
-      ResponseAppend_P(PSTR(",\"" D_JSON_AHUM "\":%4_f"), &abs_humidity);
-    }
-    ResponseJsonEnd();
+    ResponseAppend_P(PSTR(","));
+    ResponseAppendTHD(temperature, humidity);
+    ResponseAppend_P(PSTR(",\"" D_JSON_AHUM "\":%4_f}"), &abs_humidity);
 #ifdef USE_WEBSERVER
   } else {
     WSContentSend_PD(HTTP_SNS_F_ENVIRONMENTAL_CONCENTRATION, SEN6XDATA->name, "1", &massConcentrationPm1p0);
@@ -497,10 +487,8 @@ void Sen6xShow(bool json) {
       WSContentSend_PD(HTTP_SNS_F_NOX, SEN6XDATA->name, &noxIndex);
       WSContentSend_PD(HTTP_SNS_F_VOC, SEN6XDATA->name, &vocIndex);
     }
-    if (ahum_available) {
-      WSContentSend_THD(SEN6XDATA->name, temperature, humidity);
-      WSContentSend_PD(HTTP_SNS_F_ABS_HUM, SEN6XDATA->name, 4, &abs_humidity);
-    }
+    WSContentSend_THD(SEN6XDATA->name, temperature, humidity);
+    WSContentSend_PD(HTTP_SNS_F_ABS_HUM, SEN6XDATA->name, 4, &abs_humidity);
 #endif
   }
 }

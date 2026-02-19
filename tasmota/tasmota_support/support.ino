@@ -241,11 +241,11 @@ void TasAutoMutex::take() {
 \*********************************************************************************************/
 
 void PowerOnDelay(uint32_t msecs) {
-  if (ResetReasonPowerOn()) {
+//  if (ResetReasonPowerOn()) {
     while (millis() < msecs) {
       delay(1);
     }
-  }
+//  }
 }
 
 /*
