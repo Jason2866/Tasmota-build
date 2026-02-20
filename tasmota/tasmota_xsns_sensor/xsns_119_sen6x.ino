@@ -12,7 +12,7 @@
  * SEN6X - Humidity, Temperature, Particulates (PM) and 
  *         Gas (CO2 CarbonDioxide / VOC Volatile Organic Compounds / NOx Nitrous Oxides / HCHO Formaldehyde)
  *
- * Product  PM     RH&T   CO2    VOC/NOx  HCHO   Notes
+ * Product  PM     RH&T   CO₂    VOC/NOx  HCHO   Notes
  * -------  -----  -----  -----  -------  -----  -------------------------
  * SEN62    SPS6x  SHT4x  -      -        -
  * SEN63C   SPS6x  SHT4x  STCC4  -        -      Used in Ikea ALPSTUGA
@@ -21,6 +21,30 @@
  * SEN68    SPS6x  SHT4x  -      SGP41    SFA40
  * SEN69C   SPS6x  SHT4x  STCC4  SGP41    SFA40
  *
+ * Commands:
+ * Sen6x             - State information
+ * Sen6xClean        - [PM] Start fan cleaning
+ * Sen6xHeat         - [RH&T] Start heater to reverse creep at high humidity
+ * Sen6xTempOff      - [RH&T] Set compensate temperature effects
+ * Sen6xTempOff <+/-offset>,<+/-slope>,<time_constant>,<slot0..4>
+ * Sen6xTempAcc      - [RH&T] Set custom temperature acceleration
+ * Sen6xTempAcc <k>,<p>,<t1>,<t2>
+ * Sen6xVocState     - [VOC] Show VOC state
+ * Sen6xVoctune      - [VOC] Customize the VOC algorithm
+ * Sen6xVocTune <index_offset>,<learning_time_offset_hours>,<learning_time_gain_hours>,<gating_max_duration_minutes>,<std_initial>,<gain_factor>
+ * Sen6xVocTune 100,12,12,180,50,230 - Default values
+ * Sen6xVocTune <1..250>,<1..1000>,<1..1000>,<0..3000>,<10..5000>,<1..1000>
+ * Sen6xNoxTune      - [NOx] Customize the NOx algorithm
+ * Sen6xNoxTune <index_offset>,<learning_time_offset_hours>,<gating_max_duration_minutes>,<gain_factor>
+ * Sen6xNoxTune 1,12,720,230  - Default values
+ * Sen6xNoxTune <1..250>,<1..1000>,<0..3000>,<1..1000>
+ * Sen6xAlt          - [CO₂] Altitude for pressure compensation in meter
+ * Sen6xAlt <0..3000>
+ * Sen6xPres         - [CO₂] Pressure compensation in hPa
+ * Sen6xPres <700..1200>
+ * Sen6xCal          - [CO₂] Auto self calibration Off/On or Correction
+ * Sen6xCal <0|1|351..10000>
+ * 
  * I2C Address: 0x6B
 \*********************************************************************************************/
 
@@ -172,7 +196,7 @@ void Sen6xUpdate(void) {
   int error = 0;
   switch (SEN6XDATA->state) { 
     case SEN6X_STATE_READ_MEASUREMENT:
-      Sen6xError("Measurement", sen6x->readMeasuredValuesAsIntegers(
+      if (!Sen6xError("Measurement", sen6x->readMeasuredValuesAsIntegers(
         SEN6XDATA->model,
         SEN6XDATA->massConcentrationPm1p0,    // Mass concentration in μg/m³ for particles smaller than 1.0 μm.
         SEN6XDATA->massConcentrationPm2p5,    // Mass concentration in μg/m³ for particles smaller than 2.5 μm.
@@ -183,7 +207,11 @@ void Sen6xUpdate(void) {
         SEN6XDATA->vocIndex,                  // Measured VOC Index between 0 and 500.
         SEN6XDATA->noxIndex,                  // Measured NOx Index between 0 and 500.
         SEN6XDATA->co2,                       // Measured CO2 concentration in ppm.
-        SEN6XDATA->hcho));                    // Measured formaldehyde concentration in ppb.
+        SEN6XDATA->hcho))) {                  // Measured formaldehyde concentration in ppb.
+#ifdef USE_LIGHT
+        LightSetSignal(CO2_LOW, CO2_HIGH, SEN6XDATA->co2);  // SetOption18 - Pair light signal with CO2 sensor
+#endif  // USE_LIGHT
+      }
       break;
     case SEN6X_STATE_START_MEASUREMENT -1:
       if (Sen6xError("StartContinuous", sen6x->startContinuousMeasurement())) {
@@ -450,10 +478,6 @@ void Sen6xShow(bool json) {
   float temperature = ConvertTemp(ambientTemperature);
   float humidity = ConvertHumidity(ambientHumidity);
   float abs_humidity = CalcTempHumToAbsHum(ambientTemperature, ambientHumidity);
-
-#ifdef USE_LIGHT
-  LightSetSignal(CO2_LOW, CO2_HIGH, co2);  // SetOption18 - Pair light signal with CO2 sensor
-#endif  // USE_LIGHT
 
   if (json) {
     ResponseAppend_P(PSTR(",\"%s\":{\"PM1\":%1_f,\"PM2.5\":%1_f,\"PM4\":%1_f,\"PM10\":%1_f"),

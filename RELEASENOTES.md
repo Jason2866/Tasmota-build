@@ -114,6 +114,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ## Changelog v15.3.0.1
 ### Added
+- Support for Sensirion SCD43 CO2 sensor
 
 ### Changed
 

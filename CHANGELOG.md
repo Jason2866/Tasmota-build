@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [15.3.0.1]
 ### Added
+- Support for Sensirion SCD43 CO2 sensor
 
 ### Breaking Changed
 
