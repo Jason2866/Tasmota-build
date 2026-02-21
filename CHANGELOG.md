@@ -6,12 +6,13 @@ All notable changes to this project will be documented in this file.
 ## [15.3.0.1]
 ### Added
 - Support for Sensirion SCD43 CO2 sensor
+- I2S full duplex, auto rx sample rate (#24469)
 
 ### Breaking Changed
 
 ### Changed
-- LVGL library from v9.4.0 to v9.5.0
-- Matter improved parameters handling
+- LVGL library from v9.4.0 to v9.5.0 (#24470)
+- Matter improved parameters handling (#24471)
 
 ### Fixed
 
