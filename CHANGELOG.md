@@ -13,8 +13,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - LVGL library from v9.4.0 to v9.5.0 (#24470)
 - Matter improved parameters handling (#24471)
+- Sensirion Core library from v0.6.0 to v0.7.2
+- Sen5x power on delay of 60ms (#24452)
 
 ### Fixed
+- Do not free BT memory when in use (#24480)
 
 ### Removed
 
