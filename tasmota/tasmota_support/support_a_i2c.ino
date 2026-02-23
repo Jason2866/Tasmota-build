@@ -337,6 +337,21 @@ bool I2cWriteBuffer(uint8_t addr, uint8_t reg, uint8_t *reg_data, uint16_t len, 
 
 /*-------------------------------------------------------------------------------------------*/
 
+bool I2cReset(uint32_t bus = 0) {
+  /*
+  NXP UM10204 I2C-bus specification and user manual - Software Reset
+  Following a General Call, (0000 0000), sending 0000 0110 (06h) as the second byte
+  causes a software reset. This feature is optional and not all devices respond to this
+  command. On receiving this 2-byte sequence, all devices designed to respond to
+  the general call address reset and take in the programmable part of their address.
+  Precautions must be taken to ensure that a device is not pulling down the SDA or SCL
+  line after applying the supply voltage, since these low levels would block the bus.
+  */
+  return I2cWrite0(0, 6, bus);
+}
+
+/*-------------------------------------------------------------------------------------------*/
+
 void I2cScan(uint8_t bus = 0) {
   // Return error codes defined in twi.h and core_esp8266_si2c.c
   // I2C_OK                      0
@@ -388,6 +403,8 @@ void I2cScan(uint8_t bus = 0) {
     Response_P(PSTR("{\"" D_CMND_I2CSCAN "\":\"No devices found\"}"));
   }
 }
+
+/*-------------------------------------------------------------------------------------------*/
 
 void I2cResetActive(uint32_t addr, uint8_t bus = 0) {
   addr &= 0x7F;         // Max I2C address is 127

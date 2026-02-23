@@ -162,6 +162,7 @@ void ShtDetect(void) {
     AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_I2C D_SHT1X_FOUND));
   }
   I2cBegin(Sht1x.sda_pin, Sht1x.scl_pin);    // Reinit I2C bus
+  I2cReset();
 }
 
 void ShtEverySecond(void) {
