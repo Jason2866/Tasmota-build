@@ -46,8 +46,8 @@
 #define D_CMND_MIEL_HVAC_SETAIRDIRECTION "HVACSetAirDirection"
 #define D_CMND_MIEL_HVAC_SETPROHIBIT "HVACSetProhibit"
 #define D_CMND_MIEL_HVAC_SETPURIFY "HVACSetPurify"
-#define D_CMND_MIEL_HVAC_REMOTETEMP "HVACRemoteTemp"
-#define D_CMND_MIEL_HVAC_REMOTETEMP_AUTO_CLEAR_TIME "HVACRemoteTempClearTime"
+#define D_CMND_MIEL_HVAC_SETREMOTE_TEMP "HVACRemoteTemp"
+#define D_CMND_MIEL_HVAC_SETREMOTE_TEMP_AUTO_CLEAR_TIME "HVACRemoteTempClearTime"
 #define D_CMND_MIEL_HVAC_SEND_COMMAND "HVACSendCommand"
 
 #include <TasmotaSerial.h>
@@ -202,7 +202,7 @@ struct miel_hvac_data_stage
 #define MIEL_HVAC_STAGE_FAN_5 0x05
 #define MIEL_HVAC_STAGE_FAN_QUIT 0x06
 	uint8_t mode;
-#define MIEL_HVAC_STAGE_MODE_MANUAL 0x00
+#define MIEL_HVAC_STAGE_MODE_DIRECT 0x00
 #define MIEL_HVAC_STAGE_MODE_AUTO_FAN 0x01
 #define MIEL_HVAC_STAGE_MODE_AUTO_HEAT 0x02
 #define MIEL_HVAC_STAGE_MODE_AUTO_COOL 0x03
@@ -507,7 +507,7 @@ static const struct miel_hvac_map miel_hvac_stage_fan_map[] = {
 };
 
 static const struct miel_hvac_map miel_hvac_stage_mode_map[] = {
-	{MIEL_HVAC_STAGE_MODE_MANUAL, "manual"},
+	{MIEL_HVAC_STAGE_MODE_DIRECT, "direct"},
 	{MIEL_HVAC_STAGE_MODE_AUTO_FAN, "auto_fan"},
 	{MIEL_HVAC_STAGE_MODE_AUTO_HEAT, "auto_heat"},
 	{MIEL_HVAC_STAGE_MODE_AUTO_COOL, "auto_cool"},
@@ -1088,7 +1088,7 @@ miel_hvac_remotetemp_auto_clear(void)
 }
 
 static void
-miel_hvac_cmnd_remotetemp_auto_clear_time(void)
+miel_hvac_cmnd_setremote_temp_auto_clear_time(void)
 {
 	if (XdrvMailbox.data_len == 0)
 		return;
@@ -1105,7 +1105,7 @@ miel_hvac_cmnd_remotetemp_auto_clear_time(void)
 }
 
 static void
-miel_hvac_cmnd_remotetemp(void)
+miel_hvac_cmnd_setremote_temp(void)
 {
 	struct miel_hvac_softc *sc = miel_hvac_sc;
 	struct miel_hvac_msg_update_remotetemp *update = &sc->sc_remotetemp_update;
@@ -1705,7 +1705,7 @@ miel_hvac_sensor(struct miel_hvac_softc *sc)
 		name = miel_hvac_map_byval(stage->mode, miel_hvac_stage_mode_map, nitems(miel_hvac_stage_mode_map));
 		if (name != NULL)
 		{
-			ResponseAppend_P(PSTR(",\"ModeStage\":\"%s\""), name == "manual" ? mode : name);
+			ResponseAppend_P(PSTR(",\"ModeStage\":\"%s\""), name);
 		}
 
 		ResponseAppend_P(PSTR(",\"StageHex\":\"%s\""), ToHex_P((uint8_t *)&sc->sc_stage, sizeof(sc->sc_stage), hex, sizeof(hex)));
@@ -1828,8 +1828,8 @@ static const char miel_hvac_cmnd_names[] PROGMEM =
 	"|" D_CMND_MIEL_HVAC_SETAIRDIRECTION
 	"|" D_CMND_MIEL_HVAC_SETPROHIBIT
 	"|" D_CMND_MIEL_HVAC_SETPURIFY
-	"|" D_CMND_MIEL_HVAC_REMOTETEMP
-	"|" D_CMND_MIEL_HVAC_REMOTETEMP_AUTO_CLEAR_TIME
+	"|" D_CMND_MIEL_HVAC_SETREMOTE_TEMP
+	"|" D_CMND_MIEL_HVAC_SETREMOTE_TEMP_AUTO_CLEAR_TIME
 	"|" D_CMND_MIEL_HVAC_SEND_COMMAND
 #ifdef MIEL_HVAC_DEBUG
 	"|"
@@ -1847,8 +1847,8 @@ static void (*const miel_hvac_cmnds[])(void) PROGMEM = {
 	&miel_hvac_cmnd_setairdirection,
 	&miel_hvac_cmnd_setprohibit,
 	&miel_hvac_cmnd_setpurify,
-	&miel_hvac_cmnd_remotetemp,
-	&miel_hvac_cmnd_remotetemp_auto_clear_time,
+	&miel_hvac_cmnd_setremote_temp,
+	&miel_hvac_cmnd_setremote_temp_auto_clear_time,
 	&miel_hvac_cmnd_send_command,
 #ifdef MIEL_HVAC_DEBUG
 	&miel_hvac_cmnd_request,
