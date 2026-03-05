@@ -114,6 +114,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ## Changelog v15.3.0.1
 ### Added
+- Support for JSON value pair `"ARCH"` in template being either ESP8266, ESP32, ESP32C2, ESP32C3, ESP32C5, ESP32C6, ESP32H2, ESP32H4, ESP32P4, ESP32S2 or ESP32S3
 - Support for Sensirion SCD42 and SCD43 CO2 sensor
 - Support for Sensirion STCC4 CO2 sensor
 - I2S full duplex, auto rx sample rate [#24469](https://github.com/arendst/Tasmota/issues/24469)
