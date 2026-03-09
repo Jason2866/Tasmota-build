@@ -128,6 +128,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Matter improved parameters handling [#24471](https://github.com/arendst/Tasmota/issues/24471)
 
 ### Fixed
+- Crash when shutting down Wifi with `Wifi 0` [#24536](https://github.com/arendst/Tasmota/issues/24536)
 - Do not free BT memory when in use [#24480](https://github.com/arendst/Tasmota/issues/24480)
 - Berry avoid `tasmota.wifi()` returning bad values when wifi is turned off [#24505](https://github.com/arendst/Tasmota/issues/24505)
 - Don't send extraneous `0\r\n\r\n` with non-chunked HTTP/1.0 [#24518](https://github.com/arendst/Tasmota/issues/24518)
