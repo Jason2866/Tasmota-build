@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 
 ## [15.3.0.2]
 ### Added
+- Environment sensors CCS811, SGP30 and SGP40 second I2C bus support
+- Real Time Clocks PCF85063 and PCF85363 second I2C bus support
 
 ### Breaking Changed
 
 ### Changed
 - ESP8266 redesigned I2C Wire driver to support second I2C bus
+- Adafruit_BusIO library from v1.11.0 to v1.17.4
+- Adafruit_CCS811 library from v1.0.0.14 to v1.1.3
+- Adafruit SGP30 library from v1.2.0 to v2.0.3
+- Adafruit SGP40 library from v1.1.0 to v1.1.4
 
 ### Fixed
 - Crash when shutting down Wifi with `Wifi 0` (#24536)

@@ -117,10 +117,16 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for JSON value pair `"ARCH"` in template being either ESP8266, ESP32, ESP32C2, ESP32C3, ESP32C5, ESP32C6, ESP32H2, ESP32H4, ESP32P4, ESP32S2 or ESP32S3
 - Support for Sensirion SCD42 and SCD43 CO2 sensor
 - Support for Sensirion STCC4 CO2 sensor
+- Environment sensors CCS811, SGP30 and SGP40 second I2C bus support
+- Real Time Clocks PCF85063 and PCF85363 second I2C bus support
 - I2S full duplex, auto rx sample rate [#24469](https://github.com/arendst/Tasmota/issues/24469)
 - Sen5x power on delay of 60ms [#24452](https://github.com/arendst/Tasmota/issues/24452)
 
 ### Changed
+- Adafruit_BusIO library from v1.11.0 to v1.17.4
+- Adafruit_CCS811 library from v1.0.0.14 to v1.1.3
+- Adafruit SGP30 library from v1.2.0 to v2.0.3
+- Adafruit SGP40 library from v1.1.0 to v1.1.4
 - Sensirion Core library from v0.6.0 to v0.7.2
 - LVGL library from v9.4.0 to v9.5.0 [#24470](https://github.com/arendst/Tasmota/issues/24470)
 - ESP8266 redesigned I2C Wire driver to support second I2C bus
