@@ -117,6 +117,8 @@ const char WIFI_HOSTNAME[] = WIFI_DEFAULT_HOSTNAME;    // Override by user_confi
 #define ARDUINO_CORE_RELEASE        "2.7.8"
 #endif  // ARDUINO_ESP8266_RELEASE
 
+#define USE_I2C_BUS2                               // Add support for second I2C bus on ESP8266
+
 #ifndef USE_ADC_VCC
 #define USE_ADC
 #else

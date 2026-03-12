@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 
 ## [15.3.0.2]
 ### Added
+- ESP8266 redesigned I2C Wire driver to support second I2C bus
 - Environment sensors CCS811, SGP30 and SGP40 second I2C bus support
 - Real Time Clocks BM8563, PCF85063 and PCF85363 second I2C bus support
 
 ### Breaking Changed
 
 ### Changed
-- ESP8266 redesigned I2C Wire driver to support second I2C bus
 - Adafruit_BusIO library from v1.11.0 to v1.17.4
 - Adafruit_CCS811 library from v1.0.0.14 to v1.1.3
 - Adafruit SGP30 library from v1.2.0 to v2.0.3
@@ -142,7 +142,6 @@ All notable changes to this project will be documented in this file.
 - Berry `tasmota.micros()` to get time in microseconds (#24192)
 - Support for AGS02MA TVOC sensor (#24109)
 
-## [15.0.1.5] 20251011
 ### Changed
 - ESP32 Platform from 2025.11.30 to 2025.11.31, Framework (Arduino Core) from v3.1.5 to v3.1.6 and IDF from v5.3.4.251110 to v5.3.4.251110 (#24146)
 - Refactored DALI using TasmotaDali library v1.0.0 adding frame receive buffer

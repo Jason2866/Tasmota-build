@@ -33,14 +33,14 @@ extern "C"
 
 /*** so bad ****/
 // https://github.com/esp8266/Arduino/issues/3063#issuecomment-786266957
-#define MAX_TWI_INSTANCES 5
+#define MAX_TWI_INSTANCES 2
 typedef void (*fn_timer)(void *);
 typedef void (*fn_event)(ETSEvent *e);
 typedef void (*fn_sclChange)();
 typedef void (*fn_sdaChange)();
 
 int timers = 0;
-Twi *twi_instances[5];
+Twi *twi_instances[2];
 void ICACHE_RAM_ATTR timer0(void *n)
 {
     twi_instances[0]->onTimer(n);
@@ -49,18 +49,6 @@ void ICACHE_RAM_ATTR timer1(void *n)
 {
     twi_instances[1]->onTimer(n);
 }
-void ICACHE_RAM_ATTR timer2(void *n)
-{
-    twi_instances[2]->onTimer(n);
-}
-void ICACHE_RAM_ATTR timer3(void *n)
-{
-    twi_instances[3]->onTimer(n);
-}
-void ICACHE_RAM_ATTR timer4(void *n)
-{
-    twi_instances[4]->onTimer(n);
-}
 void eventTask0(ETSEvent *e)
 {
     twi_instances[0]->eventTask(e);
@@ -68,18 +56,6 @@ void eventTask0(ETSEvent *e)
 void eventTask1(ETSEvent *e)
 {
     twi_instances[1]->eventTask(e);
-}
-void eventTask2(ETSEvent *e)
-{
-    twi_instances[2]->eventTask(e);
-}
-void eventTask3(ETSEvent *e)
-{
-    twi_instances[3]->eventTask(e);
-}
-void eventTask4(ETSEvent *e)
-{
-    twi_instances[4]->eventTask(e);
 }
 
 void ICACHE_RAM_ATTR sclChange0()
@@ -102,40 +78,10 @@ void ICACHE_RAM_ATTR sdaChange1()
     twi_instances[1]->onSdaChange();
 }
 
-void ICACHE_RAM_ATTR sclChange2()
-{
-    twi_instances[2]->onSclChange();
-}
-
-void ICACHE_RAM_ATTR sdaChange2()
-{
-    twi_instances[2]->onSdaChange();
-}
-
-void ICACHE_RAM_ATTR sclChange3()
-{
-    twi_instances[3]->onSclChange();
-}
-
-void ICACHE_RAM_ATTR sdaChange3()
-{
-    twi_instances[3]->onSdaChange();
-}
-
-void ICACHE_RAM_ATTR sclChange4()
-{
-    twi_instances[4]->onSclChange();
-}
-
-void ICACHE_RAM_ATTR sdaChange4()
-{
-    twi_instances[4]->onSdaChange();
-}
-
-fn_event twi_eventTasks[] = {&eventTask0, &eventTask1, &eventTask2, &eventTask3, &eventTask4};
-fn_sclChange twi_sdaChanges[] = {&sdaChange0, &sdaChange1, &sdaChange2, &sdaChange3, &sdaChange4};
-fn_sdaChange twi_sclChanges[] = {&sclChange0, &sclChange1, &sclChange2, &sclChange3, &sclChange4};
-fn_timer twi_timers[] = {&timer0, &timer1, &timer2, &timer3, &timer4};
+fn_event twi_eventTasks[] = {&eventTask0, &eventTask1};
+fn_sclChange twi_sdaChanges[] = {&sdaChange0, &sdaChange1};
+fn_sdaChange twi_sclChanges[] = {&sclChange0, &sclChange1};
+fn_timer twi_timers[] = {&timer0, &timer1};
 
 fn_timer getTimer(Twi *obj)
 {
