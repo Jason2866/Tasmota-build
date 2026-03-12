@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - ESP8266 redesigned I2C Wire driver to support second I2C bus
 - Environment sensors CCS811, SGP30 and SGP40 second I2C bus support
 - Real Time Clocks BM8563, PCF85063 and PCF85363 second I2C bus support
+- LCD second I2C bus support
 
 ### Breaking Changed
 
