@@ -212,6 +212,16 @@ public:
     }
   }
 
+  void set_nowait(bool nowait) {
+    if (state == AsyncTCPState::CONNECTED) {
+      int flag = nowait ? 1 : 0;
+      int result = setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(int));
+      if (result < 0) {
+        AddLog(LOG_LEVEL_INFO, "BRY: Error: setsockopt failed on fd %d, errno: %d, \"%s\"", sockfd, errno, strerror(errno));
+      }
+    }
+  }
+
   size_t available(void) {
     _update_connected();
     if (state == AsyncTCPState::CONNECTED) {
@@ -290,28 +300,20 @@ public:
     return 0;
   }
 
-  bool writebytes(const char *buf, size_t size)
-  {
-    if (state != AsyncTCPState::CONNECTED) {
-      return false;
-    }
+  bool writebytes(const char *buf, size_t size) {
+    if (state != AsyncTCPState::CONNECTED) return false;
     size_t offset = 0;
     while (offset < size) {
-      fd_set wfd, efd;
-      FD_ZERO(&wfd);
-      FD_ZERO(&efd);
-      FD_SET(sockfd, &wfd);
-      FD_SET(sockfd, &efd);
-      struct timeval tv = {0, 1000};
-      int sent = 0;
-      int res = ::select(sockfd + 1, NULL, &wfd, &efd, &tv);
-      if (res > 0 && FD_ISSET(sockfd, &wfd)) {
-        sent = ::send(sockfd, buf + offset, size - offset, MSG_DONTWAIT);
-      }
-      if (sent > 0) { offset += sent; }
-      else if ((res < 0) || (sent == 0) || FD_ISSET(sockfd, &efd))
-      {
-        if (errno == EAGAIN || errno == EWOULDBLOCK) { continue; }
+      ssize_t sent = send(sockfd, buf + offset, size - offset, MSG_DONTWAIT);
+      if (sent > 0) {
+        offset += sent;
+      } else if (sent < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) { // Buffer full
+        fd_set wfd;
+        FD_ZERO(&wfd);
+        FD_SET(sockfd, &wfd);
+        struct timeval tv = {0, 5000};
+        select(sockfd + 1, NULL, &wfd, NULL, &tv);
+      } else { // disconnection or a hard error
         stop();
         return false;
       }
@@ -477,6 +479,19 @@ extern "C" {
     AsyncTCPClient * tcp = wc_gettcpclientasync_p(vm);
     tcp->stop();
     be_return_nil(vm);
+  }
+
+  // tcp.set_nowait(bool) -> nil
+  int32_t wc_tcpasync_set_nowait(struct bvm *vm);
+  int32_t wc_tcpasync_set_nowait(struct bvm *vm) {
+    int32_t argc = be_top(vm);
+    if (argc >= 2 && be_isbool(vm, 2)) {
+      AsyncTCPClient * tcp = wc_gettcpclientasync_p(vm);
+      bool nowait = be_tobool(vm, 2);
+      tcp->set_nowait(nowait);
+      be_return_nil(vm);
+    }
+    be_raise(vm, kTypeError, nullptr);
   }
 
   // tcp.available(void) -> int
