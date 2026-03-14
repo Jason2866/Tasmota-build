@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Environment sensors CCS811, SGP30 and SGP40 second I2C bus support
 - Real Time Clocks BM8563, PCF85063 and PCF85363 second I2C bus support
 - LCD second I2C bus support
+- Berry add `loglevel` to `mqtt.publish()` (#24551)
 
 ### Breaking Changed
 
@@ -22,7 +23,7 @@ All notable changes to this project will be documented in this file.
 - Crash when shutting down Wifi with `Wifi 0` (#24536)
 
 ### Removed
-- Berry remove `mdns.stop()`
+- Berry remove `mdns.stop()` (#24549)
 
 ## [15.3.0.1] 20260308
 ### Added

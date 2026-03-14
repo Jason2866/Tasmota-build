@@ -123,6 +123,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - LCD second I2C bus support
 - I2S full duplex, auto rx sample rate [#24469](https://github.com/arendst/Tasmota/issues/24469)
 - Sen5x power on delay of 60ms [#24452](https://github.com/arendst/Tasmota/issues/24452)
+- Berry add `loglevel` to `mqtt.publish()` [#24551](https://github.com/arendst/Tasmota/issues/24551)
 
 ### Changed
 - Adafruit_BusIO library from v1.11.0 to v1.17.4
@@ -143,3 +144,4 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ### Removed
 - Berry `tasmota.urlbecload()` superseded by Extension Manager [#24493](https://github.com/arendst/Tasmota/issues/24493)
+- Berry remove `mdns.stop()` [#24549](https://github.com/arendst/Tasmota/issues/24549)
