@@ -3,15 +3,27 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [15.3.0.2]
+## [15.3.0.3]
+### Added
+
+### Breaking Changed
+
+### Changed
+- ESP8266 platform update from 2026.02.00 to 2026.03.00 (#24547)
+- ESP32 Platform from 2025.02.30 to 2026.03.30, Framework (Arduino Core) from v3.1.9 to v3.1.10 and IDF from v5.3.4.251226 to v5.3.4.260127 (#24547)
+
+### Fixed
+- Athom esp32 2-3-4 gang change led behaviour after firmware update (#24509)
+
+### Removed
+
+## [15.3.0.2] 20260315
 ### Added
 - ESP8266 redesigned I2C Wire driver to support second I2C bus
 - Environment sensors CCS811, SGP30 and SGP40 second I2C bus support
 - Real Time Clocks BM8563, PCF85063 and PCF85363 second I2C bus support
 - LCD second I2C bus support
 - Berry add `loglevel` to `mqtt.publish()` (#24551)
-
-### Breaking Changed
 
 ### Changed
 - Adafruit_BusIO library from v1.11.0 to v1.17.4
