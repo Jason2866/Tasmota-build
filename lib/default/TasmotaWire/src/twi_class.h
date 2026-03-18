@@ -14,7 +14,7 @@ private:
     unsigned char twi_sda = 0;
     unsigned char twi_scl = 0;
     unsigned char twi_addr = 0;
-    uint32_t twi_clockStretchLimit = 0;
+    uint32_t twi_clockStretchLimit = 150000;
 
     // These are int-wide, even though they could all fit in a byte, to reduce code size and avoid any potential
     // issues about RmW on packed bytes.  The int-wide variations of asm instructions are smaller than the equivalent
