@@ -118,7 +118,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for Sensirion SCD42 and SCD43 CO2 sensor
 - Support for Sensirion STCC4 CO2 sensor
 - ESP8266 redesigned I2C Wire driver to support second I2C bus
-- Environment sensors CCS811, SGP30 and SGP40 second I2C bus support
+- Environment sensors CCS811, SCD30, SGP30 and SGP40 second I2C bus support
 - Real Time Clocks BM8563, PCF85063 and PCF85363 second I2C bus support
 - LCD second I2C bus support
 - I2S full duplex, auto rx sample rate [#24469](https://github.com/arendst/Tasmota/issues/24469)
@@ -128,6 +128,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Changed
 - ESP8266 platform update from 2026.02.00 to 2026.03.00 [#24547](https://github.com/arendst/Tasmota/issues/24547)
 - ESP32 Platform from 2025.02.30 to 2026.03.30, Framework (Arduino Core) from v3.1.9 to v3.1.10 and IDF from v5.3.4.251226 to v5.3.4.260127 [#24547](https://github.com/arendst/Tasmota/issues/24547)
+- ESP32-C5/C6/P4 Platform from 2025.03.30 to 2026.03.50, Framework (Arduino Core) from v3.1.10 to v3.3.7 and IDF from v5.3.4.260127 to v5.5.3+ [#24567](https://github.com/arendst/Tasmota/issues/24567)
 - Adafruit_BusIO library from v1.11.0 to v1.17.4
 - Adafruit_CCS811 library from v1.0.0.14 to v1.1.3
 - Adafruit SGP30 library from v1.2.0 to v2.0.3

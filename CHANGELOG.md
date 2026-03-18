@@ -5,20 +5,22 @@ All notable changes to this project will be documented in this file.
 
 ## [15.3.0.3]
 ### Added
+- Environment sensor SCD30 second I2C bus support
 
 ### Breaking Changed
 
 ### Changed
 - ESP8266 platform update from 2026.02.00 to 2026.03.00 (#24547)
 - ESP32 Platform from 2025.02.30 to 2026.03.30, Framework (Arduino Core) from v3.1.9 to v3.1.10 and IDF from v5.3.4.251226 to v5.3.4.260127 (#24547)
-- Matter don't advertize IPv6 global address, only link-local
+- Matter don't advertize IPv6 global address, only link-local (#24563)
+- ESP32-C5/C6/P4 Platform from 2025.03.30 to 2026.03.50, Framework (Arduino Core) from v3.1.10 to v3.3.7 and IDF from v5.3.4.260127 to v5.5.3+ (#24567)
 
 ### Fixed
 - Athom esp32 2-3-4 gang change led behaviour after firmware update (#24509)
 - ESP8266 heap drain and exception 29 when DHCP provides NTP server (#24515)
 
 ### Removed
-- Berry removed `BE_USE_PRECOMPILED_OBJECT` which is enforced in Tasmota
+- Berry removed `BE_USE_PRECOMPILED_OBJECT` which is enforced in Tasmota (#24565)
 
 ## [15.3.0.2] 20260315
 ### Added
