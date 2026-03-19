@@ -413,16 +413,16 @@ uint32_t RtcTimeZoneOffset(uint32_t local_time) {
   return timezone;
 }
 
-#include "sntp.h"
-
 void RtcSetTimeOfDay(uint32_t local_time) {
   // Sync Core/RTOS time to be used by file system time stamps
   struct timeval tv;
   tv.tv_sec = local_time;
   tv.tv_usec = 0;
   settimeofday(&tv, nullptr);
+#ifdef ESP8266
   // We do not want core SNTP server which uses DHCP to find NTP server(s). See #24515
   sntp_stop();
+#endif  // ESP8266
 }
 
 void RtcSecond(void) {
