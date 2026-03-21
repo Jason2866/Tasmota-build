@@ -63,7 +63,7 @@ bool Sen5xError(const char* func, int error) {
 
 void sen5x_Init(void) {
   PowerOnDelay(60);  // Sensor startup time (Time after power-on until I2C communication can be started)
-  for (uint32_t bus = 0; bus < 2; bus++) {
+  for (uint32_t bus = 0; bus < MAX_I2C; bus++) {
     if (!I2cSetDevice(SEN5X_ADDRESS, bus)) { continue; }
     sen5x = new SensirionI2CSen5x();
     sen5x->begin(I2cGetWire(bus));

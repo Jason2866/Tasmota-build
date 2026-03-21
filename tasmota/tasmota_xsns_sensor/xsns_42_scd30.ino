@@ -74,7 +74,7 @@ void Scd30BusSpeed(bool set) {
 }
 
 void Scd30Detect(void) {
-  for (Scd30.bus = 0; Scd30.bus < 2; Scd30.bus++) {
+  for (Scd30.bus = 0; Scd30.bus < MAX_I2C; Scd30.bus++) {
     Scd30BusSpeed(1);
     if (I2cSetDevice(SCD30_ADDRESS, Scd30.bus)) { 
       scd30.begin(&I2cGetWire(Scd30.bus));

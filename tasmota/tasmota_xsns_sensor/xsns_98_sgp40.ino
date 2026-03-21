@@ -45,7 +45,7 @@ int32_t voc_index;
 /********************************************************************************************/
 
 void sgp40_Init(void) {
-  for (uint32_t bus = 0; bus < 2; bus++) {
+  for (uint32_t bus = 0; bus < MAX_I2C; bus++) {
     if (!I2cSetDevice(SGP40_ADDRESS, bus)) { continue; }
     if (!sgp40.begin(&I2cGetWire(bus))) { continue; }
     sgp40_type = true;

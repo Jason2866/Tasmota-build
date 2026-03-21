@@ -42,7 +42,7 @@ float sgp30_abshum;
 /********************************************************************************************/
 
 void sgp30_Init(void) {
-  for (uint32_t bus = 0; bus < 2; bus++) {
+  for (uint32_t bus = 0; bus < MAX_I2C; bus++) {
     if (!I2cSetDevice(SGP30_ADDRESS, bus)) { continue; }
     if (!sgp.begin(&I2cGetWire(bus))) {
       if (!sgp.IAQinit()) { continue; }  // Fix I2C bus incompatibilities

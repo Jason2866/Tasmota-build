@@ -59,7 +59,7 @@ void LcdInit(uint8_t mode)
 void LcdInitDriver(void) {
   if ((0 == Settings->display_model) || 
       (XDSP_01 == Settings->display_model)) {
-    for (uint32_t bus = 0; bus < 2; bus++) {
+    for (uint32_t bus = 0; bus < MAX_I2C; bus++) {
       for (uint32_t idx = 0; idx < 2; idx++) {
         if (!I2cSetDevice(lcd_addresses[idx], bus)) { continue; }
         Settings->display_address[0] = lcd_addresses[idx];

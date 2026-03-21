@@ -45,7 +45,7 @@ uint8_t ecnt = 0;
 /********************************************************************************************/
 
 void CCS811Detect(void) {
-  for (uint32_t bus = 0; bus < 2; bus++) {
+  for (uint32_t bus = 0; bus < MAX_I2C; bus++) {
     if (!I2cSetDevice(CCS811_ADDRESS, bus)) { continue; }
     if (!ccs.begin(CCS811_ADDRESS, &I2cGetWire(bus))) { continue; }
     CCS811_type = 1;
