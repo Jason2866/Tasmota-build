@@ -137,10 +137,11 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - LVGL library from v9.4.0 to v9.5.0 [#24470](https://github.com/arendst/Tasmota/issues/24470)
 - SHT1x software reset I2C bus after initial (un)detection
 - NeoPool always output valid sensitive data [#24573](https://github.com/arendst/Tasmota/issues/24573)
+- SML suppress MQTT publish until valid meter data received [#24587](https://github.com/arendst/Tasmota/issues/24587)
 - Matter improved parameters handling [#24471](https://github.com/arendst/Tasmota/issues/24471)
 
 ### Fixed
-- ESP8266 heap drain and exception 29 when DHCP provides NTP server [#24515](https://github.com/arendst/Tasmota/issues/24515)
+- ESP8266 heap drain and exception 29 when DHCP provides NTP server [#24515](https://github.com/arendst/Tasmota/issues/24515), [#24566](https://github.com/arendst/Tasmota/issues/24566)
 - Crash when shutting down Wifi with `Wifi 0` [#24536](https://github.com/arendst/Tasmota/issues/24536)
 - Don't send extraneous `0\r\n\r\n` with non-chunked HTTP/1.0 [#24518](https://github.com/arendst/Tasmota/issues/24518)
 - NeoPool possible IntegerDivideByZero [#24578](https://github.com/arendst/Tasmota/issues/24578)
