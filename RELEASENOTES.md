@@ -125,6 +125,9 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Sen5x power on delay of 60ms [#24452](https://github.com/arendst/Tasmota/issues/24452)
 - Berry add `loglevel` to `mqtt.publish()` [#24551](https://github.com/arendst/Tasmota/issues/24551)
 
+### Breaking Changed
+- Renamed SCD40 sensors to their real names like SCD40 to SCD43
+
 ### Changed
 - ESP8266 platform update from 2026.02.00 to 2026.03.00 [#24547](https://github.com/arendst/Tasmota/issues/24547)
 - ESP32 Platform from 2025.02.30 to 2026.03.30, Framework (Arduino Core) from v3.1.9 to v3.1.10 and IDF from v5.3.4.251226 to v5.3.4.260127 [#24547](https://github.com/arendst/Tasmota/issues/24547)
@@ -150,5 +153,6 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - File upload improvements: `/ufsu` api mode, no interrupts disabling, cleaner confirmation page [#24521](https://github.com/arendst/Tasmota/issues/24521)
 
 ### Removed
+- ESP8266 I2C Slave support which was never used by Tasmota anyway
 - Berry `tasmota.urlbecload()` superseded by Extension Manager [#24493](https://github.com/arendst/Tasmota/issues/24493)
 - Berry remove `mdns.stop()` [#24549](https://github.com/arendst/Tasmota/issues/24549)
