@@ -118,9 +118,10 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for Sensirion SCD42 and SCD43 CO2 sensor
 - Support for Sensirion STCC4 CO2 sensor
 - ESP8266 redesigned I2C Wire driver to support second I2C bus
-- Environment sensors CCS811, SCD30, SGP30 and SGP40 second I2C bus support
-- Real Time Clocks BM8563, PCF85063 and PCF85363 second I2C bus support
-- LCD second I2C bus support
+- PWM driver PCA9685 multi I2C bus support
+- Environment sensors CCS811, SCD30, SGP30 and SGP40 multi I2C bus support
+- Real Time Clocks BM8563, PCF85063 and PCF85363 multi I2C bus support
+- LCD multi I2C bus support
 - I2S full duplex, auto rx sample rate [#24469](https://github.com/arendst/Tasmota/issues/24469)
 - Sen5x power on delay of 60ms [#24452](https://github.com/arendst/Tasmota/issues/24452)
 - Berry add `loglevel` to `mqtt.publish()` [#24551](https://github.com/arendst/Tasmota/issues/24551)

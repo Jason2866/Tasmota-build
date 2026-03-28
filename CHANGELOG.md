@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [15.3.0.3]
 ### Added
 - Environment sensor SCD30 second I2C bus support
+- PWM driver PCA9685 multi I2C bus support
 
 ### Breaking Changed
 
