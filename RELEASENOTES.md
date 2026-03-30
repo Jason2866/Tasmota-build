@@ -118,7 +118,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for Sensirion SCD42 and SCD43 CO2 sensor
 - Support for Sensirion STCC4 CO2 sensor
 - ESP8266 redesigned I2C Wire driver to support second I2C bus
-- PWM driver PCA9685 multi I2C bus support
+- Drivers PCA9685 and PCF8574 multi I2C bus support
 - Environment sensors CCS811, SCD30, SGP30 and SGP40 multi I2C bus support
 - Real Time Clocks BM8563, PCF85063 and PCF85363 multi I2C bus support
 - LCD multi I2C bus support
