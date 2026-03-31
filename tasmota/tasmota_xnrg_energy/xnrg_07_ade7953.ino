@@ -40,10 +40,12 @@
  * Model differences:
  * Function                        Model1   Model2   Model3   Model4  Model5  Model6  Remark
  * ------------------------------  -------  -------  -------  ------  ------  ------  -------------------------------------------------
- * Shelly                          2.5      EM       Plus2PM  Pro1PM  Pro2PM  Pro4PM  Shelly hardware
- *                                                   2PMGen3
- * Processor                       ESP8266  ESP8266  ESP32    ESP32   ESP32   ESP32
- *                                                   ESP32C3                          Shelly Gen3
+ * Shelly Gen1                     2.5      EM       -        -       -       -
+ * Shelly Gen2                     -        ProEM    Plus2PM  Pro1PM  Pro2PM  Pro4PM
+ * Shelly Gen3                     -        -        2PMGen3  -       -       -
+ * Processor Gen1                  ESP8266  ESP8266  -        -       -       -
+ * Processor Gen2                  -        ESP32    ESP32    ESP32   ESP32   ESP32
+ * Processor Gen3                  -        -        ESP32C3  -       -       -
  * Interface                       I2C      I2C      I2C      SPI     SPI     SPI     Interface type used
  * Number of inputs                2        2        2        1       2       4       Count of ADE9753 inputs used
  * Number of ADE9753 chips         1        1        1        1       2       2       Count of ADE9753 chips
@@ -728,9 +730,14 @@ void Ade7953DrvInit(void) {
       pinMode(pin_reset, OUTPUT);                    // Reset pin ADE7953
       delay(1);                                      // To initiate a hardware reset, this pin must be brought low for a minimum of 10 μs.
       digitalWrite(pin_reset, 1);
+/*
       if (Ade7953.model < ADE7953_SHELLY_PRO_1PM) {
-        pinMode(pin_reset, INPUT);
+        pinMode(pin_reset, INPUT);                   // Reduce current on this pin lowering temperature considerably
       }
+*/
+#if defined(ESP8266) || defined(CONFIG_IDF_TARGET_ESP32C3)  // Only ESP8266 (Gen1) and ESP32-C3 (Gen3) benefit from this
+      pinMode(pin_reset, INPUT);                     // Reduce current on this pin lowering temperature considerably
+#endif
     }
 #ifdef USE_ESP32_SPI
 #if (defined(USE_SHELLY_PRO) && defined(USE_MCP23XXX_DRV)) || defined(USE_SHELLY_PRO_V2)
