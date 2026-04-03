@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Environment sensor SCD30 second I2C bus support
 - Drivers PCA9685 and PCF8574 multi I2C bus support
+- Shelly Pro EM-50 template {"NAME":"Shelly Pro EM-50","ARCH":"ESP32","GPIO":[0,0,224,0,3457,0,0,0,0,608,544,640,9472,0,5600,0,0,0,0,5568,0,0,0,0,0,0,0,0,5536,0,0,32,4736,0,0,0],"FLAG":0,"BASE":1,"CMND":"AdcGpio36 10000,10000,3350"} (#24604)
 
 ### Breaking Changed
 
