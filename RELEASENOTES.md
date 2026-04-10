@@ -151,9 +151,10 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Don't send extraneous `0\r\n\r\n` with non-chunked HTTP/1.0 [#24518](https://github.com/arendst/Tasmota/issues/24518)
 - Shelly Dimmer 2 serial timeout regression from v15.2.0.1 [#24560](https://github.com/arendst/Tasmota/issues/24560)
 - NeoPool possible IntegerDivideByZero [#24578](https://github.com/arendst/Tasmota/issues/24578)
+- File upload improvements: `/ufsu` api mode, no interrupts disabling, cleaner confirmation page [#24521](https://github.com/arendst/Tasmota/issues/24521)
 - Do not free BT memory when in use [#24480](https://github.com/arendst/Tasmota/issues/24480)
 - Berry avoid `tasmota.wifi()` returning bad values when wifi is turned off [#24505](https://github.com/arendst/Tasmota/issues/24505)
-- File upload improvements: `/ufsu` api mode, no interrupts disabling, cleaner confirmation page [#24521](https://github.com/arendst/Tasmota/issues/24521)
+- Berry crash when comparing for equality float literals on ESP32 [#24610](https://github.com/arendst/Tasmota/issues/24610)
 
 ### Removed
 - ESP8266 I2C Slave support which was never used by Tasmota anyway
