@@ -36,7 +36,7 @@ class LwDecoDrgSN50v3L
     end
 
     ## SENSOR DATA ##
-    if 2 == FPort && Bytes.size() > 10   # Variable length, depending on mode, but always 11 bytes or more
+    if 2 == FPort && Bytes.size() > 10         # Variable length, depending on mode, but always 11 bytes or more
       valid_values = true
       last_seen = tasmota.rtc('local')  
 
@@ -52,7 +52,7 @@ class LwDecoDrgSN50v3L
       battery_last_seen = tasmota.rtc('local')
 		
       ### TBA - handle all of the many cases	
-      if 0 == mode                            # Mode 1 (default)
+      if 0 == mode                             # Mode 1 (default)
         var temp_pc13 = 1000
         var adc_pa4 = -1
         var digital_status
@@ -121,7 +121,7 @@ class LwDecoDrgSN50v3L
         end
         #                             sensor[0]    [1]   [2]        [3]                [4]      [5]   [6]          [7]   [8]        [9]      [10]            [11]             [12]            [13]             [14]           [15]          [16]      [17]
         global.DrgSN50v3LNodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, RSSI, WorkingMode, mode, temp_pc13, adc_pa4, digital_status, digital_in_pb15, pb15_last_seen, digital_int_pa8, pa8_last_seen, illum_bh1750, temp_sht, humidity_sht])   
-        valid_values = false
+        valid_values = false                   # Already updated
 
       end # mode 0
 
@@ -146,6 +146,7 @@ class LwDecoDrgSN50v3L
       if global.DrgSN50v3LNodes.find(Node)
         global.DrgSN50v3LNodes.remove(Node)
       end
+      mode = -1                                # Report incomplete list
       #                             sensor[0]    [1]   [2]        [3]                [4]      [5]   [6]          [7]
       global.DrgSN50v3LNodes.insert(Node, [Name, Node, last_seen, battery_last_seen, battery, RSSI, WorkingMode, mode])   
     end
@@ -158,7 +159,7 @@ class LwDecoDrgSN50v3L
     var msg = ""
     for sensor: global.DrgSN50v3LNodes
       var name = sensor[0]
-      if string.find(name, "SN50v3-L") > -1                                   # If LoRaWanName contains SN50v3 use SN50v3-<node>
+      if string.find(name, "SN50v3-L") > -1                              # If LoRaWanName contains SN50v3 use SN50v3-<node>
         name = string.format("SN50v3-L-%i", sensor[1])
       end
       var name_tooltip = "Dragino SN50v3-L"
