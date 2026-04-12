@@ -3,13 +3,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [15.3.0.3]
+## [15.3.0.4]
+### Added
+
+### Breaking Changed
+
+### Changed
+- ESP8266 platform update from 2026.03.00 to 2026.04.00 (#24635)
+- ESP32 Platform from 2025.03.30 to 2026.04.30, Framework (Arduino Core) from v3.1.10 to v3.1.11 and IDF from v5.3.4.251226 to v5.3.4.260127 (#24635)
+- ESP32-C5/C6/P4 Platform from 2025.03.50 to 2026.04.50, Framework (Arduino Core) from v3.3.7 to v3.3.8 and IDF from v5.5.3+ to v5.5.4.260407 (#24635)
+
+### Fixed
+
+### Removed
+
+
+## [15.3.0.3] 20260412
 ### Added
 - Environment sensor SCD30 second I2C bus support
 - Drivers PCA9685 and PCF8574 multi I2C bus support
 - Shelly Pro EM-50 template {"NAME":"Shelly Pro EM-50","ARCH":"ESP32","GPIO":[0,0,224,0,3457,0,0,0,0,608,544,640,9472,0,5600,0,0,0,0,5568,0,0,0,0,0,0,0,0,5536,0,0,32,4736,0,0,0],"FLAG":0,"BASE":1,"CMND":"AdcGpio36 10000,10000,3350"} (#24604)
-
-### Breaking Changed
 
 ### Changed
 - ESP8266 platform update from 2026.02.00 to 2026.03.00 (#24547)
@@ -26,8 +39,6 @@ All notable changes to this project will be documented in this file.
 - NeoPool possible IntegerDivideByZero (#24578)
 - Shelly Dimmer 2 serial timeout regression from v15.2.0.1 (#24560)
 - Berry crash when comparing for equality float literals on ESP32 (#24610)
-
-### Removed
 
 ## [15.3.0.2] 20260315
 ### Added
