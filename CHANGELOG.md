@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [15.3.0.4]
 ### Added
+- Berry solidification is now part of the build system
 
 ### Breaking Changed
 
