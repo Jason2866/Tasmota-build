@@ -170,7 +170,7 @@ jobs:
       - name: Move safeboot files
         run: |
           mkdir -p ./firmware/firmware
-          find ./temp -type f -exec cp -t ./firmware/firmware {} +
+          find ./temp -type f -exec cp -f -t ./firmware/firmware {} +
       - name: Add SHA to footer
         run: |
           COMMIT_SHA_LONG=$(git rev-parse --short HEAD || echo "")
