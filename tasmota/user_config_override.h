@@ -626,6 +626,11 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
 
 #endif // CONFIG_IDF_TARGET_ESP32C3
 
+#define USE_BERRY
+#undef USE_BERRY_TCPSERVER
+#define USE_WEBCLIENT
+#define USE_WEBCLIENT_HTTPS
+
 #define USE_SERIAL_BRIDGE                        // Add support for software Serial Bridge (+2k code)
 #undef USE_ARMTRONIX_DIMMERS                    // Disable support for Armtronix Dimmers (+1k4 code)
 //#undef USE_PS_16_DZ                             // Disable support for PS-16-DZ Dimmer (+2k code)
