@@ -78,8 +78,10 @@ jobs:
           - tasmota32c3_2M
           - tasmota32c2-bluetooth
           - tasmota32c3-bluetooth
+          - tasmota32c5-bluetooth
           - tasmota32c6-bluetooth
           - tasmota32c3-lvgl
+          - tasmota32c5-lvgl
           - tasmota32c6-lvgl
           - tasmota32s2-lvgl
           - tasmota32s3-lvgl
@@ -87,13 +89,11 @@ jobs:
           - tasmota32p4r3-lvgl
           - tasmota32s3-qio_opi
           - tasmota32s3-opi_opi
-          #- tasmota32s2-display
-          #- tasmota32s3-display
-          #- tasmota32c3-display
           - tasmota32s3-bluetooth
           - tasmota32s3-box
           - tasmota32c2-mi32
           - tasmota32c3-mi32
+          - tasmota32c5-mi32
           - tasmota32c6-mi32
           - tasmota32s3-mi32
           - tasmota32-mi32
