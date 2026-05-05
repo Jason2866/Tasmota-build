@@ -33,6 +33,7 @@
  * Supported commands:
  * WcInterrupt     = Control streaming, 0 = stop, 1 = start
  * WcResolution = Set resolution (max framerates at wcclock=20)
+ **** Pre v14.4.0 ****
  * FPS quoted is (max, withonewebclient) at wcclock=20 on AIThinker esp32cam equivalent
  * FPS is mostly limited by sending data to webclients & rtsp, not by the camera.
  0 = FRAMESIZE_96X96,    // 96x96 (50fps, ~48fps) - at wcclock=30 (75, ~53)
@@ -64,6 +65,38 @@
  20 = FRAMESIZE_P_FHD,    // 1080x1920
  21 = FRAMESIZE_QSXGA,    // 2560x1920
  22 = FRAMESIZE_INVALID
+
+ **** Post v14.4.0 ****
+  0 = FRAMESIZE_96X96,    // 96x96
+  1 = FRAMESIZE_QQVGA,    // 160x120
+  2 = FRAMESIZE_128X128,  // 128x128
+  3 = FRAMESIZE_QCIF,     // 176x144
+  4 = FRAMESIZE_HQVGA,    // 240x176
+  5 = FRAMESIZE_240X240,  // 240x240
+  6 = FRAMESIZE_QVGA,     // 320x240
+  7 = FRAMESIZE_320X320,  // 320x320 (Known not to work. See https://github.com/espressif/arduino-esp32/pull/10814)
+  8 = FRAMESIZE_CIF,      // 400x296
+  9 = FRAMESIZE_HVGA,     // 480x320
+ 10 = FRAMESIZE_VGA,      // 640x480
+ 11 = FRAMESIZE_SVGA,     // 800x600
+ 12 = FRAMESIZE_XGA,      // 1024x768
+ 13 = FRAMESIZE_HD,       // 1280x720
+ 14 = FRAMESIZE_SXGA,     // 1280x1024
+ 15 = FRAMESIZE_UXGA,     // 1600x1200
+      // 3MP Sensors
+ 16 = FRAMESIZE_FHD,      // 1920x1080
+ 17 = FRAMESIZE_P_HD,     //  720x1280
+ 18 = FRAMESIZE_P_3MP,    //  864x1536
+ 19 = FRAMESIZE_QXGA,     // 2048x1536
+      // 5MP Sensors
+ 20 = FRAMESIZE_QHD,      // 2560x1440
+ 21 = FRAMESIZE_WQXGA,    // 2560x1600
+ 22 = FRAMESIZE_P_FHD,    // 1080x1920
+ 23 = FRAMESIZE_QSXGA,    // 2560x1920
+ 24 = FRAMESIZE_5MP,      // 2592x1944
+ 25 = FRAMESIZE_INVALID
+      // This driver
+ 31 = CAMERA DISABLED (from wcresolution -1)
 
 Framerate: I found that achievable streamed framerate is VERY dependent on wifi.
 e.g. latest BT router, but with android screensharing with TV, and framerate for resolution 0 was scatty between 20 and 40fps!!!!
@@ -488,6 +521,22 @@ struct {
 #define WC_REALLOC_WITH_COPY 2
 
 #define WC_USE_FAST_MEM 0x10
+
+/*********************************************************************************************/
+
+int32_t WcResolutionSetting(int32_t resolution = -2);
+int32_t WcResolutionSetting(int32_t resolution) {
+  if (resolution > -2) {
+    if (-1 == resolution) { resolution = 31; }
+    Settings->webcam_config.resolution = resolution & 0xF;
+    Settings->webcam_config2.resolution = resolution >> 4 & 0x1;
+  }
+  resolution = Settings->webcam_config2.resolution << 4 | Settings->webcam_config.resolution;
+  if (31 == resolution) { resolution = -1; }  // Disable Camera
+  return resolution;
+}
+
+/*********************************************************************************************/
 
 bool pic_alloc(struct PICSTORE *ps, int width, int height, int jpegsize, int format, int allocstyle){
   int len = 0;
@@ -931,8 +980,8 @@ uint32_t WcSetup(int32_t fsiz) {
 #ifdef WEBCAM_DEV_DEBUG  
   AddLog(LOG_LEVEL_DEBUG, PSTR("CAM: WcSetup"));
 #endif  
-  // if 15, make it -1, so disableing
-  if (fsiz >= FRAMESIZE_FHD) { fsiz = -1; }
+  // if FRAMESIZE_INVALID, make it -1, so disableing
+  if (fsiz >= FRAMESIZE_INVALID) { fsiz = -1; }
 
   if (fsiz < 0) {
     if (Wc.up){    
@@ -1179,7 +1228,7 @@ int32_t WcSetOptions(uint32_t sel, int32_t value) {
       // pixelformat - native formats + 1, 0->jpeg
       if (value >= 0) { Wc.camPixelFormat = value; }
       if (Wc.up){
-        WcSetup((int32_t)Settings->webcam_config.resolution);
+        WcSetup((int32_t)WcResolutionSetting());
       }
       return value;
       break;
@@ -2275,7 +2324,7 @@ void WcInit(void) {
   if (!Settings->webcam_config.data) {
     // set defaults...
     Settings->webcam_config.stream = 1;
-    Settings->webcam_config.resolution = FRAMESIZE_QVGA;
+    WcResolutionSetting(FRAMESIZE_QVGA);
     WcSetDefaults(0);
   }
   // previous webcam driver had only a small subset of possible config vars
@@ -2421,7 +2470,7 @@ void CmndWebcam(void) {
   ",\"" D_CMND_RTSP "\":%d"
 #endif // ENABLE_RTSPSERVER
   "}}"),
-    Settings->webcam_config.stream, Settings->webcam_config.resolution, Settings->webcam_config.mirror,
+    Settings->webcam_config.stream, WcResolutionSetting(), Settings->webcam_config.mirror,
     Settings->webcam_config.flip,
     Settings->webcam_config.saturation -2, Settings->webcam_config.brightness -2, Settings->webcam_config.contrast -2,
     Settings->webcam_config2.special_effect, Settings->webcam_config.awb, Settings->webcam_config2.wb_mode,
@@ -2649,20 +2698,20 @@ void CmndWebcamStream(void) {
 }
 
 void CmndWebcamResolution(void) {
-  if ((XdrvMailbox.payload >= -1) && (XdrvMailbox.payload < FRAMESIZE_FHD)) {
+  if ((XdrvMailbox.payload >= -1) && (XdrvMailbox.payload < FRAMESIZE_INVALID)) {
     int reinit = 0;
-    // if changinf from or to disabled, then force re-init.
-    if (Settings->webcam_config.resolution == 15 || XdrvMailbox.payload == -1){
+    // if changing from or to disabled, then force re-init.
+    if (WcResolutionSetting() == -1 || XdrvMailbox.payload == -1){
       reinit = 1;  
     }
-    Settings->webcam_config.resolution = XdrvMailbox.payload;
+    WcResolutionSetting(XdrvMailbox.payload);
     if (reinit) {
-      WcSetup((int32_t)Settings->webcam_config.resolution);
+      WcSetup((int32_t)WcResolutionSetting());
     } else {
-      WcSetOptions(0, Settings->webcam_config.resolution);
+      WcSetOptions(0, WcResolutionSetting());
     }
   }
-  ResponseCmndNumber(Settings->webcam_config.resolution);
+  ResponseCmndNumber(WcResolutionSetting());
 }
 
 void CmndWebcamMirror(void) {
@@ -2861,7 +2910,7 @@ void CmndWebcamClock(void){
     Settings->webcam_clk = XdrvMailbox.payload;
     // if cam is up, must setup to apply
     if (Wc.up){
-      WcSetup((int32_t)Settings->webcam_config.resolution);
+      WcSetup((int32_t)WcResolutionSetting());
     }
   }
   ResponseCmndNumber(Settings->webcam_clk);
@@ -2876,7 +2925,7 @@ void CmndWebcamCamStartStop(void){
 
 
 void CmndWebcamInit(void) {
-  WcSetup((int32_t)Settings->webcam_config.resolution);
+  WcSetup((int32_t)WcResolutionSetting());
   WcSetStreamserver(Settings->webcam_config.stream);
   ResponseCmndDone();
 }
@@ -3027,7 +3076,7 @@ bool Xdrv99(uint32_t function) {
       break;
     case FUNC_INIT:
       // starts stream server if configured, and configured camera 
-      WcSetup((int32_t)Settings->webcam_config.resolution);
+      WcSetup((int32_t)WcResolutionSetting());
       WcSetStreamserver(Settings->webcam_config.stream);
       WCStartOperationTask();
       break;
