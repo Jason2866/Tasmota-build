@@ -9,12 +9,13 @@ All notable changes to this project will be documented in this file.
 - Berry transpose C defines to Berry in `tasmota_defines_for_berry.be` (#24680)
 - MiElHVAC extend support of AirDirection control (#24675)
 - Command `SetOption [0..2]` to display SetOption values
+- Command `WcResolution 0..24` increasing camera max resolution from 14 to 24
 
 ### Breaking Changed
 
 ### Changed
 - ESP32 Platform from 2025.04.30 to 2026.04.50, Framework (Arduino Core) from v3.1.11 to v3.3.8 and IDF from v5.3.4.260127 to v5.5.4.260407 (#24676)
-- Berry solidification cache
+- Berry solidification cache (#24710)
 
 ### Fixed
 

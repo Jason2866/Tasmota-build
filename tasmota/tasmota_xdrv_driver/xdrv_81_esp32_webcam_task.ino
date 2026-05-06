@@ -826,6 +826,7 @@ void WcFeature(int32_t value) {
   TasAutoMutex localmutex(&WebcamMutex, "WcFeature", 200);
   sensor_t * wc_s = esp_camera_sensor_get();
   if (!wc_s) { return; }
+  if (wc_s->id.PID != OV2640_PID) { return; }   // We currently only support OV2460 features
 
   if (value != 1) {
       // CLKRC: Set Clock Divider to 0 = fullspeed
@@ -985,6 +986,7 @@ uint32_t WcSetup(int32_t fsiz) {
 
   if (fsiz < 0) {
     if (Wc.up){    
+      esp_camera_return_all();
       esp_camera_deinit();
       AddLog(LOG_LEVEL_DEBUG, PSTR("CAM: Deinit fsiz %d"), fsiz);
       Wc.up = 0;
@@ -994,6 +996,7 @@ uint32_t WcSetup(int32_t fsiz) {
   }
 
   if (Wc.up) {
+    esp_camera_return_all();
     esp_camera_deinit();
 #ifdef WEBCAM_DEV_DEBUG  
     AddLog(LOG_LEVEL_DEBUG, PSTR("CAM: Deinit"));
@@ -1156,6 +1159,7 @@ uint32_t WcSetup(int32_t fsiz) {
     err = esp_camera_init(&config);
     if (err != ESP_OK) {
       AddLog(LOG_LEVEL_INFO, PSTR("CAM: InitErr 0x%x try %d"), err, (i+1));
+      esp_camera_return_all();
       esp_camera_deinit();
       if (err == 0x105 && (config.pin_pwdn >= 0)){
         // try a longer power off... and retry
@@ -2297,7 +2301,7 @@ void WcShowStream(void) {
   }
 
   if (!Wc.CamServer){
-    WSContentSend_P(PSTR("<p></p><center>Cam Server Not Running'</center><p></p>"));
+    WSContentSend_P(PSTR("<p></p><center>Cam Server Not Running</center><p></p>"));
     WSContentSend_P(HTTP_WEBCAM_MENUVIDEOCONTROL, "wcstream2", "Turn On Streaming");
   } else {
     if (!Wc.up){

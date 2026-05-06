@@ -115,6 +115,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ## Changelog v15.4.0.1
 ### Added
 - Command `SetOption [0..2]` to display SetOption values
+- Command `WcResolution 0..24` increasing camera max resolution from 14 to 24
 - MiElHVAC extend support of AirDirection control [#24675](https://github.com/arendst/Tasmota/issues/24675)
 - Berry add support for pre-processor [#24679](https://github.com/arendst/Tasmota/issues/24679)
 - Berry transpose C defines to Berry in `tasmota_defines_for_berry.be` [#24680](https://github.com/arendst/Tasmota/issues/24680)

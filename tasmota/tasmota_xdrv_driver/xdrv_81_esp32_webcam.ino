@@ -269,6 +269,7 @@ void WcFeature(int32_t value) {
   TasAutoMutex localmutex(&WebcamMutex, "WcFeature");
   sensor_t * wc_s = esp_camera_sensor_get();
   if (!wc_s) { return; }
+  if (wc_s->id.PID != OV2640_PID) { return; }   // We currently only support OV2460 features
 
   if (value != 1) {
       // CLKRC: Set Clock Divider to 0 = fullspeed
@@ -388,6 +389,7 @@ uint32_t WcSetup(int32_t fsiz) {
 
   if (fsiz < 0) {
     if (Wc.up){    
+      esp_camera_return_all();
       esp_camera_deinit();
       AddLog(LOG_LEVEL_DEBUG, PSTR("CAM: Deinit fsiz %d"), fsiz);
       Wc.up = 0;
@@ -396,6 +398,7 @@ uint32_t WcSetup(int32_t fsiz) {
   }
 
   if (Wc.up) {
+    esp_camera_return_all();
     esp_camera_deinit();
     AddLog(LOG_LEVEL_DEBUG, PSTR("CAM: Deinit"));
     //return Wc.up;
@@ -499,6 +502,7 @@ uint32_t WcSetup(int32_t fsiz) {
 
     if (err != ESP_OK) {
       AddLog(LOG_LEVEL_INFO, PSTR("CAM: InitErr 0x%x try %d"), err, (i+1));
+      esp_camera_return_all();
       esp_camera_deinit();
     } else {
       if (i){
