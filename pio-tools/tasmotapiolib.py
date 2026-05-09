@@ -144,8 +144,8 @@ def is_env_set(name: str, env):
 
 # Targets for which Berry artifact regeneration should be skipped.
 NON_BUILD_TARGETS = frozenset({
-    # uploads
-    "upload", "uploadfs", "uploadfsota",
+    # filesystem-only uploads (do not compile firmware)
+    "uploadfs", "uploadfsota",
     # filesystem build/download
     "buildfs", "downloadfs", "download_fs",
     # erase variants
@@ -178,7 +178,7 @@ def is_non_build_target(env=None):
     # COMMAND_LINE_TARGETS is empty (e.g. VS Code / PlatformIO IDE environment).
     # Fall back to inspecting sys.argv for known non-build target keywords.
     argv_lower = [str(a).lower() for a in sys.argv]
-    if any(t in arg for t in NON_BUILD_TARGETS for arg in argv_lower):
+    if any(t == arg for t in NON_BUILD_TARGETS for arg in argv_lower):
         return True
 
     return False  # default build
