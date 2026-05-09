@@ -360,6 +360,8 @@ const int nativeIntervals20ms[] = {
    100, //24 = FRAMESIZE_5MP,      // 2592x1944
 };
 
+static_assert(FRAMESIZE_INVALID == 25, "Number of supported frame sizes has changed in tools/esp32-arduino-libs sensor.h. Update table above. If over 31 redesign WcResolutionSetting()");
+
 
 // use mutex like:
 // TasAutoMutex localmutex(&WebcamMutex, "somename", 200);
