@@ -5,16 +5,19 @@ All notable changes to this project will be documented in this file.
 
 ## [15.4.0.2]
 ### Added
+- Support for Modbus RX Enable GPIO (#24726)
+- Support for hostname generation using single-specifier Format() patterns (#24731)
 
 ### Breaking Changed
 
 ### Changed
 - ESP32 Platform from 2026.04.50 to 2026.05.50, Framework (Arduino Core) from v3.3.8 to v3.3.8.260506 and IDF v5.5.4.260407 (#24718)
 - Berry `format()` now uses internal `ext_snprintf_P()` for floating point formatting (#24725)
+- ESP8266 wrap printf and replace with stubs reducing flash size by 6k (#24714)
 
 ### Fixed
-- NeoPool fix possible overflow/div-zero errors
-- NeoPool fix Hydrolysis module detection
+- NeoPool possible overflow/div-zero errors and Hydrolysis module detection (#24724)
+- Seesaw encoder position tracking in light control mode (#24730)
 
 ### Removed
 
