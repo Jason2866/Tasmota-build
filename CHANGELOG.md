@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 - Berry `format()` now uses internal `ext_snprintf_P()` for floating point formatting (#24725)
 
 ### Fixed
+- NeoPool fix possible overflow/div-zero errors
+- NeoPool fix Hydrolysis module detection
 
 ### Removed
 
