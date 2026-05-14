@@ -4081,6 +4081,7 @@ o888o        o888ooooood8 o88o     o8888o     o888o     o888o o8o        `8     
     #ifndef USE_DISPLAY
       #define USE_DISPLAY
       #define USE_UNIVERSAL_DISPLAY
+      #define USE_UNIVERSAL_TOUCH
     #endif
 //       #define USE_DISPLAY_ILI9341                  // [DisplayModel 4] Enable ILI9341 Tft 480x320 display (+19k code)
 //       #define USE_DISPLAY_EPAPER_29                // [DisplayModel 5] Enable e-paper 2.9 inch display (+19k code)
