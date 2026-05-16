@@ -124,6 +124,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry add support for pre-processor [#24679](https://github.com/arendst/Tasmota/issues/24679)
 - Berry transpose C defines to Berry in `tasmota_defines_for_berry.be` [#24680](https://github.com/arendst/Tasmota/issues/24680)
 - Berry RGBW white blend and 10-bit gamma support to Berry LED pixel rendering [#24750](https://github.com/arendst/Tasmota/issues/24750)
+- Berry manual tool to compare and verify solidification between C and Python [#24754](https://github.com/arendst/Tasmota/issues/24754)
 
 ### Breaking Changed
 
