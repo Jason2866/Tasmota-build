@@ -3457,8 +3457,11 @@ void HandleUpgradeFirmwareStart(void) {
 void HandleUploadDone(void) {
   if (!HttpCheckPriviledgedAccess()) { return; }
 
+  uint32_t upload_file_type = Web.upload_file_type;
+  Web.upload_file_type = UPL_NONE;
+
 #if defined(USE_ZIGBEE_EZSP)
-  if ((UPL_EFR32 == Web.upload_file_type) && !Web.upload_error && BUpload.ready) {
+  if ((UPL_EFR32 == upload_file_type) && !Web.upload_error && BUpload.ready) {
     BUpload.ready = false;  //  Make sure not to follow thru again
     // GUI xmodem
     ZigbeeUploadStep1Done(FlashWriteStartSector(), BUpload.spi_hex_size);
@@ -3475,7 +3478,7 @@ void HandleUploadDone(void) {
   WSContentStart_P(PSTR(D_INFORMATION));
   if (!Web.upload_error) {
     WSContentSend_P(HTTP_SCRIPT_RELOAD_TIME, 
-      (UPL_TASMOTA == Web.upload_file_type) ? HTTP_OTA_RESTART_RECONNECT_TIME : HTTP_RESTART_RECONNECT_TIME);  // Refesh main web ui after OTA upgrade
+      (UPL_TASMOTA == upload_file_type) ? HTTP_OTA_RESTART_RECONNECT_TIME : HTTP_RESTART_RECONNECT_TIME);  // Refesh main web ui after OTA upgrade
   }
   WSContentSendStyle();
   WSContentSend_P(PSTR("<div style='text-align:center;'><b>" D_UPLOAD " <font color='#"));
@@ -3537,6 +3540,7 @@ void HandleUploadLoop(void) {
   static bool upload_error_signalled;
 
   if (HTTP_USER == Web.state) { return; }
+  if (UPL_NONE == Web.upload_file_type) { return; }  // Invalid or no file type so bail out
 
   if (Web.upload_error) {
     if (!upload_error_signalled) {
