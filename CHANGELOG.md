@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - ESP8266 wrap printf and replace with stubs reducing flash size by 6k (#24714)
 - LVGL splash screen uses default Montserrat-14 instead of Montserrat-20 on small screens (#24735)
 - Move autoconf repository to `ota.tasmota.com` (#24754)
+- Increase security by inverting state of `define DISABLE_REFERER_CHK`, command `SetOption128` controlling HTTP access which is now default off
 
 ### Fixed
 - NeoPool possible overflow/div-zero errors and Hydrolysis module detection (#24724)

@@ -782,7 +782,7 @@ bool HttpCheckPriviledgedAccess(bool autorequestauth = true) {
     return false;
   }
 
-  if (!Settings->flag5.disable_referer_chk && !WifiIsInManagerMode()) {
+  if (!Settings->flag5.disable_referer_chk && !WifiIsInManagerMode()) {  // SetOption128 - DISABLE_REFERER_CHK - (Web) Allow access without referer check
     String referer = Webserver->header(F("Referer"));  // http://demo/? or http://192.168.2.153/?
     if (referer.length()) {
       referer.toUpperCase();
@@ -3539,7 +3539,7 @@ void HandleUploadLoop(void) {
   static uint32_t upload_size;
   static bool upload_error_signalled;
 
-  if (HTTP_USER == Web.state) { return; }
+  if (!HttpCheckPriviledgedAccess(false)) { return; }
   if (UPL_NONE == Web.upload_file_type) { return; }  // Invalid or no file type so bail out
 
   if (Web.upload_error) {
