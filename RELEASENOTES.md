@@ -141,4 +141,3 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ### Removed
 - `USE_UNIVERSAL_TOUCH` no more forced when `USE_UNIVERSAL_DISPLAY` is enabled [#24743](https://github.com/arendst/Tasmota/issues/24743)
-- Disable `-DUSE_SHA_ROM` flag due to TLS issues [#24744](https://github.com/arendst/Tasmota/issues/24744)

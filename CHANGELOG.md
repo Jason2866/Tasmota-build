@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - `USE_UNIVERSAL_TOUCH` no more forced when `USE_UNIVERSAL_DISPLAY` is enabled (#24743)
 - Disable `-DUSE_SHA_ROM` flag due to TLS issues (#24744)
+- Re-enable `-DUSE_SHA_ROM` flag for IDF v5.5.4 = current version and up (#24757)
 
 ## [15.4.0.1] 20260507
 ### Added
