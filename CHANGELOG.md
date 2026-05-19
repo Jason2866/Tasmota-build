@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Berry manual tool to compare and verify solidification between C and Python (#24754)
 - ESP32 VID6608 hardware RMT support for Automotive gauge driver (#24759)
 - Support for uDisplay ST7305 (#24738)
+- Support for hosted MCU different from esp32c6
 
 ### Breaking Changed
 
