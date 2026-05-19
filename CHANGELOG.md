@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Support for multi-byte chars like emojis (💡) in light device toggle buttons (#24482)
 - Berry RGBW white blend and 10-bit gamma support to Berry LED pixel rendering (#24750)
 - Berry manual tool to compare and verify solidification between C and Python (#24754)
+- ESP32 VID6608 hardware RMT support for Automotive gauge driver (#24759)
 
 ### Breaking Changed
 
