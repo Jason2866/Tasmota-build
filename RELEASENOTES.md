@@ -120,6 +120,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for Modbus RX Enable GPIO [#24726](https://github.com/arendst/Tasmota/issues/24726)
 - Support for multi-byte chars like emojis (💡) in light device toggle buttons [#24482](https://github.com/arendst/Tasmota/issues/24482)
 - Support for M5Stack Atom S3R drivers [#24747](https://github.com/arendst/Tasmota/issues/24747)
+- Support for uDisplay ST7305 [#24738](https://github.com/arendst/Tasmota/issues/24738)
 - MiElHVAC extend support of AirDirection control [#24675](https://github.com/arendst/Tasmota/issues/24675)
 - ESP32 VID6608 hardware RMT support for Automotive gauge driver [#24759](https://github.com/arendst/Tasmota/issues/24759)
 - Berry add support for pre-processor [#24679](https://github.com/arendst/Tasmota/issues/24679)
