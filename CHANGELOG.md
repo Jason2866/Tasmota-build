@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - NeoPool possible overflow/div-zero errors and Hydrolysis module detection (#24724)
 - Seesaw encoder position tracking in light control mode (#24730)
+- I80 pushColors swap logic for parallel displays (#24766)
 
 ### Removed
 - `USE_UNIVERSAL_TOUCH` no more forced when `USE_UNIVERSAL_DISPLAY` is enabled (#24743)

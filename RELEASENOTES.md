@@ -140,6 +140,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - LVGL splash screen uses default Montserrat-14 instead of Montserrat-20 on small screens [#24735](https://github.com/arendst/Tasmota/issues/24735)
 
 ### Fixed
+- I80 pushColors swap logic for parallel displays [#24766](https://github.com/arendst/Tasmota/issues/24766)
 - NeoPool possible overflow/div-zero errors and Hydrolysis module detection [#24724](https://github.com/arendst/Tasmota/issues/24724)
 - Seesaw encoder position tracking in light control mode [#24730](https://github.com/arendst/Tasmota/issues/24730)
 
