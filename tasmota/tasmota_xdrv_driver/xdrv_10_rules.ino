@@ -304,7 +304,7 @@ String GetRule(uint32_t idx) {
     // If the cache is empty, we need to decompress from Settings
     if (0 == k_rules[idx].length() ) {
       GetRule_decompress(rule, &Settings->rules[idx][1]);
-      if (!Settings->flag4.compress_rules_cpu) {
+      if (!Settings->flag4.compress_rules_cpu) {  // SetOption93 - (Compress) Keep uncompressed rules in memory to avoid CPU load of uncompressing at each tick (1)
         k_rules[idx] = rule;        // keep a copy for next time
       }
     } else {
@@ -934,8 +934,7 @@ bool RulesProcess(void) {
   return false;
 }
 
-void RulesInit(void)
-{
+void RulesInit(void) {
   // indicates scripter not enabled
   bitWrite(Settings->rule_once, 7, 0);
   // and indicates scripter do not use compress
@@ -947,6 +946,16 @@ void RulesInit(void)
       bitWrite(Settings->rule_enabled, i, 0);
       bitWrite(Settings->rule_once, i, 0);
     }
+#ifdef USE_UNISHOX_COMPRESSION
+    else {
+      // Pre-populate k_rules[] cache here (FUNC_PRE_INIT), before WiFi/MQTT/WebServer
+      // allocate heap, so the persistent cache lands at low heap addresses instead of
+      // fragmenting the middle of the heap when first rule evaluation occurs later.
+      if (!Settings->flag4.compress_rules_cpu) {  // SetOption93 - (Compress) Keep uncompressed rules in memory to avoid CPU load of uncompressing at each tick (1)
+        GetRule(i);
+      }
+    }
+#endif
   }
   Rules.teleperiod = false;
 }

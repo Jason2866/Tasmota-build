@@ -13,8 +13,8 @@ All notable changes to this project will be documented in this file.
 - Berry manual tool to compare and verify solidification between C and Python (#24754)
 - ESP32 VID6608 hardware RMT support for Automotive gauge driver (#24759)
 - Support for uDisplay ST7305 (#24738)
-- Support for hosted MCU different from esp32c6
-- Trigger events to Berry when `USE_RULES` is not enabled
+- Support for hosted MCU other than esp32c6
+- Trigger events to Berry when `USE_RULES` is not enabled (#24796)
 
 ### Breaking Changed
 
@@ -30,7 +30,7 @@ All notable changes to this project will be documented in this file.
 - NeoPool possible overflow/div-zero errors and Hydrolysis module detection (#24724)
 - Seesaw encoder position tracking in light control mode (#24730)
 - I80 pushColors swap logic for parallel displays (#24766)
-- Crash when MQTT-TLS when tcp connection failed
+- Crash when MQTT-TLS when tcp connection failed (#24798)
 
 ### Removed
 - `USE_UNIVERSAL_TOUCH` no more forced when `USE_UNIVERSAL_DISPLAY` is enabled (#24743)
