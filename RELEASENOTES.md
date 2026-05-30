@@ -145,6 +145,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - I80 pushColors swap logic for parallel displays [#24766](https://github.com/arendst/Tasmota/issues/24766)
 - NeoPool possible overflow/div-zero errors and Hydrolysis module detection [#24724](https://github.com/arendst/Tasmota/issues/24724)
 - Seesaw encoder position tracking in light control mode [#24730](https://github.com/arendst/Tasmota/issues/24730)
+- Berry `write(value:int | s:string) -> nil` internal argument parsing [#24800](https://github.com/arendst/Tasmota/issues/24800)
 
 ### Removed
 - `USE_UNIVERSAL_TOUCH` no more forced when `USE_UNIVERSAL_DISPLAY` is enabled [#24743](https://github.com/arendst/Tasmota/issues/24743)
