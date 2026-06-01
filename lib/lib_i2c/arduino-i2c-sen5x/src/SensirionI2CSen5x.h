@@ -50,7 +50,7 @@ class SensirionI2CSen5x {
     /**
      * begin() - Initializes the SensirionI2CSen5x class.
      *
-     * @param serial Arduino stream object to be communicated with.
+     * @param i2cBus Arduino stream object to use for communication.
      *
      */
     void begin(TwoWire& i2cBus);
@@ -62,8 +62,11 @@ class SensirionI2CSen5x {
      * measurement results are available. You could poll with the command
      * 0x0202 \"Read Data Ready\" to check when the results are ready to read.
      *
-     * This command is only available in idle mode. If the device is already
-     * in any measure mode, this command has no effect.
+     * If the device is in measure mode without particulate matter (low-power)
+     * and the firmware version is at least 2.0, this command enables PM
+     * measurement without affecting the already running RH/T/VOC/NOx
+     * measurements (except that the \"data ready\"-flag will be cleared). In
+     * previous firmware versions, this command is supported only in idle mode.
      *
      * @return 0 on success, an error code otherwise
      */
@@ -78,8 +81,11 @@ class SensirionI2CSen5x {
      * measurement results are available. You could poll with the command
      * 0x0202 \"Read Data Ready\" to check when the results are ready to read.
      *
-     * This command is only available in idle mode. If the device is already
-     * in any measure mode, this command has no effect.
+     * If the device is in measure mode with particulate matter (normal measure
+     * mode) and the firmware version is at least 2.0, this command disables PM
+     * measurement without affecting the already running RH/T/VOC/NOx
+     * measurements (except that the \"data ready\"-flag will be cleared). In
+     * previous firmware versions, this command is supported only in idle mode.
      *
      * Supported sensors: SEN54, SEN55
      *
@@ -238,8 +244,8 @@ class SensirionI2CSen5x {
      *
      * @param rawNox Raw measured NOx ticks without scale factor.
      * Note: If this value is unknown, which is the case for SEN54,
-     * 0x7FFF is returned. During the first 10..11 seconds after power-on
-     * or device reset, this value will be 0x7FFF as well.*
+     * 0xFFFF is returned. During the first 10..11 seconds after power-on
+     * or device reset, this value will be 0xFFFF as well.*
      *
      * @return 0 on success, an error code otherwise
      */
@@ -334,35 +340,35 @@ class SensirionI2CSen5x {
      * second), all values will be 0xFFFF.
      *
      * @param massConcentrationPm1p0 Value is scaled with factor 10:
-     *                               PM1.0 [µg/m³] = value / 1
+     *                               PM1.0 [µg/m³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param massConcentrationPm2p5 Value is scaled with factor 10:
-     *                               PM2.5 [µg/m³] = value / 1
+     *                               PM2.5 [µg/m³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param massConcentrationPm4p0 Value is scaled with factor 10:
-     *                               PM4.0 [µg/m³] = value / 1
+     *                               PM4.0 [µg/m³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param massConcentrationPm10p0 Value is scaled with factor 10:
-     *                                PM10.0 [µg/m³] = value / 1
+     *                                PM10.0 [µg/m³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param numberConcentrationPm0p5 Value is scaled with factor 10:
-     *                                 PM0.5 [#/cm³] = value / 1
+     *                                 PM0.5 [#/cm³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param numberConcentrationPm1p0 Value is scaled with factor 10:
-     *                                 PM1.0 [#/cm³] = value / 1
+     *                                 PM1.0 [#/cm³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param numberConcentrationPm2p5 Value is scaled with factor 10:
-     *                                 PM2.5 [#/cm³] = value / 1
+     *                                 PM2.5 [#/cm³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param numberConcentrationPm4p0 Value is scaled with factor 10:
-     *                                 PM4.0 [#/cm³] = value / 1
+     *                                 PM4.0 [#/cm³] = value / 10
      * Note: If this value is unknown, 0xFFFF is returned.*
      *
      * @param numberConcentrationPm10p0 Value is scaled with factor 10:

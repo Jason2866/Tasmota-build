@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Support for uDisplay ST7305 (#24738)
 - Support for hosted MCU other than esp32c6
 - Trigger events to Berry when `USE_RULES` is not enabled (#24796)
+- Support for Modbus Relays (#24812)
 
 ### Breaking Changed
 
@@ -32,6 +33,8 @@ All notable changes to this project will be documented in this file.
 - I80 pushColors swap logic for parallel displays (#24766)
 - Crash when MQTT-TLS when tcp connection failed (#24798)
 - Berry `write(value:int | s:string) -> nil` internal argument parsing (#24800)
+- MiElHVAC sensor and settings out of sync (#24813)
+- SPS30 not detected on ESP8266 (#24780)
 
 ### Removed
 - `USE_UNIVERSAL_TOUCH` no more forced when `USE_UNIVERSAL_DISPLAY` is enabled (#24743)

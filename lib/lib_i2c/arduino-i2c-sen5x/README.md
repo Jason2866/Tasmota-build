@@ -1,5 +1,3 @@
-<!-- Downloaded from https://github.com/Sensirion/arduino-i2c-sen5x
-on 10/01/2023 at commit d7a73c86073cca34b84cde83814f5c17b87aad6d -->
 # Sensirion I2C SEN5X Arduino Library
 
 This is the Sensirion SEN5X library for Arduino using the
