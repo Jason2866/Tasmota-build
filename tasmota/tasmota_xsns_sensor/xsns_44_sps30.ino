@@ -28,7 +28,9 @@
 #define XSNS_44                    44
 #define XI2C_30                    30  // See I2CDEVICES.md
 
-//#define SPS30_PARTS_PER_DECILITER      // Report NCPM as parts per deciliter instead of parts per cm3
+//#define SPS30_ENABLE_SLEEP             // SPS30 v2.0: Adds support for sleep/wakeup to reduce power when not measuring (+0k2 code)
+//#define SPS30_PARTS_PER_DECILITER      // Report NCPM as parts per deciliter instead of parts per cm3 (+0k1 code)
+
 //#define SENSIRION_DEBUG                // Adds 1k2 to code size
 
 #include <SensirionI2cSps30.h>
@@ -65,6 +67,25 @@ bool Sps30Error(const char* func, int error) {
   return result;
 }
 
+#ifdef SPS30_ENABLE_SLEEP
+int16_t Sps30Wakeup(void) {
+  // SPS30 v2.0: Switch from sleep to idle mode. Performs delay(5) if no error
+  // If the software implementation does not allow to send a I2C-Start-Condition followed by a Stop-Condition,
+  // the Wake-up command can be sent twice in succession. In this case the first Wake-up command is ignored, but causes
+  // the interface to be activated.
+  int16_t localError = 0;
+  sps30.wakeUp();
+/*
+  // Note: Lib v1.0.1 always returns 0 on call to wakeUp()
+  if (Sps30Error("WakeUp", sps30.wakeUp())) {
+    localError = 1;
+  }
+*/  
+  sps30.wakeUp();
+  return localError;
+}
+#endif  // SPS30_ENABLE_SLEEP
+
 /********************************************************************************************/
 
 void Sps30Init(void) {
@@ -76,12 +97,6 @@ void Sps30Init(void) {
     }
     sps30.begin(I2cGetWire(bus), SPS30_I2C_ADDR_69);
 
-    if (sps30.wakeUp()) {                             // Switch from sleep to idle mode. Performs delay(5) if no error
-      if (Sps30Error("WakeUp", sps30.wakeUp())) {
-        continue;
-      }
-    }
-
     if (sps30.deviceReset()) {                        // Switch to power reset state (idle mode). Performs delay(100) if no error
       if (Sps30Error("Reset", sps30.deviceReset())) { // See https://github.com/arendst/Tasmota/discussions/24452
         continue;
@@ -90,12 +105,14 @@ void Sps30Init(void) {
 
     uint8_t major;
     uint8_t minor;
-    if (Sps30Error("Version", sps30.readFirmwareVersion(major, minor))) {
+//    if (Sps30Error("Version", sps30.readFirmwareVersion(major, minor))) {
+    if (sps30.readFirmwareVersion(major, minor)) {
       continue;
     }
 
     int8_t serial_number[32] = { 0 };
-    if (Sps30Error("Serialnumber", sps30.readSerialNumber(serial_number, sizeof(serial_number)))) {
+//    if (Sps30Error("Serialnumber", sps30.readSerialNumber(serial_number, sizeof(serial_number)))) {
+    if (sps30.readSerialNumber(serial_number, sizeof(serial_number))) {
       continue;
     }
 /*
@@ -190,9 +207,15 @@ bool Sps30Command(void) {
     else if (*cp == '0' || *cp == '1') {
       SPS30DATA->running = *cp &1;
       if (SPS30DATA->running) {
+#ifdef SPS30_ENABLE_SLEEP
+        Sps30Wakeup();
+#endif  // SPS30_ENABLE_SLEEP
         sps30.startMeasurement(SPS30_OUTPUT_FORMAT_OUTPUT_FORMAT_FLOAT);
       } else {
         sps30.stopMeasurement();
+#ifdef SPS30_ENABLE_SLEEP
+        sps30.sleep();
+#endif  // SPS30_ENABLE_SLEEP
       }
     } else {
       return false;;
@@ -280,6 +303,11 @@ bool Xsns44(uint32_t function) {
         Sps30Show(0);
         break;
 #endif  // USE_WEBSERVER
+#ifdef SPS30_ENABLE_SLEEP
+      case FUNC_SAVE_BEFORE_RESTART:
+        Sps30Wakeup();         // Need to wakeup before a restart as otherwise SPS30 is not recognised after restart
+        break;
+#endif  // SPS30_ENABLE_SLEEP
       case FUNC_COMMAND_SENSOR:
         if (XSNS_44 == XdrvMailbox.index) {
           result = Sps30Command();
