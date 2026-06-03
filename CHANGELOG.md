@@ -3,7 +3,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [15.4.0.2]
+## [15.4.0.3]
+### Added
+
+### Breaking Changed
+
+### Changed
+- SCD4x library FrogmoreScd40 to Sensirion arduino-i2c-scd4x v1.1.0
+- SPS30 library Sensirion arduino-i2c-sps30 v1.0.1
+
+### Fixed
+
+### Removed
+
+## [15.4.0.2] 20260603
 ### Added
 - Support for Modbus RX Enable GPIO (#24726)
 - Support for hostname generation using single-specifier Format() patterns (#24731)
@@ -16,8 +29,6 @@ All notable changes to this project will be documented in this file.
 - Support for hosted MCU other than esp32c6
 - Trigger events to Berry when `USE_RULES` is not enabled (#24796)
 - Support for Modbus Relays (#24812)
-
-### Breaking Changed
 
 ### Changed
 - ESP32 Platform from 2026.04.50 to 2026.05.50, Framework (Arduino Core) from v3.3.8 to v3.3.8.260506 and IDF v5.5.4.260407 (#24718)
