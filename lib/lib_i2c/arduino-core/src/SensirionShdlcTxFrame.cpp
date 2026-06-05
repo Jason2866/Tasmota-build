@@ -39,7 +39,7 @@
 uint16_t SensirionShdlcTxFrame::begin(uint8_t command, uint8_t address,
                                       uint8_t dataLength) {
     _index = 0;  // sets the index to point towards the start of the buffer.
-    _buffer[_index] = 0x7e;
+    _buffer[_index++] = 0x7e;
     uint16_t error = addUInt8(address);
     error |= addUInt8(command);
     error |= addUInt8(dataLength);
