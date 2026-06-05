@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Breaking Changed
 
 ### Changed
+- SCD30 library FrogmoreScd30 to Sensirion arduino-i2c-scd30 v1.1.1
 - SCD4x library FrogmoreScd40 to Sensirion arduino-i2c-scd4x v1.1.0
 - SPS30 library Sensirion arduino-i2c-sps30 v1.0.1
 

@@ -135,6 +135,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ### Changed
 - ESP32 Platform from 2025.04.30 to 2026.05.50, Framework (Arduino Core) from v3.1.11 to v3.3.8.260506 and IDF from v5.3.4.260127 to v5.5.4.260407 [#24718](https://github.com/arendst/Tasmota/issues/24718)
+- SCD30 library FrogmoreScd30 to Sensirion arduino-i2c-scd30 v1.1.1
 - SCD4x library FrogmoreScd40 to Sensirion arduino-i2c-scd4x v1.1.0
 - SPS30 library Sensirion arduino-i2c-sps30 v1.0.1
 - Increase security by inverting state of `define DISABLE_REFERER_CHK` controlling remote HTTP access which is now default off
