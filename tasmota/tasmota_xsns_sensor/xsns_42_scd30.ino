@@ -72,25 +72,6 @@ void Scd30BusSpeed(uint32_t bus_speed) {
   I2cSetClock(bus_speed, scd30_bus);
 }
 
-void Scd30ClearI2CBus(void) {
-#ifdef ESP8266
-  /**
-   * SCD30 driver known issues:
-   *
-   * *softReset()*:
-   * After using the ``softReset()`` function on an Arduino MKR WIFI 1010 (software I2C),
-   * subsequent commands are no longer acknowledged. The I2C line remains low after
-   * receiving the first command byte.
-   *
-   * To make the provided example work on the Arduino MKR WIFI 1010, the call to
-   * ``softReset()`` and the subsequent ``delay()`` can be removed.
-   */
-  Scd30BusSpeed(SCD30_I2C_BUS_SPEED);
-  Scd30Error("ClearI2cBus", I2cClearBus(scd30_bus));
-  Scd30BusSpeed(0);
-#endif
-}
-
 /********************************************************************************************/
 
 void Scd30Init(void) {
@@ -202,7 +183,20 @@ void Scd30Update(void) {
     AddLog(LOG_LEVEL_DEBUG, PSTR("SCD: Reinit"));
     Scd30Error("StopMeasurement", scd30.stopPeriodicMeasurement());  // Performs delay(10)
     Scd30Error("ReInit", scd30.softReset());                         // Performs delay(2000)
-    Scd30ClearI2CBus();
+#ifdef ESP8266
+    /**
+    * SCD30 driver known issues:
+    *
+    * *softReset()*:
+    * After using the ``softReset()`` function on an Arduino MKR WIFI 1010 (software I2C),
+    * subsequent commands are no longer acknowledged. The I2C line remains low after
+    * receiving the first command byte.
+    *
+    * To make the provided example work on the Arduino MKR WIFI 1010, the call to
+    * ``softReset()`` and the subsequent ``delay()`` can be removed.
+    */
+    Scd30Error("ClearI2cBus", I2cClearBus(scd30_bus));
+#endif  // ESP8266
     Scd30Error("Measurement", scd30.startPeriodicMeasurement(SCD30DATA->pressure));
     SCD30DATA->loop_count = 0;
   }
