@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [15.4.0.3]
 ### Added
-- Serial console support for Backspace when enabling `#define USE_SERIAL_BACKSPACE`
+- Serial console support for Backspace when enabling `#define USE_SERIAL_BACKSPACE` (#24830)
 
 ### Breaking Changed
 

@@ -123,6 +123,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Support for uDisplay ST7305 [#24738](https://github.com/arendst/Tasmota/issues/24738)
 - Support for Modbus Relays [#24812](https://github.com/arendst/Tasmota/issues/24812)
 - Support for hosted MCU other than esp32c6
+- Serial console support for Backspace when enabling `#define USE_SERIAL_BACKSPACE` [#24830](https://github.com/arendst/Tasmota/issues/24830)
 - Trigger events to Berry when `USE_RULES` is not enabled [#24796](https://github.com/arendst/Tasmota/issues/24796)
 - MiElHVAC extend support of AirDirection control [#24675](https://github.com/arendst/Tasmota/issues/24675)
 - ESP32 VID6608 hardware RMT support for Automotive gauge driver [#24759](https://github.com/arendst/Tasmota/issues/24759)
