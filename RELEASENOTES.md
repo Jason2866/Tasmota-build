@@ -140,6 +140,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - SCD30 library FrogmoreScd30 to Sensirion arduino-i2c-scd30 v1.1.1
 - SCD4x library FrogmoreScd40 to Sensirion arduino-i2c-scd4x v1.1.0
 - SPS30 library Sensirion arduino-i2c-sps30 v1.0.1
+- Code hardening replacing `strcat` and `strcpy` with safer alternatives [#24832](https://github.com/arendst/Tasmota/issues/24832)
 - Increase security by inverting state of `define DISABLE_REFERER_CHK` controlling remote HTTP access which is now default off
 - ESP8266 wrap printf and replace with stubs reducing flash size by 6k [#24714](https://github.com/arendst/Tasmota/issues/24714)
 - Move autoconf repository to `ota.tasmota.com` [#24754](https://github.com/arendst/Tasmota/issues/24754)
