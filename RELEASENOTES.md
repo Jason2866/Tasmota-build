@@ -114,6 +114,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ## Changelog v15.4.0.3
 ### Added
+- Build: Copy firmware artifacts with ELF-extracted build timestamp (opt-in) [#24794](https://github.com/arendst/Tasmota/issues/24794)
 - Command `SetOption [0..2]` to display SetOption values
 - Command `WcResolution 0..24` increasing camera max resolution from 14 to 24
 - Support for hostname generation using single-specifier Format() patterns [#24731](https://github.com/arendst/Tasmota/issues/24731)
