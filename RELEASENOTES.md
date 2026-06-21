@@ -132,8 +132,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Berry transpose C defines to Berry in `tasmota_defines_for_berry.be` [#24680](https://github.com/arendst/Tasmota/issues/24680)
 - Berry RGBW white blend and 10-bit gamma support to Berry LED pixel rendering [#24750](https://github.com/arendst/Tasmota/issues/24750)
 - Berry manual tool to compare and verify solidification between C and Python [#24754](https://github.com/arendst/Tasmota/issues/24754)
-
-### Breaking Changed
+- Enhance Matter plugin functionality for On/Off control and add support for Global Scene Control and related commands [#24854](https://github.com/arendst/Tasmota/issues/24854)
 
 ### Changed
 - ESP32 Platform from 2025.04.30 to 2026.05.50, Framework (Arduino Core) from v3.1.11 to v3.3.8.260506 and IDF from v5.3.4.260127 to v5.5.4.260407 [#24718](https://github.com/arendst/Tasmota/issues/24718)
@@ -152,6 +151,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Fixed
 - Crash when MQTT-TLS when tcp connection failed [#24798](https://github.com/arendst/Tasmota/issues/24798)
 - SPS30 not detected on ESP8266 [#24780](https://github.com/arendst/Tasmota/issues/24780)
+- SML modbus/TCP on ESP32-p4 with only Ethernet shows "SML: could not connect TCP since wifi is down" [#24845](https://github.com/arendst/Tasmota/issues/24845)
 - I80 pushColors swap logic for parallel displays [#24766](https://github.com/arendst/Tasmota/issues/24766)
 - MiElHVAC sensor and settings out of sync [#24813](https://github.com/arendst/Tasmota/issues/24813)
 - NeoPool possible overflow/div-zero errors and Hydrolysis module detection [#24724](https://github.com/arendst/Tasmota/issues/24724)
