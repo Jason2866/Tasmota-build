@@ -78,11 +78,17 @@
 #ifndef STA_PASS1
 #define STA_PASS1              ""                // [Password1] Wi-Fi password
 #endif
+#ifndef AP_BSSID1
+#define AP_BSSID1              ""                // [BSsid1] Wi-Fi desired AP BSSID to connect to
+#endif
 #ifndef STA_SSID2
 #define STA_SSID2              ""                // [Ssid2] Optional alternate AP Wi-Fi SSID
 #endif
 #ifndef STA_PASS2
 #define STA_PASS2              ""                // [Password2] Optional alternate AP Wi-Fi password
+#endif
+#ifndef AP_BSSID2
+#define AP_BSSID2              ""                // [BSsid2] Wi-Fi desired AP BSSID to connect to
 #endif
 #ifndef WIFI_AP_PASSPHRASE
 #define WIFI_AP_PASSPHRASE     ""                // AccessPoint passphrase. For WPA2 min 8 char, for open use "" (max 63 char).

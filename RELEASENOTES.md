@@ -117,6 +117,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Build copy firmware artifacts with ELF-extracted build timestamp (opt-in) [#24794](https://github.com/arendst/Tasmota/issues/24794)
 - Command `SetOption [0..2]` to display SetOption values
 - Command `WcResolution 0..24` increasing camera max resolution from 14 to 24
+- Command `BSSid[1|2] [0|1|11:22:33:44:55:66]` to select fixed WiFi Access Point disabling `SetOption56` and `SetOption57` [#24394](https://github.com/arendst/Tasmota/issues/24394)
 - Support for hostname generation using single-specifier Format() patterns [#24731](https://github.com/arendst/Tasmota/issues/24731)
 - Support for Modbus RX Enable GPIO [#24726](https://github.com/arendst/Tasmota/issues/24726)
 - Support for multi-byte chars like emojis (💡) in light device toggle buttons [#24482](https://github.com/arendst/Tasmota/issues/24482)
