@@ -114,7 +114,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 
 ## Changelog v15.4.0.3
 ### Added
-- Build: Copy firmware artifacts with ELF-extracted build timestamp (opt-in) [#24794](https://github.com/arendst/Tasmota/issues/24794)
+- Build copy firmware artifacts with ELF-extracted build timestamp (opt-in) [#24794](https://github.com/arendst/Tasmota/issues/24794)
 - Command `SetOption [0..2]` to display SetOption values
 - Command `WcResolution 0..24` increasing camera max resolution from 14 to 24
 - Support for hostname generation using single-specifier Format() patterns [#24731](https://github.com/arendst/Tasmota/issues/24731)
@@ -145,6 +145,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - Increase security by inverting state of `define DISABLE_REFERER_CHK` controlling remote HTTP access which is now default off
 - ESP8266 wrap printf and replace with stubs reducing flash size by 6k [#24714](https://github.com/arendst/Tasmota/issues/24714)
 - Move autoconf repository to `ota.tasmota.com` [#24754](https://github.com/arendst/Tasmota/issues/24754)
+- Berry optimized solidified structures for code constants and maps [#24838](https://github.com/arendst/Tasmota/issues/24838)
 - Berry `format()` now uses internal `ext_snprintf_P()` for floating point formatting [#24725](https://github.com/arendst/Tasmota/issues/24725)
 - LVGL splash screen uses default Montserrat-14 instead of Montserrat-20 on small screens [#24735](https://github.com/arendst/Tasmota/issues/24735)
 

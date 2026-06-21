@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [15.4.0.3]
 ### Added
 - Serial console support for Backspace when enabling `#define USE_SERIAL_BACKSPACE` (#24830)
-- Build: Copy firmware artifacts with ELF-extracted build timestamp (opt-in) (#24794)
+- Build copy firmware artifacts with ELF-extracted build timestamp (opt-in) (#24794)
 
 ### Breaking Changed
 
@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - SCD4x library FrogmoreScd40 to Sensirion arduino-i2c-scd4x v1.1.0
 - SPS30 library Sensirion arduino-i2c-sps30 v1.0.1
 - Code hardening replacing `strcat` and `strcpy` with safer alternatives (#24832)
-- Berry optimized solidified structures for code constants and maps
+- Berry optimized solidified structures for code constants and maps (#24838)
 
 ### Fixed
 
