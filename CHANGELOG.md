@@ -3,14 +3,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
-## [15.4.0.3]
+## [15.5.0.1]
+### Added
+
+### Breaking Changed
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [Released]
+
+## [15.5.0] 20260621
+- Release Sylvan
+
+## [15.4.0.3] 20260621
 ### Added
 - Serial console support for Backspace when enabling `#define USE_SERIAL_BACKSPACE` (#24830)
 - Build copy firmware artifacts with ELF-extracted build timestamp (opt-in) (#24794)
 - Enhance Matter plugin functionality for On/Off control and add support for Global Scene Control and related commands (#24854)
 - Command `BSSid[1|2] [0|1|11:22:33:44:55:66]` to select fixed WiFi Access Point disabling `SetOption56` and `SetOption57` (#24394)
-
-### Breaking Changed
 
 ### Changed
 - Sensirion_Core library from v0.7.2 to arduino-core v0.7.3
@@ -22,8 +36,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - SML modbus/TCP on ESP32-p4 with only Ethernet shows "SML: could not connect TCP since wifi is down" (#24845)
-
-### Removed
 
 ## [15.4.0.2] 20260603
 ### Added
@@ -72,8 +84,6 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - ESP32 Platform from 2025.04.30 to 2026.04.50, Framework (Arduino Core) from v3.1.11 to v3.3.8 and IDF from v5.3.4.260127 to v5.5.4.260407 (#24676)
 - Berry solidification cache (#24710)
-
-## [Released]
 
 ## [15.4.0] 20260422
 - Release Sybil
