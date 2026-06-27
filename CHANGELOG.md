@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 
 ## [15.5.0.1]
 ### Added
-- Berry `bytes` methods `setbits`/`getbits` transposed to native and support for big endian
+- Berry `bytes` methods `setbits`/`getbits` transposed to native and support for big endian (#24857)
 
 ### Breaking Changed
 
 ### Changed
+- MiElHVAC auto-enable i-See widevane when setting AirDirection (#24860)
 
 ### Fixed
 
