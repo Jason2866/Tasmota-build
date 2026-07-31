@@ -14,6 +14,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Can sniffer functionality (#18287)
+- Reset BLE scan flag on new operation (#24925)
+- Minor fixes in `LList`
+- TLS fix public key fingerprint for ECDSA certificates
 
 ### Removed
 

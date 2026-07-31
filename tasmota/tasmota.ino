@@ -747,10 +747,6 @@ void BacklogLoop(void) {
       do {
         char* cmd = *backlog.head();
         backlog.removeHead();
-/*
-        // This adds 32 bytes
-        char* cmd = *backlog.removeHead();
-*/
         if (!strncasecmp_P(cmd, PSTR(D_CMND_NODELAY), strlen(D_CMND_NODELAY))) {
           free(cmd);
           nodelay = true;
