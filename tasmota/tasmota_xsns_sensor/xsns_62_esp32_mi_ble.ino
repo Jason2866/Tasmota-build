@@ -1,11 +1,7 @@
 /*
   xsns_62_esp32_mi_ble.ino - MI-BLE-sensors via ESP32 support for Tasmota
-  enabled by ESP32 && USE_BLE_ESP32
-  if (ESP32 && !USE_BLE_ESP32) then xsns_62_esp32_mi.ino is used - the older driver
 
-
-  Copyright (C) 2020  Christian Baars and Theo Arends
-  Also Simon Hailes and Robert Klauco
+  Copyright (C) 2020  Christian Baars, Simon Hailes, Robert Klauco and Theo Arends
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,8 +16,34 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#define MI32_VERSION "V0.9.3.1"
+//#define VSCODE_DEV
+
 /*
+#ifdef VSCODE_DEV
+#define ESP32
+#define USE_BLE_ESP32
+#define USE_MI_ESP32
+#endif
+*/
+//#undef USE_MI_ESP32
+
+// for testing of BLE_ESP32, we remove xsns_62_MI_ESP32.ino completely, and instead add this modified xsns_52_ibeacon_BLE_ESP32.ino
+#ifdef USE_BLE_ESP32
+
+#ifdef ESP32                       // ESP32 family only. Use define USE_HM10 for ESP8266 support
+#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C5 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32S3
+
+#ifdef USE_MI_ESP32
+
+#define MI32_VERSION "V0.9.3.1"
+
+/*********************************************************************************************\
+  BLE Xiaomi/Mijia (MI) sensor decoding
+  BLE BTHome V2 sensor decoding
+
+  enabled by #define ESP32 && #define USE_BLE_ESP32
+  if (#define ESP32 && no #define USE_BLE_ESP32) then xsns_62_esp32_mi.ino is used - the older driver
+
   --------------------------------------------------------------------------------------------
   Version yyyymmdd  Action    Description
   --------------------------------------------------------------------------------------------
@@ -76,29 +98,11 @@
   -------
   0.9.0.0 20200413  started - initial development by Christian Baars
                     forked  - from arendst/tasmota            - https://github.com/arendst/Tasmota
+\*********************************************************************************************/
 
-*/
-//#define VSCODE_DEV
+#define XSNS_62                62
 
-/*
-#ifdef VSCODE_DEV
-#define ESP32
-#define USE_BLE_ESP32
-#define USE_MI_ESP32
-#endif
-*/
-//#undef USE_MI_ESP32
-
-// for testing of BLE_ESP32, we remove xsns_62_MI_ESP32.ino completely, and instead add this modified xsns_52_ibeacon_BLE_ESP32.ino
-#ifdef USE_BLE_ESP32
-
-#ifdef ESP32                       // ESP32 family only. Use define USE_HM10 for ESP8266 support
-#if CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C5 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32S3
-
-#ifdef USE_MI_ESP32
-
-#define XSNS_62                    62
-#define USE_MI_DECRYPTION
+#define USE_MI_DECRYPTION         // Enable also for BTHome V2
 
 #include <vector>
 #ifdef USE_MI_DECRYPTION
@@ -1691,12 +1695,9 @@ void MI32Init(void) {
   MI32.option.onlyAliased = MI32_OPTION5_ONLY_ALIASED;                // Mi32Option5: only include sensors that are aliased
   MI32.option.MQTTType = MI32_OPTION6_MQTT_TYPE;                      // Mi32Option6: publish sensor on MI32.bleTopic with 1 topic per sensor
 
-AddLog(0,PSTR("MI32Option0: %d"), MI32.option.allwaysAggregate);
-AddLog(0,PSTR("MI32Option1: %d"), MI32.option.noSummary);
-AddLog(0,PSTR("MI32Option2: %d"), MI32.option.directBridgeMode);
-AddLog(0,PSTR("MI32Option4: %d"), MI32.option.ignoreBogusBattery);
-AddLog(0,PSTR("MI32Option5: %d"), MI32.option.onlyAliased);
-AddLog(0,PSTR("MI32Option6: %d"), MI32.option.MQTTType);
+  AddLog(LOG_LEVEL_DEBUG, PSTR("M32: MI32Option0:%d, 1:%d, 2:%d, 4:%d, 5:%d, 6:%d"),
+    MI32.option.allwaysAggregate, MI32.option.noSummary, MI32.option.directBridgeMode,
+    MI32.option.ignoreBogusBattery, MI32.option.onlyAliased, MI32.option.MQTTType);
 
   BLE_ESP32::registerForAdvertismentCallbacks((const char *)"MI32", MI32advertismentCallback);
   BLE_ESP32::registerForScanCallbacks((const char *)"MI32", MI32scanCompleteCallback);
@@ -2124,7 +2125,10 @@ static const bthome_obj_def_t BTHOME_OBJECTS[] = {
   {0x63, 4},  // Acceleration (0.000001 m/s2) int32
   {0x64, 1},  // Light level (0 = Dark, 1 = Twilight, 2 = Bright) uint8
   {0x65, 1},  // Settings revision uint8
-  {0xFF, 0},  // sentinel
+  {0xF0, 2},  // Device type id uint16
+  {0xF1, 4},  // Firmware version (F100010204 = 4.2.1.0} uint32
+  {0xF2, 3},  // Firmware version (F2000106 = 6.1.0} uint24
+  {0xFF, 0}   // sentinel
 };
 
 // Returns data length for a BTHome v2 object ID, or -1 if unknown
