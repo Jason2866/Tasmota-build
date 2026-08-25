@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Library `PubSubClient` renamed to `TasmotaPubSub`, hardening fixes and comprehensive non-regression tests (#24916)
 - Berry `json.dump()` works with subclasses of `map` and `list` (#24954)
 - Berry/MI32 improved dashboard and widget handling (#24972)
+- Keep the first panic in the ESP32 crash recorder (#24976)
 
 ### Fixed
 - Can sniffer functionality (#18287)
@@ -29,7 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
-## [15.5.0.1]
+## [15.5.0.1] 20260725
 ### Added
 - Berry `bytes` methods `setbits`/`getbits` transposed to native and support for big endian (#24857)
 - HASPmota ability to set default screen background on `p0b0` object (#24874)
