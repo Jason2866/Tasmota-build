@@ -900,6 +900,9 @@
 //    #define USE_LORA_SX126X                      // Add driver support for LoRa on SX126x based devices like LiliGo T3S3 Lora32 (+16k code)
 //    #define USE_LORA_SX127X                      // Add driver support for LoRa on SX127x based devices like M5Stack LoRa868, RFM95W (+5k code)
 //    #define USE_LORAWAN_BRIDGE                   // Add support for LoRaWan bridge (+8k code)
+//  #define USE_TFA_MARBELLA                       // Add support for TFA Dostmann Marbella 868MHz pool thermometer using a CC1101 (+12k6 code on ESP8266, +5k7 on ESP32)
+//    #define TFA_MARBELLA_TIMEOUT   900           // Seconds without a packet after which the reading is dropped
+//    #define TFA_MARBELLA_SERIAL    0             // Sensor id to bind to, 0 learns the first sensor received
 
 #endif  // USE_SPI
 
@@ -947,6 +950,7 @@
   #define USE_TASMOTA_CLIENT_SERIAL_SPEED 57600  // Depends on the sketch that is running on the Uno/Pro Mini
 //#define USE_OPENTHERM                            // Add support for OpenTherm (+15k code)
 //#define USE_MIEL_HVAC                            // Add support for Mitsubishi Electric HVAC serial interface (+5k code)
+//  #define USE_MIEL_HVAC_MODBUS_SLAVE             // Expose all MiEL HVAC states/functions on a second RS485 port as a Modbus RTU slave for PLC use (ESP32 only, +4k code)
 //#define USE_TUYAMCUBR                            // Add support for TuyaMCU Bridge
 //#define USE_PROJECTOR_CTRL                       // Add support for LCD/DLP Projector serial control interface (+2k code)
 //  #define USE_PROJECTOR_CTRL_NEC                 // Use codes for NEC
