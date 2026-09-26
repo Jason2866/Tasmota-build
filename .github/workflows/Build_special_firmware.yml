@@ -113,7 +113,7 @@ jobs:
           enable-cache: false
       - name: Install dependencies
         run: |
-          uv pip install --system -U https://github.com/pioarduino/platformio-core/archive/refs/tags/v6.1.19.zip
+          uv pip install --system pioarduino==6.2.0
           curl -O https://raw.githubusercontent.com/Jason2866/Tasmota-build/start_build/copy_safeboot.py
           python copy_safeboot.py
           mkdir -p ./firmware/firmware
