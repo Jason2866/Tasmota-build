@@ -5,13 +5,16 @@ All notable changes to this project will be documented in this file.
 
 ## [15.6.0.2]
 ### Added
-
+- DALI-2 push button bindings to control gear targets with command `DaliBind` (toggle, on, off, up, down) (#25073)
+- Matter add Electrical Power Measurement cluster to On/Off Plug-in Unit (#24922)
 
 ### Breaking Changed
 
 
 ### Changed
 - Shutter split `EnableEndStopTime` into `OpenEndStopTime` and `CloseEndStopTime` (#25020)
+- ESP8266 platform update from 2026.04.00 to 2026.09.00 (#25072)
+- ESP32 Platform from 2026.05.50 to 2026.09.50, Framework (Arduino Core) from v3.3.8 to v3.3.12 and IDF from v5.5.4.260407 to v5.5.5 (#25072)
 
 
 ### Fixed

@@ -122,15 +122,19 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - NeoPool AuxMode [#24998](https://github.com/arendst/Tasmota/issues/24998)
 - DALI-2 input device event messages (IEC 62386-103) from push buttons, occupancy and light sensors decoded and published for rules and MQTT [#25029](https://github.com/arendst/Tasmota/issues/25029)
 - DALI-2 control device commissioning and instance queries with commands `DaliDeviceScan` and `DaliDevice` [#25029](https://github.com/arendst/Tasmota/issues/25029)
+- DALI-2 push button bindings to control gear targets with command `DaliBind` (toggle, on, off, up, down) [#25073](https://github.com/arendst/Tasmota/issues/25073)
 - MiELHVAC climate control panel on the web UI main page (mode, target temperature, fan, vanes, air direction) with live state [#24984](https://github.com/arendst/Tasmota/issues/24984)
 - MiELHVAC Modbus RTU slave on a second RS485 port exposing all states and functions for PLC use with `#define USE_MIEL_HVAC_MODBUS_SLAVE` [#24982](https://github.com/arendst/Tasmota/issues/24982)
 - MiELHVAC Home Assistant MQTT discovery [#25027](https://github.com/arendst/Tasmota/issues/25027)
 - Berry virtual button support
 - Berry `sortedmap` support for `json.dump` [#24999](https://github.com/arendst/Tasmota/issues/24999)
+- Matter add Electrical Power Measurement cluster to On/Off Plug-in Unit [#24922](https://github.com/arendst/Tasmota/issues/24922)
 
 ### Breaking Changed
 
 ### Changed
+- ESP8266 platform update from 2026.04.00 to 2026.09.00 [#25072](https://github.com/arendst/Tasmota/issues/25072)
+- ESP32 Platform from 2026.05.50 to 2026.09.50, Framework (Arduino Core) from v3.3.8 to v3.3.12 and IDF from v5.5.4.260407 to v5.5.5 [#25072](https://github.com/arendst/Tasmota/issues/25072)
 - MQTT connection closed before TCP retransmission could deliver a delayed PINGRESP, now tolerates 2 unanswered pings [#25067](https://github.com/arendst/Tasmota/issues/25067)
 - Command `SetOption46 201..255` init wait 1 to 55 seconds instead of 2010 to 2550 msec [#25035](https://github.com/arendst/Tasmota/issues/25035)
 - Shutter split `EnableEndStopTime` into `OpenEndStopTime` and `CloseEndStopTime` [#25020](https://github.com/arendst/Tasmota/issues/25020)
