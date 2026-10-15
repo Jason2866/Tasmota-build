@@ -16,13 +16,14 @@ All notable changes to this project will be documented in this file.
 
 
 ### Changed
-- LVGL library from v9.5.0 to v9.6.0
+- LVGL library from v9.5.0 to v9.6.0 (#25144)
 
 ### Fixed
 - Unauthenticated UFS writes on web password enabled systems
 - Display dsi dma2d psram buffers (#24949)
 - Matter MQTT subscription when Matter is disabled (#25140)
 - HttpClientLight time out reading a body when the server goes silent (#25139)
+- AsyncHttpClientLight finish a chunked body at the empty line after the last chunk (#25142)
 
 ### Removed
 

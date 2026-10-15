@@ -149,6 +149,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Changed
 - ESP8266 platform update from 2026.04.00 to 2026.09.00 [#25072](https://github.com/arendst/Tasmota/issues/25072)
 - ESP32 Platform from 2026.05.50 to 2026.09.50, Framework (Arduino Core) from v3.3.8 to v3.3.12 and IDF from v5.5.4.260407 to v5.5.5 [#25072](https://github.com/arendst/Tasmota/issues/25072)
+- LVGL library from v9.5.0 to v9.6.0 [#25144](https://github.com/arendst/Tasmota/issues/25144)
 - Matter update specs to 1.6.1 (to be used by AI) [#25083](https://github.com/arendst/Tasmota/issues/25083)
 - MQTT connection closed before TCP retransmission could deliver a delayed PINGRESP, now tolerates 2 unanswered pings [#25067](https://github.com/arendst/Tasmota/issues/25067)
 - Command `SetOption46 201..255` init wait 1 to 55 seconds instead of 2010 to 2550 msec [#25035](https://github.com/arendst/Tasmota/issues/25035)
@@ -169,6 +170,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - WT32_ETH01 ethernet initialization [#25051](https://github.com/arendst/Tasmota/issues/25051)
 - ESP32 release UART0 console when the template uses its pins [#25047](https://github.com/arendst/Tasmota/issues/25047)
 - HttpClientLight time out reading a body when the server goes silent [#25139](https://github.com/arendst/Tasmota/issues/25139)
+- AsyncHttpClientLight finish a chunked body at the empty line after the last chunk [#25142](https://github.com/arendst/Tasmota/issues/25142)
 - PWM on CDC GPIO [#25106](https://github.com/arendst/Tasmota/issues/25106)
 - Zigbee deferred timer use after free, and the truncated backtrace that hid it [#24979](https://github.com/arendst/Tasmota/issues/24979)
 - Berry rare register allocation bug [#25010](https://github.com/arendst/Tasmota/issues/25010)
