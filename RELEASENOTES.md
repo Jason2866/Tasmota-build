@@ -130,7 +130,11 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 ### Changed
 - ESP8266 platform update from 2026.09.00 to 2026.10.00 [#25196](https://github.com/arendst/Tasmota/issues/25196)
 - ESP32 Platform from 2026.09.50 to 2026.10.50, Framework (Arduino Core) from v3.3.12 to v3.3.12-1 and IDF v5.5.5 [#25196](https://github.com/arendst/Tasmota/issues/25196)
-- HttpClientLight: keep read timeouts longer than 65 s [#25180](https://github.com/arendst/Tasmota/issues/25180)
+- OTA give up on a stalled OTA after 30s, not 300 reads [#25177](https://github.com/arendst/Tasmota/issues/25177)
+- HttpClientLight keep read timeouts longer than 65s [#25180](https://github.com/arendst/Tasmota/issues/25180)
+- GUI allow `;` or `{` in a password saved from the settings page [#25184](https://github.com/arendst/Tasmota/issues/25184)
+- ESP32 web login uses own Basic auth instead Arduino [#25210](https://github.com/arendst/Tasmota/issues/25210)
+- BLE EQ3-TRV avoid sending of empty status [#25182](https://github.com/arendst/Tasmota/issues/25182)
 
 ### Fixed
 - Security issues caused by buffer overflows
@@ -142,6 +146,7 @@ The latter links can be used for OTA upgrades too like ``OtaUrl https://ota.tasm
 - DisplayText [pN] command now works when followed by another [pN] [#25188](https://github.com/arendst/Tasmota/issues/25188)
 - ESP32 `PWMFrequency` < 8 result in WDT exception after restart [#25155](https://github.com/arendst/Tasmota/issues/25155)
 - ESP32 steady 38 kHz IR carrier (fixes [#25168](https://github.com/arendst/Tasmota/issues/25168)) [#25176](https://github.com/arendst/Tasmota/issues/25176)
+- ESP32 `UfsServe` (`UFILESYS_STATIC_SERVING`) compilation, and reject `..` in served paths [#25211](https://github.com/arendst/Tasmota/issues/25211)
 - MiEL HVAC Modbus no response timeouts now serves the RS485 slave from its own task [#25157](https://github.com/arendst/Tasmota/issues/25157)
 - ESP32-S3 RGB display permanent image shift after flash writes, DMA sync guard [#25194](https://github.com/arendst/Tasmota/issues/25194)
 - Wireguard reconnect when a dynamic DNS `Endpoint` changes IP [#25204](https://github.com/arendst/Tasmota/issues/25204)

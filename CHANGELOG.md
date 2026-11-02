@@ -11,8 +11,13 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - ESP8266 platform update from 2026.09.00 to 2026.10.00 (#25196)
 - ESP32 Platform from 2026.09.50 to 2026.10.50, Framework (Arduino Core) from v3.3.12 to v3.3.12-1 and IDF v5.5.5 (#25196)
+- OTA give up on a stalled OTA after 30 s, not 300 reads (#25177)
+- BLE EQ3-TRV avoid sending of empty status (#25182)
+- GUI allow `;` or `{` in a password saved from the settings page (#25184)
+- ESP32 web login uses own Basic auth instead Arduino (#25210)
 
 ### Fixed
+- ESP32 `UfsServe` (`UFILESYS_STATIC_SERVING`) compilation, and reject `..` in served paths (#25211)
 
 ### Removed
 
@@ -31,7 +36,7 @@ All notable changes to this project will be documented in this file.
 - BTHome un-reverse MAC address usage for command `MI32Keys` to make it consistent
 
 ### Changed
-- HttpClientLight: keep read timeouts longer than 65 s (#25180)
+- HttpClientLight keep read timeouts longer than 65 s (#25180)
 
 ### Fixed
 - Security issues caused by buffer overflows
