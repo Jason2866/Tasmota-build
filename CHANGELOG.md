@@ -15,11 +15,15 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - ESP32 Platform from 2026.11.50 to 2026.11.51, Framework (Arduino Core) from v3.3.12-2 to v3.3.12-3 and IDF v5.5.5 (#25275)
 - JPEGDEC library from v1.8.4 to v1.8.5 (#25282)
+- Matter cluster and device type revisions aligned with Matter 1.6.1, fixed ReachableChanged for MQTT
 
 ### Fixed
 - GPIOViewer fails to execute, regression from platform 2026.11.50 with Framework v3.3.12-2 (#25275)
 - Display palette colors on monochrome universal displays (#25260)
 - TashMesh and WizMote ESP-NOW support for IDF v5.5.5 (#25289)
+- Matter Fan advertising the unsupported Auto mode
+- Matter Air Quality PM1, PM2.5 and PM10 reported in ppm instead of µg/m³, and TVOC in ppm instead of ppb
+- Matter MRP sending unacknowledged messages 7 times instead of 5
 
 ### Removed
 
