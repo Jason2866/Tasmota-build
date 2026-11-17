@@ -150,8 +150,8 @@ protected:
     uint8_t sentStatus;
     int queueSize = ESPNOW_QUEUE_SIZE;
 
-    QueueHandle_t tx_queue;
-    QueueHandle_t rx_queue;
+    QueueHandle_t tx_queue = nullptr;
+    QueueHandle_t rx_queue = nullptr;
     //SemaphoreHandle_t espnow_send_mutex;
     //uint8_t channel;
     bool followWiFiChannel = false;
@@ -165,8 +165,8 @@ protected:
     static void espnowRxTask_cb (void* param);
     void espnowRxHandle ();
 
-    static void ICACHE_FLASH_ATTR rx_cb(const esp_now_recv_info_t* esp_now_info, const uint8_t* data, int len);
-    static void ICACHE_FLASH_ATTR tx_cb (uint8_t* mac_addr, uint8_t status);
+    static void ICACHE_FLASH_ATTR rx_cb (const esp_now_recv_info_t* esp_now_info, const uint8_t* data, int len);
+    static void ICACHE_FLASH_ATTR tx_cb (const esp_now_send_info_t* info, uint8_t status);
 };
 
 extern QuickEspNow quickEspNow;
