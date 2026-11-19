@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - MQTT optional FileDownload and FileUpload transferring a file system file (`#define USE_UFILESYS_MQTT`) (#25278)
 - Matter Boolean State StateChange event for Contact, Rain and Water Leak sensors (#25286)
 - TLS support for SHA384 and Letsencrypt Root X2 CA (#25302)
+- Zigbee support EZSP V13 (#25225)
 
 ### Breaking Changed
 - Matter lights Level Control MinLevel 1 and On/Off behavior aligned with Matter 1.6.1 (#25279)
@@ -27,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Matter MRP sending unacknowledged messages 7 times instead of 5 (#25295)
 - Ethernet share SPI bus 1 with drivers already using it (#25299)
 - Configure Wi-Fi page hang when the Wi-Fi scan cannot start (#25267)
+- OpenTherm no silent cooldown after a lost connection (default 0) (#25296)
 
 ### Removed
 
