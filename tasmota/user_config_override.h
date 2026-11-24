@@ -523,6 +523,9 @@ ooooo     ooo ooooo      ooo oooooooooo.   oooooooooooo oooooooooooo ooooo ooooo
   #undef USE_PWM_DIMMER_REMOTE                  // Add support for remote switches to PWM Dimmer, also adds device groups support (+0k7 code, also includes device groups)
 #undef USE_DISPLAY_SSD1306
 #undef USE_DISPLAY_ILI9341
+#undef USE_MQTT_TLS                             // Use TLS for MQTT connection (+34.5k code, +7.0k mem and +4.8k additional during connection handshake)
+ #undef USE_MQTT_TLS_ECDSA                      // (ESP8266 only, always on for ESP32) enable ECDSA in addition to RSA (+11.5k code)
+ #undef USE_MQTT_TLS_SHA384                     // Validate certificates signed with SHA-384, used by most ECDSA P-384 CAs like LetsEncrypt ISRG Root X2 and E5..E9
 #endif
 
 
